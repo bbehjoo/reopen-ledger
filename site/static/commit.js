@@ -67,6 +67,7 @@ async function send(eth, from, chainHex, to, windowId, dataHex, codes, status) {
 }
 
 async function main() {
+  if (!document.getElementById("commit")) return; // loaded on the landing page for send(); the form lives on commit.html
   const status = document.getElementById("status");
   let open;
   try {

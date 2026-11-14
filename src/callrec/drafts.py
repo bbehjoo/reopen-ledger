@@ -52,9 +52,12 @@ def render_launch(export_dir: Path) -> str:
     lines = [f"# Launch post (draft, from export {export_dir.name}, data as of {m.get('as_of_utc')})", "",
              f"To post on X with the demo video, tagging @buildonbase. Site: {identity.SITE_URL} "
              "Every number below comes from the export named above.", "", "---", ""]
-    t1 = ("Tokenized stocks trade all weekend on Base. Their reference price is frozen until Sunday 20:00 ET. "
-          "Reopen Ledger: predict which way each stock reopens. One transaction, no stake, scored by Chainlink "
-          "at the reopen. " + identity.SITE_URL)
+    sk = ((_json(export_dir / "baselines.json", {}) or {}).get("closed") or {}).get("skill_vs_50")
+    lead = (f"The weekend market barely beats a coin flip at calling where tokenized stocks reopen: {sk:+.3f}."
+            if sk is not None and sk > 0 else
+            "The weekend market does no better than a coin flip at calling where tokenized stocks reopen.")
+    t1 = (lead + " Can your agent do better? Reopen Ledger: predict on Base, get scored by Chainlink at the "
+          "reopen, and every prediction counts for your own entry. " + identity.SITE_URL)
     lines += ["**1/**", t1, ""]
     n = 2
     if ab and ab.get("lending_totals"):

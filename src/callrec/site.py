@@ -21,8 +21,8 @@ import markdown
 
 from . import config, identity
 
-NAV = [("agents.html", "For agents"), ("absorb.html", "Absorb"), ("tape.html", "Weekend tape"), ("board.html", "Board"),
-       ("registry.html", "Registry"), ("methods.html", "Methods"), ("data.html", "Data")]
+NAV = [("agents.html", "For agents"), ("index.html#why", "Why it matters"), ("board.html", "Board"),
+       ("methods.html", "Methods"), ("data.html", "Data")]
 CTA = ("commit.html", "Predict the reopen")
 DESCRIPTION = ("Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, "
                "scored against Chainlink at the reopen. Plus the data on what a frozen weekend price means for "
@@ -32,9 +32,9 @@ FEATURED = ("NVDAc", "TSLAc", "AAPLc", "GOOGLc", "MSFTc", "METAc", "AMZNc")
 MARK = ('<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/>'
         '<path d="M7 19.5h10.5L25 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="3" stroke-linecap="round" '
         'stroke-linejoin="round"/><circle cx="25" cy="10.5" r="2.6" fill="var(--accent-ink)"/></svg>')
-LUCK = ("With a few dozen windows, skill and luck cannot yet be told apart. Ranks use a lower confidence "
-        "bound and a minimum of {n} scored windows, which reduces, but does not remove, the chance that a "
-        "rank reflects luck. With many forecasters, the best of them will look skilled by chance.")
+LUCK = ("With a few dozen windows, skill and luck cannot yet be told apart. Ranks need {n} scored windows and "
+        "discount lucky streaks, which reduces, but does not remove, the chance that a rank reflects luck. With "
+        "many forecasters, the best of them will look skilled by chance.")
 
 
 def esc(x) -> str:
@@ -96,7 +96,7 @@ def page(name: str, title: str, body: str, as_of: str, root: str = "", landing: 
 <footer><div class="wrap"><p>Data as of {esc(as_of)}. Every number is replayable from the published inputs.
 Measurements, not verdicts; nothing here is advice. Coinbase tokenized stocks are offered only to persons in eligible jurisdictions outside the United States.</p>
 <div class="links"><a href="{root}data.html">Data</a><a href="{root}methods.html">Methods</a><a href="{root}registry.html">Registry</a><a href="{identity.REPO_URL}">Code</a></div></div></footer>
-<script src="{root}site.js" defer></script>
+{f'<script src="{root}commit.js" defer></script>' if landing else ""}<script src="{root}site.js" defer></script>
 </body></html>
 """
 
@@ -214,7 +214,7 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
     pick = [s for s in FEATURED if s in feeds and (slate_syms is None or s in slate_syms)][:4]
     names = {t["address"]: t.get("name") for t in json.loads((config.config_dir() / "tokens.json").read_text(encoding="utf-8"))["tokens"]}
     rows = "".join(
-        f'<div class="pick" data-sym="{esc(s)}"><div class="lbl"><span class="s">{esc(s)}</span>'
+        f'<div class="pick" data-sym="{esc(s)}" data-token="{esc(feeds[s][1].lower())}"><div class="lbl"><span class="s">{esc(s)}</span>'
         f'<span class="n">{esc((names.get(feeds[s][1]) or "").replace(" Inc.", "").replace(" Corporation", ""))} '
         f'&middot; ${feeds[s][0]:,.2f}</span></div>'
         f'<div class="tap" role="group" aria-label="{esc(s)} reopens"><button type="button" data-v="35" aria-pressed="false">Lower</button>'
@@ -224,7 +224,8 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
             f'<div class="clock" id="clock">Fri 20:00 ET</div><div class="clock-k" id="clock-k">The reference freezes every Friday 20:00 ET and reopens Sunday 20:00 ET.</div></div></div>'
             f'<div class="pick-q">Where does each one reopen? Tap one, skip the rest.</div>{rows}'
             f'<div class="pick-go"><a class="btn primary" id="hp-go" href="{CTA[0]}">Commit on Base <span class="arr">&rarr;</span></a>'
-            f'<span>One transaction. No stake, gas only. Fine-tune the odds on the next step.</span></div>'
+            f'<span>One transaction. No stake, gas only. <a href="{CTA[0]}" id="hp-adv">Advanced: set exact odds</a></span></div>'
+            f'<p class="pick-status" id="hp-status" role="status"></p>'
             f'<div class="foot">Chainlink reference values on Base, read {esc(_utc_label(as_of))}.</div></div>')
 
 
@@ -311,11 +312,13 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
     missing = house_checks.get("house_commit_missing", [])
     miss_html = "" if not missing else ('<div class="note">House records missing: ' + "; ".join(
         f'{esc(m["role"])} for {esc(m["label"])}' for m in missing) + "</div>")
-    body = (f'<h1>The board</h1><p class="lede">Every forecaster with a record, scored against the reference feed '
-            f'after each window closes. Brier score per token; skill against the DEX-implied baseline and against 50%.</p>'
-            f'{reveal}<div class="note">{esc(LUCK.format(n=board["min_windows"]))}</div>{miss_html}'
-            + _board_table(board["forecasters"])
-            + _baselines_block(read_json(export_dir / "baselines.json", {}))
+    baselines = read_json(export_dir / "baselines.json", {})
+    body = (f'<h1>The board</h1><p class="lede">Every forecaster with a record, scored against Chainlink when each '
+            f'window closes. Lower score is better; a coin flip scores 0.250.</p>'
+            f'{reveal}{_rivals_block(baselines)}{miss_html}'
+            + '<h2>Forecasters</h2>' + _board_table(board["forecasters"])
+            + f'<div class="note">{esc(LUCK.format(n=board["min_windows"]))}</div>'
+            + _baselines_block(baselines)
             + '<p class="muted">House wallets (labelled) follow the published schedule and are excluded from every usage figure. '
               'Open windows show who committed, never what; probabilities appear here after the window resolves.</p>'
             + _open_table(open_w))
@@ -346,9 +349,9 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
                      f'<a class="btn small" href="{_share(line + "Can your agent do better?", identity.SITE_URL + f"f/{c}.html")}">Share on X</a></div>')
         body = (f'<h1 class="mono">{esc(c)}{tag}</h1>{share}'
                 f'<div class="grid"><div class="card stat"><div class="v">{f["windows_scored"]}</div><div class="k">windows scored</div></div>'
-                f'<div class="card stat"><div class="v">{fnum(f["brier"], 4)}</div><div class="k">mean Brier</div></div>'
-                f'<div class="card stat"><div class="v">{fnum(f["skill_vs_dex"], 3, sign=True)}</div><div class="k">skill vs DEX-implied</div></div>'
-                f'<div class="card stat"><div class="v">{fnum(f["edge_lcb"], 4, sign=True)}</div><div class="k">edge, lower bound</div></div></div>'
+                f'<div class="card stat"><div class="v">{fnum(f["brier"], 4)}</div><div class="k">score (lower is better; a coin flip scores 0.250)</div></div>'
+                f'<div class="card stat"><div class="v">{fnum(f["skill_vs_dex"], 3, sign=True)}</div><div class="k">vs Weekend DEX</div></div>'
+                f'<div class="card stat"><div class="v">{fnum(f["edge_lcb"], 4, sign=True)}</div><div class="k">edge, luck discounted</div></div></div>'
                 '<h2>Resolved calls</h2>'
                 + table([("window", False), ("token", False), ("p up", True), ("outcome", False), ("Brier", True),
                          ("DEX-implied p", True), ("DEX-implied Brier", True)], rows))
@@ -457,14 +460,23 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
     hit = cb.get("direction_hit_rate")
 
     sk = cb.get("skill_vs_50")
-    skill_txt = (f"beats a coin flip by just {sk:.3f}" if sk is not None and sk > 0
-                 else "does no better than a coin flip")
+    dsk = (baselines.get("daily") or {}).get("skill_vs_50")
+    if sk is not None and sk > 0:
+        h1 = '<span>The weekend market</span> <span>barely beats a <span class="accent">coin flip.</span></span>'
+        nums = f"Its odds on the Sunday-night reopen score just {sk:.3f} better than a coin flip's"
+    else:
+        h1 = '<span>The weekend market</span> <span>is a <span class="accent">coin flip.</span></span>'
+        nums = "Its odds on the Sunday-night reopen score no better than a coin flip's"
+    if dsk is not None:
+        nums += f"; on weekday closes, {abs(dsk):.3f} {'worse' if dsk < 0 else 'better'}."
+    else:
+        nums += "."
     hero = (f'<section class="hero"><div class="wrap">'
             f'<p class="kicker"><i class="live-dot"></i>Stocks trade all weekend on Base. The price lenders use is frozen.</p>'
-            f'<h1><span>Can your agent beat</span> <span>the weekend <span class="accent">market?</span></span></h1>'
+            f'<h1>{h1}</h1>'
             f'<div class="intro">'
-            f'<p class="lede">The weekend DEX price {skill_txt} at calling the reopen. Predict which way each stock '
-            f'reopens, with an agent or by hand. Chainlink scores it Sunday night.</p>'
+            f'<p class="lede"><b class="ask">Can your agent beat it?</b> {nums} Predict on chain, get scored by '
+            f'Chainlink, and every prediction counts for your own entry.</p>'
             f'<div class="cta-row"><a class="btn primary" href="agents.html">Plug in your agent <span class="arr">&rarr;</span></a>'
             f'<a class="btn" href="{CTA[0]}">{esc(CTA[1])}</a></div></div>'
             f'{_hero_board(export_dir, as_of, open_w)}</div></section>')
@@ -481,7 +493,7 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
              f'<div class="tile s3 rv" style="--i:2"><div class="big">{ts.get("median_error_bps", 0) / 100:.2f}<small>%</small></div>'
              f'<p>median miss of the last-hour weekend DEX price against the reopen value.</p></div>'
              f'</div>')
-    numbers = (f'<section class="band"><div class="wrap"><h2 class="rv">Why the reopen matters.</h2>'
+    numbers = (f'<section class="band" id="why"><div class="wrap"><h2 class="rv">Why the reopen matters.</h2>'
                f'<p class="lede rv">Lending markets on Base price these stocks off the same frozen feed. Millions ride on '
                f'what it shows when it comes back.</p>{tiles}</div></section>')
 
@@ -526,9 +538,10 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
                 f'<div class="facts rv">'
                 f'<div><span>Token-weekends with a usable DEX price</span><strong>{ts.get("n", 0)}</strong></div>'
                 + (f'<div><span>Weekend DEX price had the direction right</span><strong>{hit * 100:.0f}%</strong></div>' if hit is not None else "")
-                + (f'<div><span>How much better than a coin flip it sets the odds (Brier skill)</span><strong>{cb.get("skill_vs_50", 0):+.3f}</strong></div>' if cb else "")
+                + (f'<div><span>How much better than a coin flip its odds score</span><strong>{cb.get("skill_vs_50", 0):+.3f}</strong></div>' if cb else "")
                 + f'<div><span>Largest reopen move seen</span><strong>{ts.get("max_reopen_bps", 0) / 100:.1f}%</strong></div>'
-                f'</div></div><div class="panel chart">{_scatter(closed, big=True)}</div></div></section>')
+                f'</div><p style="margin-top:20px"><a href="tape.html">Every weekend, stock by stock &rarr;</a></p></div>'
+                f'<div class="panel chart">{_scatter(closed, big=True)}</div></div></section>')
 
     code = ('<pre class="code"><span class="c">// one transaction, no value: probabilities per token for one window</span>\n'
             '<span class="k">import</span> { commitCalls, windowId } <span class="k">from</span> <span class="s">"./clients/ts"</span>;\n\n'
@@ -552,7 +565,7 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
 
     closer = ('<section class="band closer"><div class="wrap"><h2 class="rv">Don\'t trust the dashboard. Replay it.</h2>'
               '<div class="trust">'
-              '<div class="rv"><strong>Signed</strong><p>Every daily export carries an Ed25519 signature over its manifest.</p></div>'
+              '<div class="rv"><strong>Signed</strong><p>Every daily export is signed, so any copy can be checked against the original.</p></div>'
               '<div class="rv" style="--i:1"><strong>Anchored</strong><p>The export hash goes on the record on Base once a day.</p></div>'
               '<div class="rv" style="--i:2"><strong>Replayable</strong><p>Every number rebuilds from public chain logs with one command.</p></div>'
               f'<div class="rv" style="--i:3"><strong>Open</strong><p>Code under Apache-2.0, data under CC BY 4.0. <a href="{identity.REPO_URL}">Read the code</a>.</p></div>'
@@ -593,7 +606,7 @@ def _agents_page() -> str:
         '<div><b>2. Add two secrets</b><strong>Key and Builder Code</strong><p><code>PRIVATE_KEY</code> for a Base '
         'wallet with a little ETH for gas, and <code>BUILDER_CODES</code> with your own code.</p></div>'
         '<div><b>3. Put your model in <code>predict()</code></b><strong>Then leave it running</strong><p>A dry run '
-        'from the Actions tab shows the exact calldata first. After that it runs every day by itself.</p></div></div>'
+        'from the Actions tab shows the exact transaction first. After that it runs every day by itself.</p></div></div>'
         f'<div class="cta-row"><a class="btn primary" href="{TEMPLATE_URL}/generate">Use the template <span class="arr">&rarr;</span></a>'
         f'<a class="btn" href="{TEMPLATE_URL}">See the template</a></div>'
         '<h2>Or run it yourself</h2>'
@@ -619,7 +632,7 @@ def _agents_page() -> str:
         '<div><span>A prediction counts if it is mined before the window\'s cutoff</span><strong>Sun 18:00 ET</strong></div>'
         '<div><span>The first prediction per wallet and window is the scored one</span><strong>1 per window</strong></div>'
         '<div><span>Predictions stay hidden until the window resolves, so nobody can copy them</span><strong>sealed</strong></div>'
-        '<div><span>Ranks need a minimum number of scored windows and use a lower confidence bound</span><strong>no luck ranks</strong></div>'
+        '<div><span>Ranks need five scored windows, and lucky streaks are discounted</span><strong>no luck ranks</strong></div>'
         '</div>'
         '<p class="muted" style="margin-top:20px">Encoding and scoring are specified in <a href="methods.html">METHODS</a> '
         'sections 4 and 5. The weekday cutoff is 20:00 ET; weekend and holiday cutoffs are two hours before the reopen.</p>'
@@ -651,9 +664,10 @@ def _form_json(path: Path, open_w: list[dict], sym: dict, names: dict) -> None:
 
 def _board_table(rows: list[dict]) -> str:
     if not rows:
-        return ('<div class="empty"><strong>No records have resolved yet.</strong>The ledger went live on Base on '
-                'Nov 14, 2026. The first records resolve at the next reopen; every forecaster appears here once a '
-                'window it committed to has been scored. <a href="commit.html">Make a prediction</a>.</div>')
+        return ('<div class="empty"><strong>No outside forecaster yet. Be the first to beat the rivals.</strong>'
+                'Every forecaster appears here once a window it predicted has been scored, every weekday evening and '
+                'every Sunday night. <a href="agents.html">Plug in your agent</a> or '
+                '<a href="commit.html">predict by hand</a>.</div>')
     out = []
     for f in rows:
         c = f["committer"].lower()
@@ -662,8 +676,27 @@ def _board_table(rows: list[dict]) -> str:
         out.append([rank, f'<a class="mono" href="f/{c}.html">{esc(short(c))}</a>{tag}',
                     esc(f["windows_scored"]), fnum(f["brier"], 4), fnum(f["skill_vs_dex"], 3, sign=True),
                     fnum(f["skill_vs_50"], 3, sign=True), fnum(f["edge_lcb"], 4, sign=True)])
-    return table([("rank", True), ("forecaster", False), ("windows", True), ("Brier", True), ("skill vs DEX", True),
-                  ("skill vs 50%", True), ("edge (lower bound)", True)], out)
+    return table([("rank", True), ("forecaster", False), ("windows", True), ("score", True), ("vs Weekend DEX", True),
+                  ("vs coin flip", True), ("edge, luck discounted", True)], out)
+
+
+def _rivals_block(b: dict) -> str:
+    """The three house rivals on top of the board, so it is never empty. The Weekend DEX record is computed for
+    every resolved window since Aug 24 as if it had been on the record, and says so."""
+    c, d = b.get("closed") or {}, b.get("daily") or {}
+    if not c.get("pairs"):
+        return ""
+    hit = f' It had the direction right {c["direction_hit_rate"] * 100:.0f}% of the time.' if c.get("direction_hit_rate") is not None else ""
+    day = (f' On weekday closes it scores {d["brier"]:.3f}, {"worse" if d["skill_vs_50"] < 0 else "better"} than a coin flip.'
+           if d.get("pairs") else "")
+    return ('<h2>The rivals to beat</h2><div class="grid rivals">'
+            f'<div class="card stat hot"><div class="v">{c["brier"]:.3f}</div><div class="k"><b>Weekend DEX</b>: the '
+            f'last-hour weekend DEX price, read as odds. Computed over {c["windows"]} weekends and holidays since Aug 24, '
+            f'as if it had been on the record.{hit}{day}</div></div>'
+            '<div class="card stat"><div class="v">0.250</div><div class="k"><b>Coin Flip</b>: says 50% on every stock, '
+            'every window. Any forecaster with real skill scores below it.</div></div>'
+            '<div class="card stat"><div class="v">0.250</div><div class="k"><b>Frozen Price</b>: says nothing moves. '
+            'Its odds score like a coin flip; it is the rival for the size of the move.</div></div></div>')
 
 
 def _baselines_block(b: dict) -> str:
@@ -678,11 +711,11 @@ def _baselines_block(b: dict) -> str:
                      esc(x["pairs_void_dex"])])
     if not rows:
         return ""
-    return ('<h2>The DEX-implied baseline since Aug 24</h2><p>Computed for every resolved window from the data, '
+    return ('<h2>Rival details: the Weekend DEX since Aug 24</h2><p>Computed for every resolved window from the data, '
             'as if it had been on the record (it was not: house records start when the contract is deployed). '
             'This is the forecaster to beat.</p>'
-            + table([("windows", False), ("count", True), ("token-windows", True), ("Brier", True),
-                     ("skill vs 50%", True), ("direction right", True), ("DEX baseline void", True)], rows))
+            + table([("windows", False), ("count", True), ("stock-windows", True), ("score", True),
+                     ("vs coin flip", True), ("direction right", True), ("no usable DEX price", True)], rows))
 
 
 def _open_table(open_w: list[dict]) -> str:

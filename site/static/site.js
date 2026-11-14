@@ -61,6 +61,36 @@
       sync();
     });
     sync();
+    // With a wallet and at least one tap, "Commit on Base" sends the prediction from here (commit.js send());
+    // without either, the link opens the full form, which explains the rest.
+    const st = document.getElementById("hp-status");
+    go.addEventListener("click", async (ev) => {
+      const picks = rows.map((r) => ({ r, b: $("button[aria-pressed=true]", r) })).filter((x) => x.b);
+      const eth = window.ethereum;
+      if (!picks.length || !eth || typeof send !== "function") return;
+      ev.preventDefault();
+      try {
+        st.textContent = "Reading the open window...";
+        const open = await (await fetch("data/form.json", { cache: "no-store" })).json();
+        const now = Date.now();
+        const win = open.windows.filter((w) => w.cutoff_ms - now > 120000).sort((a, b) => a.cutoff_ms - b.cutoff_ms)[0];
+        if (!open.ledger || !win) { location.href = go.href; return; }
+        const onSlate = new Set(open.slate.map((t) => t.address.toLowerCase()));
+        const calls = picks.map(({ r, b }) => ({ token: r.dataset.token, p: Number(b.dataset.v) / 100 })).filter((c) => onSlate.has(c.token));
+        if (!calls.length) { location.href = go.href; return; }
+        const [from] = await eth.request({ method: "eth_requestAccounts" });
+        const chainHex = "0x" + open.ledger.chain_id.toString(16);
+        if ((await eth.request({ method: "eth_chainId" })) !== chainHex) {
+          await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
+        }
+        st.textContent = "Confirm in your wallet...";
+        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st);
+        st.innerHTML = `On the record for ${win.label}: <a href="https://basescan.org/tx/${hash}">view the transaction</a>. ` +
+          "It stays sealed until the window resolves, then shows on the board.";
+      } catch (e) {
+        st.textContent = `Not sent: ${e && e.message ? e.message : e}`;
+      }
+    });
   }
 
   // shock toggle

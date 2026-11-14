@@ -348,3 +348,10 @@ footer p { margin: 0; max-width: 78ch; line-height: 1.55; }
 h1.mono { font-family: var(--mono); font-size: clamp(20px, 2.4vw, 32px); letter-spacing: -.02em; word-break: break-all; }
 .badge-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 18px 0 4px; }
 .badge-row code { font-size: 12px; word-break: break-all; max-width: 100%; }
+.rivals .stat .k { font-size: 14px; }
+.rivals .stat .k b { color: var(--fg); font-weight: 600; }
+.rivals .stat.hot { border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: linear-gradient(160deg, var(--accent-soft), var(--surface)); }
+.rivals .stat.hot .v { color: var(--accent-text); }
+.lede .ask { display: block; color: var(--fg); font-weight: 650; font-size: 1.35em; letter-spacing: -.02em; margin-bottom: 8px; }
+.pick-status { font-size: 13px; color: var(--muted); margin: 0; min-height: 0; }
+.pick-status:not(:empty) { padding: 0 0 14px; }
