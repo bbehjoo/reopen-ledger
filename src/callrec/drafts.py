@@ -49,7 +49,6 @@ def render_launch(export_dir: Path) -> str:
     tape = _csv(export_dir / "tape.csv")
     ab = _json(export_dir / "absorb.json")
     st = tape_stats(tape)
-    sym = _sym()
     lines = [f"# Launch post (draft, from export {export_dir.name}, data as of {m.get('as_of_utc')})", "",
              f"To post on X with the demo video, tagging @buildonbase. Site: {identity.SITE_URL} "
              "Every number below comes from the export named above.", "", "---", ""]
@@ -63,7 +62,6 @@ def render_launch(export_dir: Path) -> str:
         coll, debt = tot["collateral_usd"], tot["debt_usd"]
         rows = ab["tokens"]
         d10 = sum((r["absorb_5pct_below_usd"] or {}).get("10") or 0 for r in rows)
-        l10 = sum((r["liquidation_flow_usd"] or {}).get("10") or 0 for r in rows)
         l20 = sum((r["liquidation_flow_usd"] or {}).get("20") or 0 for r in rows)
         d20 = sum((r["absorb_5pct_below_usd"] or {}).get("20") or 0 for r in rows)
         lines += [f"**{n}/**", (f"Why the reopen matters: {_usd(debt)} of USDC is borrowed against {_usd(coll)} of these "
@@ -110,9 +108,10 @@ def render_weekend(export_dir: Path, window_id: str | None = None) -> str:
            "hours before the reopen. Rows marked void are shown but not used in any score.", "",
            "| token | frozen | DEX, last hour | reopen | gap bps | reopen bps | error bps | void |",
            "|---|---:|---:|---:|---:|---:|---:|---|"]
+    dex_cols = {"twap_last_hour", "gap_bps", "tape_error_bps"}
     for r in rows:
-        def f(k, nd=2):
-            return f"{float(r[k]):,.{nd}f}" if r[k] else "n/a"
+        def f(k, nd=2, r=r):  # a void row's DEX-derived values are not shown (they stay in tape.csv)
+            return f"{float(r[k]):,.{nd}f}" if r[k] and not (r["void"] and k in dex_cols) else "n/a"
         out.append(f"| {sym.get(r['token'], r['token'][:10])} | {f('frozen_ref')} | {f('twap_last_hour')} | "
                    f"{f('reopen_ref')} | {f('gap_bps', 0)} | {f('reopen_bps', 0)} | {f('tape_error_bps', 0)} | {r['void'] or ''} |")
     st = tape_stats(rows)   # non-void rows only
