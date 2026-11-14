@@ -12,6 +12,7 @@ import csv
 import html
 import io
 import json
+import os
 import re
 import shutil
 from datetime import UTC, datetime, timedelta
@@ -735,7 +736,10 @@ def _form_json(path: Path, open_w: list[dict], sym: dict, names: dict, tape: lis
            "slate": [{"address": t, "symbol": sym.get(t), "name": names.get(t),
                       "reference_feed": feeds.get(t.lower())} for t in slate],
            "ledger": {"address": led["address"], "chain_id": 8453} if led.get("address") else None,
-           "builder_codes": [led["builder_code"]] if led.get("builder_code") else []}
+           "builder_codes": [led["builder_code"]] if led.get("builder_code") else [],
+           # the CDP paymaster URL for sponsored gas (smart wallets only); from the PAYMASTER_URL secret at build
+           # time, never stored in the repository; capped and allowlisted to commit() on the CDP side
+           "paymaster_url": os.environ.get("PAYMASTER_URL") or None}
     path.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 

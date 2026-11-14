@@ -41,20 +41,27 @@ function fmt(ms) {
 // Smart wallets wrap the call, so a suffix appended to the calldata would not sit at the end of what Base reads.
 // When the wallet supports the EIP-5792 dataSuffix capability, the Builder Code goes there (Base's Builder Code
 // docs, "for app developers"); otherwise it is appended to the calldata, which is right for ordinary wallets.
-async function send(eth, from, chainHex, to, windowId, dataHex, codes, status) {
+// Gas: when the site has a paymaster (form.json paymaster_url, set from a secret at build time) and the wallet
+// supports both paymasterService and dataSuffix, the call is sponsored and keeps its Builder Code. A wallet that
+// cannot keep the code is never sponsored: attribution is not traded for free gas.
+async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, paymasterUrl) {
   let caps = null;
   try {
     caps = await eth.request({ method: "wallet_getCapabilities", params: [from, [chainHex]] });
   } catch (e) { caps = null; }
   const c = caps && (caps[chainHex] || caps[String(parseInt(chainHex, 16))]);
-  if (codes.length && c && c.dataSuffix && c.dataSuffix.supported) {
+  const suffixOk = !!(c && c.dataSuffix && c.dataSuffix.supported);
+  const sponsor = !!(paymasterUrl && suffixOk && c.paymasterService && c.paymasterService.supported);
+  if (codes.length && suffixOk) {
+    const capabilities = { dataSuffix: { value: "0x" + suffix(codes), optional: true } };
+    if (sponsor) capabilities.paymasterService = { url: paymasterUrl };
     const res = await eth.request({ method: "wallet_sendCalls", params: [{
       version: "2.0.0", chainId: chainHex, from, atomicRequired: false,
       calls: [{ to, data: calldata(windowId, dataHex, []), value: "0x0" }],
-      capabilities: { dataSuffix: { value: "0x" + suffix(codes), optional: true } },
+      capabilities,
     }] });
     const id = typeof res === "string" ? res : res.id;
-    status.textContent = "Sent; waiting for it to be mined...";
+    status.textContent = (sponsor ? "Gas covered. " : "") + "Sent; waiting for it to be mined...";
     for (let i = 0; i < 60; i++) {
       const st = await eth.request({ method: "wallet_getCallsStatus", params: [id] });
       const r = st && st.receipts && st.receipts[0];
@@ -128,7 +135,7 @@ async function main() {
       const calls = [...list.querySelectorAll("input[type=range]")].map((i) => ({ token: i.dataset.token, p: Number(i.value) / 100 }));
       const codes = open.builder_codes || [];
       status.textContent = "Waiting for the wallet...";
-      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status);
+      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status, open.paymaster_url);
       status.innerHTML = `On the record: transaction <a href="https://basescan.org/tx/${hash}"><code>${hash}</code></a>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
     } catch (e) {
       status.textContent = `Not sent: ${e && e.message ? e.message : e}`;

@@ -84,7 +84,7 @@
           await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
         }
         st.textContent = "Confirm in your wallet...";
-        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st);
+        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st, open.paymaster_url);
         st.innerHTML = `On the record for ${win.label}: <a href="https://basescan.org/tx/${hash}">view the transaction</a>. ` +
           "It stays sealed until the window resolves, then shows on the board.";
       } catch (e) {
