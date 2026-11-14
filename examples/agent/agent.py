@@ -11,7 +11,9 @@ The contract holds no funds and the transaction carries no value; it only emits 
   python agent.py --window 220261117   a specific open window
   python agent.py --dry-run --fixture  fixed example (no network), used by verify.py
 
-Env: PRIVATE_KEY (hex, the wallet that signs), BUILDER_CODES (yours, comma separated, optional),
+Env: PRIVATE_KEY (hex, the wallet that signs) or, with no key anywhere, CDP_API_KEY_ID / CDP_API_KEY_SECRET /
+     CDP_WALLET_SECRET for a Coinbase server account (pip install cdp-sdk; --account prints its address),
+     BUILDER_CODES (yours, comma separated, optional), STRATEGY / CONFIDENCE (see predict()),
      RPC_URL (default https://mainnet.base.org), FORM_URL (default the live site's data/form.json).
 
 The encoding is self-contained on purpose (the same bytes as the site's commit.js, METHODS.md section 4),
@@ -199,13 +201,43 @@ def fetch_form() -> dict:
         return json.load(r)
 
 
+CDP_ACCOUNT = os.environ.get("CDP_ACCOUNT_NAME") or "reopen-ledger-agent"
+
+
+def use_cdp() -> bool:
+    """No private key anywhere: a Coinbase Developer Platform server account signs (pip install cdp-sdk; env
+    CDP_API_KEY_ID, CDP_API_KEY_SECRET, CDP_WALLET_SECRET). It still pays its own gas, so fund its address
+    (python agent.py --account) with a little ETH on Base. It sends an ordinary transaction, so the Builder Code
+    suffix stays where Base reads it."""
+    return not (os.environ.get("PRIVATE_KEY") or "").strip() and bool(os.environ.get("CDP_API_KEY_ID"))
+
+
+async def _cdp(ledger: str | None = None, data: str | None = None) -> str:
+    from cdp import CdpClient
+    from cdp.evm_transaction_types import TransactionRequestEIP1559
+    async with CdpClient() as cdp:
+        acct = await cdp.evm.get_or_create_account(name=CDP_ACCOUNT)
+        if ledger is None:
+            return acct.address
+        return await cdp.evm.send_transaction(address=acct.address, network="base",
+                                              transaction=TransactionRequestEIP1559(to=ledger, value=0, data=data))
+
+
 def send(ledger: str, data: str, window: dict) -> None:
+    if use_cdp():
+        import asyncio
+        print(f"from     CDP server account {CDP_ACCOUNT}")
+        h = asyncio.run(_cdp(ledger, data))
+        h = h if h.startswith("0x") else "0x" + h
+        print(f"tx       {h}")
+        print(f"basescan https://basescan.org/tx/{h}")
+        return
     from eth_account import Account
     from web3 import Web3
 
     pk = (os.environ.get("PRIVATE_KEY") or "").strip()
     if not pk:
-        raise SystemExit("error: PRIVATE_KEY is not set")
+        raise SystemExit("error: set PRIVATE_KEY, or CDP_API_KEY_ID / CDP_API_KEY_SECRET / CDP_WALLET_SECRET")
     acct = Account.from_key(pk if pk.startswith("0x") else "0x" + pk)
     w3 = Web3(Web3.HTTPProvider(RPC_URL, request_kwargs={"timeout": 30}))
     if w3.eth.chain_id != CHAIN_ID:
@@ -240,7 +272,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--due-within", type=float, default=0, metavar="HOURS",
                     help="record every open window whose cutoff falls within the next HOURS (for a once-a-day "
                          "schedule use 24: each window then gets exactly one run, holidays included)")
+    ap.add_argument("--account", action="store_true", help="print the CDP server account's address (fund it with gas)")
     a = ap.parse_args(argv)
+    if a.account:
+        import asyncio
+        print(asyncio.run(_cdp()))
+        return 0
 
     if a.fixture:
         if not a.dry_run:
