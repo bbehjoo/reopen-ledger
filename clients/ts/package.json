@@ -23,7 +23,7 @@
     "node": ">=20"
   },
   "bin": {
-    "callrec-mcp-placeholder": "dist/src/mcp.js"
+    "reopen-ledger-mcp": "dist/src/mcp.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",

@@ -324,10 +324,25 @@ footer p { margin: 0; max-width: 78ch; line-height: 1.55; }
 .pick-go span { font-size: 13px; color: var(--muted); }
 .hero .wrap { grid-template-columns: minmax(0, 1.3fr) minmax(0, .9fr); grid-template-rows: auto auto 1fr; gap: 26px 56px; }
 .hero .kicker { grid-column: 1; margin: 8px 0 0; }
-.hero h1 { grid-column: 1; font-size: clamp(42px, 4.9vw, 70px); }
+.hero h1 { grid-column: 1; font-size: clamp(40px, 4.3vw, 62px); }
 .hero .intro { grid-column: 1; }
 .hero .panel { grid-column: 2; grid-row: 1 / span 3; }
 .hero .panel .clock { font-size: clamp(30px, 3.4vw, 42px); }
 @media (max-width: 960px) { .hero .kicker, .hero h1, .hero .intro, .hero .panel { grid-column: 1 / -1; grid-row: auto; } .hero h1 span { display: inline; } }
+.pick { grid-template-columns: minmax(0, 1fr) auto; }
+.pick .lbl { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tap { display: inline-flex; gap: 6px; }
+.tap button { font: 600 13px/1 var(--sans); height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line-2);
+  background: transparent; color: var(--muted); cursor: pointer; transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease); }
+.tap button:hover { color: var(--fg); border-color: var(--dim); }
+.tap button:active { transform: scale(.96); }
+.tap button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tap button[data-v="50"][aria-pressed="true"] { background: var(--surface-2); border-color: var(--line-2); color: var(--fg); }
+.token-row .tap { grid-column: 2 / -1; margin-top: -2px; }
+@media (max-width: 640px) { .token-row .tap { grid-column: 1 / -1; grid-row: 3; } }
 .steps.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 860px) { .steps.three { grid-template-columns: 1fr; } }
+.reveal { margin: 28px 0 8px; max-width: 900px; }
+.reveal img { display: block; width: 100%; height: auto; border-radius: var(--r-lg); border: 1px solid var(--line); }
+.reveal .btn { margin-top: 14px; }
+h1.mono { font-family: var(--mono); font-size: clamp(20px, 2.4vw, 32px); letter-spacing: -.02em; word-break: break-all; }

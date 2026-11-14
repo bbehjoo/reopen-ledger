@@ -38,6 +38,34 @@ function fmt(ms) {
   return new Date(ms).toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
 }
 
+// Smart wallets wrap the call, so a suffix appended to the calldata would not sit at the end of what Base reads.
+// When the wallet supports the EIP-5792 dataSuffix capability, the Builder Code goes there (Base's Builder Code
+// docs, "for app developers"); otherwise it is appended to the calldata, which is right for ordinary wallets.
+async function send(eth, from, chainHex, to, windowId, dataHex, codes, status) {
+  let caps = null;
+  try {
+    caps = await eth.request({ method: "wallet_getCapabilities", params: [from, [chainHex]] });
+  } catch (e) { caps = null; }
+  const c = caps && (caps[chainHex] || caps[String(parseInt(chainHex, 16))]);
+  if (codes.length && c && c.dataSuffix && c.dataSuffix.supported) {
+    const res = await eth.request({ method: "wallet_sendCalls", params: [{
+      version: "2.0.0", chainId: chainHex, from, atomicRequired: false,
+      calls: [{ to, data: calldata(windowId, dataHex, []), value: "0x0" }],
+      capabilities: { dataSuffix: { value: "0x" + suffix(codes), optional: true } },
+    }] });
+    const id = typeof res === "string" ? res : res.id;
+    status.textContent = "Sent; waiting for it to be mined...";
+    for (let i = 0; i < 60; i++) {
+      const st = await eth.request({ method: "wallet_getCallsStatus", params: [id] });
+      const r = st && st.receipts && st.receipts[0];
+      if (r && r.transactionHash) return r.transactionHash;
+      await new Promise((ok) => setTimeout(ok, 2000));
+    }
+    return id;
+  }
+  return eth.request({ method: "eth_sendTransaction", params: [{ from, to, data: calldata(windowId, dataHex, codes), value: "0x0" }] });
+}
+
 async function main() {
   const status = document.getElementById("status");
   let open;
@@ -72,13 +100,19 @@ async function main() {
     row.innerHTML = `<label for="p-${t.address}"><span class="sym">${t.symbol}</span>` +
       `<span class="name">${t.name ?? ""}</span></label>` +
       `<input type="range" min="0" max="100" step="1" value="50" id="p-${t.address}" data-token="${t.address}">` +
-      `<output for="p-${t.address}">50%</output>`;
+      `<output for="p-${t.address}">50%</output>` +
+      `<div class="tap" role="group" aria-label="${t.symbol} reopens"><button type="button" data-v="35">Lower</button>` +
+      `<button type="button" data-v="50">Not sure</button><button type="button" data-v="65">Higher</button></div>`;
     list.appendChild(row);
     const input = row.querySelector("input");
     const out = row.querySelector("output");
-    input.addEventListener("input", () => { out.textContent = `${input.value}%`; });
+    const taps = [...row.querySelectorAll(".tap button")];
+    const mark = () => { for (const b of taps) b.setAttribute("aria-pressed", String(b.dataset.v === input.value)); };
+    input.addEventListener("input", () => { out.textContent = `${input.value}%`; mark(); });
+    for (const b of taps) b.addEventListener("click", () => { input.value = b.dataset.v; out.textContent = `${b.dataset.v}%`; mark(); });
     const v = preset.get(t.symbol);
     if (v !== undefined) { input.value = String(v); out.textContent = `${v}%`; }
+    mark();
   }
   document.getElementById("ledger").textContent = open.ledger.address;
   document.getElementById("commit").addEventListener("click", async () => {
@@ -91,9 +125,9 @@ async function main() {
         await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
       }
       const calls = [...list.querySelectorAll("input[type=range]")].map((i) => ({ token: i.dataset.token, p: Number(i.value) / 100 }));
-      const data = calldata(Number(sel.value), encodeCalls(calls), open.builder_codes || []);
+      const codes = open.builder_codes || [];
       status.textContent = "Waiting for the wallet...";
-      const hash = await eth.request({ method: "eth_sendTransaction", params: [{ from, to: open.ledger.address, data, value: "0x0" }] });
+      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status);
       status.innerHTML = `On the record: transaction <a href="https://basescan.org/tx/${hash}"><code>${hash}</code></a>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
     } catch (e) {
       status.textContent = `Not sent: ${e && e.message ? e.message : e}`;

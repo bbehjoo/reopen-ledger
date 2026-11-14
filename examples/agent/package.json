@@ -1,0 +1,24 @@
+{
+  "name": "reopen-ledger-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Starter agent: put one probability record per window on the Reopen Ledger board (CallLedger on Base).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "tsx agent.ts",
+    "dry": "tsx agent.ts --dry-run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

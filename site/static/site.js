@@ -46,15 +46,20 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // hero prediction card: sliders carry their values to the full form
+  // hero prediction card: one tap per stock (Lower 35%, Higher 65%, tap again to clear); picks go to the form
   const go = document.getElementById("hp-go");
   if (go) {
-    const picks = $$(".pick input[type=range]");
+    const rows = $$(".pick[data-sym]");
     const sync = () => {
-      go.href = "commit.html?p=" + picks.map((i) => `${i.dataset.sym}:${i.value}`).join(",");
-      for (const i of picks) i.parentElement.querySelector("output").textContent = `${i.value}%`;
+      const picks = rows.map((r) => { const b = $("button[aria-pressed=true]", r); return b ? `${r.dataset.sym}:${b.dataset.v}` : ""; }).filter(Boolean);
+      go.href = "commit.html" + (picks.length ? "?p=" + picks.join(",") : "");
     };
-    for (const i of picks) i.addEventListener("input", sync);
+    for (const r of rows) for (const b of $$("button", r)) b.addEventListener("click", () => {
+      const on = b.getAttribute("aria-pressed") === "true";
+      for (const x of $$("button", r)) x.setAttribute("aria-pressed", "false");
+      b.setAttribute("aria-pressed", String(!on));
+      sync();
+    });
     sync();
   }
 
