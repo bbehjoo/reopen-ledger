@@ -355,3 +355,17 @@ h1.mono { font-family: var(--mono); font-size: clamp(20px, 2.4vw, 32px); letter-
 .lede .ask { display: block; color: var(--fg); font-weight: 650; font-size: 1.35em; letter-spacing: -.02em; margin-bottom: 8px; }
 .pick-status { font-size: 13px; color: var(--muted); margin: 0; min-height: 0; }
 .pick-status:not(:empty) { padding: 0 0 14px; }
+.counter { display: grid; gap: 14px; margin: 28px 0 8px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); max-width: 760px; }
+.counter .big { font: 650 44px/1 var(--sans); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.counter .big small { font-size: .5em; color: var(--muted); }
+.counter .k { font-size: 14px; color: var(--muted); margin-top: 6px; }
+.counter .meter { height: 6px; border-radius: 999px; overflow: hidden; }
+.counter .meter i { display: block; height: 100%; min-width: 6px; background: var(--accent); border-radius: 999px; }
+.counter-small { font-size: 14px; color: var(--muted); margin-top: 18px; }
+.counter-small b { color: var(--fg); }
+.live-top { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; margin: 8px 0 4px; }
+.live-top .clock { font-size: 28px; margin: 0; }
+.live-top .clock-k { margin: 0; }
+.live-sum { max-width: 760px; }
+tr.hot td { background: var(--accent-soft); }
+td.flag { color: var(--accent-text); font-size: 13px; }

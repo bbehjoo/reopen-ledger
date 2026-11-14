@@ -21,7 +21,7 @@ import markdown
 
 from . import config, identity
 
-NAV = [("agents.html", "For agents"), ("index.html#why", "Why it matters"), ("board.html", "Board"),
+NAV = [("agents.html", "For agents"), ("live.html", "Live"), ("board.html", "Board"),
        ("methods.html", "Methods"), ("data.html", "Data")]
 CTA = ("commit.html", "Predict the reopen")
 DESCRIPTION = ("Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, "
@@ -284,7 +284,7 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(f, dst)
     shutil.copy(config.ROOT / "keys" / "export-key.json", out / "data" / "export-key.json")
-    _form_json(out / "data" / "form.json", open_w, sym, names)
+    _form_json(out / "data" / "form.json", open_w, sym, names, tape, windows)
 
     # --- overview
     closed = [t for t in tape if t["kind"] == "1"]
@@ -315,7 +315,7 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
     baselines = read_json(export_dir / "baselines.json", {})
     body = (f'<h1>The board</h1><p class="lede">Every forecaster with a record, scored against Chainlink when each '
             f'window closes. Lower score is better; a coin flip scores 0.250.</p>'
-            f'{reveal}{_rivals_block(baselines)}{miss_html}'
+            f'{_counter(usage)}{reveal}{_rivals_block(baselines)}{miss_html}'
             + '<h2>Forecasters</h2>' + _board_table(board["forecasters"])
             + f'<div class="note">{esc(LUCK.format(n=board["min_windows"]))}</div>'
             + _baselines_block(baselines)
@@ -409,6 +409,7 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
                           ("match", False), ("R1_lookalike_symbol", False)], lrows))
     pages["registry.html"] = page("registry.html", "Registry", body, as_of)
     pages["agents.html"] = page("agents.html", "For agents", _agents_page(), as_of)
+    pages["live.html"] = page("live.html", "Live", _live_page(export_dir, absorb, sym) + (f'<script type="application/json" id="spans">{json.dumps(_spans(as_of_ms))}</script>' if as_of_ms else ""), as_of)
 
     # --- methods
     md = (config.ROOT / "METHODS.md").read_text(encoding="utf-8")
@@ -478,7 +479,7 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
             f'<p class="lede"><b class="ask">Can your agent beat it?</b> {nums} Predict on chain, get scored by '
             f'Chainlink, and every prediction counts for your own entry.</p>'
             f'<div class="cta-row"><a class="btn primary" href="agents.html">Plug in your agent <span class="arr">&rarr;</span></a>'
-            f'<a class="btn" href="{CTA[0]}">{esc(CTA[1])}</a></div></div>'
+            f'<a class="btn" href="{CTA[0]}">{esc(CTA[1])}</a></div>{_counter(usage, small=True)}</div>'
             f'{_hero_board(export_dir, as_of, open_w)}</div></section>')
 
     tiles = (f'<div class="bento">'
@@ -574,6 +575,51 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
     return hero + week + numbers + absorb_sec + tape_sec + agents + closer + spans_json
 
 
+def _live_page(export_dir: Path, absorb: dict | None, sym: dict) -> str:
+    """The freeze, live in the browser: each stock's DEX price now (DexScreener) against its Chainlink reference
+    (read on Base), and what the lending markets would liquidate if the reference reopened at the DEX price,
+    against the pool depth there. Lending positions and depth come from the export's snapshot and are dated;
+    the prices are live. Nothing is sent; static/live.js does the reading."""
+    import yaml
+    if not absorb or not absorb.get("tokens"):
+        return head("Live: the freeze", "No lending snapshot in this export yet.")
+    feeds = {fd["token"].lower(): fd for fd in yaml.safe_load((config.config_dir() / "feeds.yaml").read_text(encoding="utf-8"))["feeds"]
+             if fd.get("token") and fd.get("kind") == "24/5"}
+    toks = []
+    for x in absorb["tokens"]:
+        a = x["token"].lower()
+        f = read_json(export_dir / "feed" / f"{sym.get(x['token'], '')}.json", {}) or {}
+        fd = feeds.get(a)
+        toks.append({"s": sym.get(x["token"], short(a)), "a": a,
+                     "proxy": fd["proxy"] if fd else None, "dec": int(fd.get("decimals", 8)) if fd else 8,
+                     "ref": (f.get("reference") or {}).get("value"),
+                     "flow": {k: round(((x.get("liquidation_flow_usd") or {}).get(k) or 0), 2) for k in ("5", "10", "20")},
+                     "depth": {k: round(((x.get("absorb_5pct_below_usd") or {}).get(k) or 0), 2) for k in ("5", "10", "20")}})
+    toks.sort(key=lambda t: t["s"])
+    rows = "".join(f'<tr data-a="{t["a"]}"><td>{esc(t["s"])}</td><td class="num ref">&ndash;</td><td class="num dex">&ndash;</td>'
+                   f'<td class="num gap">&ndash;</td><td class="num flow">&ndash;</td><td class="num depth">&ndash;</td>'
+                   f'<td class="flag"></td></tr>' for t in toks)
+    data = {"tokens": toks, "snapshot": {"block": absorb.get("block"), "at_et": absorb.get("at_et")}}
+    return (
+        head("Live: what lands at the reopen",
+             "While the price lenders use is frozen, nothing can be liquidated. This page reads each stock's DEX "
+             "price and its Chainlink price right now, and shows what the lending markets would liquidate if the "
+             "price reopened at the DEX price, against the pool depth there to absorb it.")
+        + '<div class="live-top"><span class="state" id="state"><i></i><span>Reference</span></span>'
+          '<span class="clock" id="clock"></span><span class="clock-k" id="clock-k"></span></div>'
+        + '<div class="readout live-sum"><div class="flow"><div class="big" id="lv-flow">&ndash;</div><div class="k">would be liquidated '
+          'at the reopen, at today\'s DEX prices</div></div><div><div class="big" id="lv-depth">&ndash;</div>'
+          '<div class="k">pool depth in the 5% below, there to absorb it</div></div></div>'
+        + '<p class="shock-note" id="lv-note">Reading prices...</p>'
+        + table([("stock", False), ("Chainlink now", True), ("DEX now", True), ("gap", True),
+                 ("liquidation flow", True), ("depth", True), ("", False)], []).replace("<tbody></tbody>", f"<tbody>{rows}</tbody>")
+        + f'<p class="muted" id="lv-meta">Prices: DexScreener (most liquid Base pool) and Chainlink on Base, read in your '
+          f'browser, refreshed every minute. Lending positions and pool depth: the snapshot at block '
+          f'{esc(absorb.get("block"))} ({esc(absorb.get("at_et"))}), interpolated between the 5%, 10% and 20% shocks '
+          f'of <a href="absorb.html">the absorb page</a>. Each stock on its own, onchain absorption only.</p>'
+        + f'<script type="application/json" id="live-data">{json.dumps(data)}</script>')
+
+
 def _agents_page() -> str:
     """How an agent gets on the board: why, three steps, the MCP server, the rules that decide what counts."""
     led = _ledger()
@@ -647,16 +693,45 @@ def _next_friday(spans: list[dict], as_of_ms: int) -> str:
     return datetime.fromtimestamp(nxt["start"] / 1000, tz()).date().isoformat() if nxt else "2026-11-20"
 
 
-def _form_json(path: Path, open_w: list[dict], sym: dict, names: dict) -> None:
-    """What the form needs: open windows, the slate with symbols, the mainnet ledger and the project code."""
+def _open_sigma(open_w: list[dict], tape: list[dict], windows: list[dict]) -> dict[int, float]:
+    """The sigma the DEX-implied baseline (METHODS section 6) will use for each open window: 1.4826 x the
+    median absolute tape error of earlier windows of the same kind that ended before it starts (non-void
+    rows), floor 25 bps, prior until enough windows exist. Published so agents can start from the baseline."""
+    from .tape import SIGMA_MIN_WINDOWS, SIGMA_PRIOR_BPS
+    end = {str(w["id"]): w["end_ms"] for w in windows}
+    out = {}
+    for w in open_w:
+        rows = [t for t in tape if t["kind"] == str(w["kind"]) and not t["void"] and t["tape_error_bps"]
+                and end.get(t["window"], 1 << 62) <= w["start_ms"]]
+        errs = sorted(abs(float(t["tape_error_bps"])) for t in rows)
+        if len({t["window"] for t in rows}) < SIGMA_MIN_WINDOWS or not errs:
+            out[w["id"]] = SIGMA_PRIOR_BPS
+            continue
+        n = len(errs)
+        med = errs[n // 2] if n % 2 else (errs[n // 2 - 1] + errs[n // 2]) / 2
+        out[w["id"]] = round(max(25.0, 1.4826 * med), 2)
+    return out
+
+
+def _form_json(path: Path, open_w: list[dict], sym: dict, names: dict, tape: list[dict] | None = None,
+               windows: list[dict] | None = None) -> None:
+    """What the form and the agents need: open windows (with the baseline's sigma), the slate with symbols and
+    each token's Chainlink reference feed, the mainnet ledger and the project code."""
     import yaml
     led = {}
     lf = config.config_dir() / "ledger.yaml"
     if lf.exists():
         led = (yaml.safe_load(lf.read_text(encoding="utf-8")) or {}).get("base") or {}
+    feeds = {}
+    for fd in yaml.safe_load((config.config_dir() / "feeds.yaml").read_text(encoding="utf-8"))["feeds"]:
+        if fd.get("token") and fd.get("kind") == "24/5":
+            feeds[fd["token"].lower()] = {"proxy": fd["proxy"], "decimals": int(fd.get("decimals", 8))}
+    sig = _open_sigma(open_w, tape or [], windows or [])
     slate = sorted({t for w in open_w for t in w.get("slate", [])})
-    doc = {"windows": [{k: w[k] for k in ("id", "label", "cutoff_ms", "cutoff_et")} for w in open_w],
-           "slate": [{"address": t, "symbol": sym.get(t), "name": names.get(t)} for t in slate],
+    doc = {"windows": [{**{k: w[k] for k in ("id", "label", "cutoff_ms", "cutoff_et")}, "sigma_bps": sig.get(w["id"])}
+                       for w in open_w],
+           "slate": [{"address": t, "symbol": sym.get(t), "name": names.get(t),
+                      "reference_feed": feeds.get(t.lower())} for t in slate],
            "ledger": {"address": led["address"], "chain_id": 8453} if led.get("address") else None,
            "builder_codes": [led["builder_code"]] if led.get("builder_code") else []}
     path.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
@@ -678,6 +753,24 @@ def _board_table(rows: list[dict]) -> str:
                     fnum(f["skill_vs_50"], 3, sign=True), fnum(f["edge_lcb"], 4, sign=True)])
     return table([("rank", True), ("forecaster", False), ("windows", True), ("score", True), ("vs Weekend DEX", True),
                   ("vs coin flip", True), ("edge, luck discounted", True)], out)
+
+
+GOAL = (25, "Dec 1")   # the public goal for outside forecasters (house wallets never count)
+
+
+def _counter(usage: dict, small: bool = False) -> str:
+    """Outside forecasters on the record (wallets with at least one record, house wallets excluded), against
+    the public goal. Shown as measured, zero included."""
+    n = int(usage.get("external_wallets") or 0)
+    recs = int(usage.get("external_records") or 0)
+    if small:
+        return (f'<p class="counter-small"><b>{n}</b> outside forecaster{"" if n == 1 else "s"} on the record so far. '
+                f'Goal: {GOAL[0]} by {GOAL[1]}.</p>')
+    pct = min(100.0, n / GOAL[0] * 100)
+    return (f'<div class="counter"><div><div class="big">{n}<small> / {GOAL[0]}</small></div>'
+            f'<div class="k">outside forecasters on the record, goal by {GOAL[1]}. {recs} outside '
+            f'prediction{"" if recs == 1 else "s"} so far; house wallets never count.</div></div>'
+            f'<div class="meter" role="img" aria-label="{n} of {GOAL[0]}"><i style="width:{pct:.1f}%"></i></div></div>')
 
 
 def _rivals_block(b: dict) -> str:

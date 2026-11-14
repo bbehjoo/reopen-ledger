@@ -40,10 +40,87 @@ MARGIN_MS = 120_000  # leave two minutes for the transaction to be mined before 
 # YOUR MODEL GOES HERE.
 # Return, for each slate token address, the probability (0 to 1) that its Chainlink reference value at the
 # window's end is above its value at the window's start. Tokens you leave out are scored as 0.5.
-# The default below says 0.5 for everything, which scores exactly like a coin flip.
+#
+# Two starting strategies, chosen with the STRATEGY env:
+#   weekend_dex (default)  reads the DEX price against the Chainlink reference as odds, the way the Weekend
+#                          DEX rival does: p = Phi(gap / sigma). CONFIDENCE scales the gap (1.0 = the rival;
+#                          0.7 = humbler, 1.3 = bolder). Change it, add signals, beat the rival.
+#   coin_flip              0.5 for everything; scores exactly like the Coin Flip rival.
 # =====================================================================================================
+STRATEGY = os.environ.get("STRATEGY") or "weekend_dex"
+CONFIDENCE = float(os.environ.get("CONFIDENCE") or 1.0)
+
+
 def predict(slate: list[dict], window: dict) -> dict[str, float]:
-    return {t["address"]: 0.5 for t in slate}
+    if STRATEGY == "coin_flip":
+        return {t["address"]: 0.5 for t in slate}
+    if STRATEGY == "weekend_dex":
+        return weekend_dex(slate, window, CONFIDENCE)
+    raise SystemExit(f"error: unknown STRATEGY {STRATEGY!r} (weekend_dex or coin_flip)")
+
+
+# ---- the weekend_dex strategy: public data only, no keys ----
+DEX_URL = "https://api.dexscreener.com/tokens/v1/base/"
+
+
+def _get_json(url: str, body: dict | None = None):
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(url, data=data, headers={"User-Agent": "reopen-ledger-agent",
+                                                          "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)
+
+
+def reference_value(feed: dict) -> float | None:
+    """Chainlink latestRoundData().answer on Base, scaled by the feed's decimals."""
+    try:
+        res = _get_json(RPC_URL, {"jsonrpc": "2.0", "id": 1, "method": "eth_call",
+                                  "params": [{"to": feed["proxy"], "data": "0xfeaf968c"}, "latest"]})["result"]
+        answer = int(res[2 + 64: 2 + 128], 16)
+        if answer >= 1 << 255:
+            answer -= 1 << 256
+        return answer / 10 ** int(feed.get("decimals", 8)) if answer > 0 else None
+    except Exception:  # noqa: BLE001  any read failure leaves this token at 0.5
+        return None
+
+
+def dex_prices(addresses: list[str]) -> dict[str, float]:
+    """USD price of each token from its most liquid Base pool (DexScreener's public API)."""
+    out: dict[str, tuple[float, float]] = {}
+    for i in range(0, len(addresses), 30):
+        try:
+            pairs = _get_json(DEX_URL + ",".join(addresses[i:i + 30]))
+        except Exception:  # noqa: BLE001
+            continue
+        for pr in pairs if isinstance(pairs, list) else []:
+            a = (pr.get("baseToken") or {}).get("address", "").lower()
+            liq = float((pr.get("liquidity") or {}).get("usd") or 0)
+            if a and pr.get("priceUsd") and liq > out.get(a, (0.0, -1.0))[1]:
+                out[a] = (float(pr["priceUsd"]), liq)
+    return {a: v[0] for a, v in out.items()}
+
+
+def phi(x: float) -> float:
+    return 0.5 * (1 + math.erf(x / math.sqrt(2)))
+
+
+def weekend_dex(slate: list[dict], window: dict, confidence: float = 1.0) -> dict[str, float]:
+    """p = Phi(confidence x gap_bps / sigma), gap = ln(DEX price / reference), clipped to [0.05, 0.95];
+    0.5 where a price is missing or the DEX is more than 30% from the reference (a broken or empty pool).
+    The rival uses the last-hour TWAP of the primary pool; this uses the most liquid pool's spot price."""
+    sigma = float(window.get("sigma_bps") or 150.0)
+    dex = dex_prices([t["address"].lower() for t in slate])
+    out = {}
+    for t in slate:
+        a, feed = t["address"].lower(), t.get("reference_feed")
+        ref = reference_value(feed) if feed else None
+        price = dex.get(a)
+        if not ref or not price or abs(price / ref - 1) > 0.30:
+            out[t["address"]] = 0.5
+            continue
+        gap_bps = math.log(price / ref) * 10_000
+        out[t["address"]] = round(min(0.95, max(0.05, phi(confidence * gap_bps / sigma))), 4)
+    return out
 
 
 # ---- encoding: commit(uint32,uint16,bytes), schema 1, plus the ERC-8021 attribution suffix ----

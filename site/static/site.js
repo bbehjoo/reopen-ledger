@@ -114,4 +114,85 @@
   }
   for (const b of $$(".seg button")) b.addEventListener("click", () => shock(b.dataset.s));
   if (ab) shock(ab.initial);
+
+  // live freeze view (live.html): prices read now, positions and depth from the dated snapshot
+  const lv = data("live-data");
+  if (lv) {
+    const RPC = "https://mainnet.base.org";
+    const lerp = (pts, x) => {
+      if (x <= pts[0][0]) return pts[0][1];
+      for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+      }
+      return pts[pts.length - 1][1];
+    };
+    const flowAt = (t, s) => lerp([[0, 0], [5, t.flow["5"]], [10, t.flow["10"]], [20, t.flow["20"]]], s);
+    const depthAt = (t, s) => lerp([[5, t.depth["5"]], [10, t.depth["10"]], [20, t.depth["20"]]], s);
+    const money = (v) => v >= 1e6 ? `$${(v / 1e6).toFixed(2)}M` : v >= 1e3 ? `$${(v / 1e3).toFixed(1)}k` : `$${Math.round(v)}`;
+    async function refs() {
+      const ts = lv.tokens.filter((t) => t.proxy);
+      const body = ts.map((t, i) => ({ jsonrpc: "2.0", id: i, method: "eth_call", params: [{ to: t.proxy, data: "0xfeaf968c" }, "latest"] }));
+      const out = {};
+      try {
+        const res = await (await fetch(RPC, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })).json();
+        for (const r of res) {
+          if (!r.result || r.result.length < 130) continue;
+          let a = BigInt("0x" + r.result.slice(66, 130));
+          if (a >= (1n << 255n)) a -= (1n << 256n);
+          const t = ts[r.id];
+          if (a > 0n) out[t.a] = Number(a) / 10 ** t.dec;
+        }
+      } catch (e) { /* fall back to the snapshot's reference values */ }
+      for (const t of lv.tokens) if (!out[t.a] && t.ref) out[t.a] = t.ref;
+      return out;
+    }
+    async function dex() {
+      const out = {};
+      try {
+        const pairs = await (await fetch("https://api.dexscreener.com/tokens/v1/base/" + lv.tokens.map((t) => t.a).join(","))).json();
+        const best = {};
+        for (const p of Array.isArray(pairs) ? pairs : []) {
+          const a = ((p.baseToken || {}).address || "").toLowerCase(), liq = Number((p.liquidity || {}).usd || 0);
+          if (a && p.priceUsd && liq > (best[a] || -1)) { best[a] = liq; out[a] = Number(p.priceUsd); }
+        }
+      } catch (e) { /* leave the DEX column empty */ }
+      return out;
+    }
+    async function update() {
+      const [ref, px] = await Promise.all([refs(), dex()]);
+      let flow = 0, depth = 0, over = 0, priced = 0;
+      for (const t of lv.tokens) {
+        const row = $(`tr[data-a="${t.a}"]`);
+        const r = ref[t.a], p = px[t.a];
+        $(".ref", row).textContent = r ? `$${r.toFixed(2)}` : "–";
+        $(".dex", row).textContent = p ? `$${p.toFixed(2)}` : "–";
+        if (!r || !p || Math.abs(p / r - 1) > 0.3) {
+          for (const k of [".gap", ".flow", ".depth"]) $(k, row).textContent = "–";
+          $(".flag", row).textContent = p && r ? "pool far from reference" : "no DEX price";
+          continue;
+        }
+        priced++;
+        const gap = (p / r - 1) * 100, s = Math.max(0, -gap);
+        const f = s > 0 ? flowAt(t, s) : 0, d = depthAt(t, Math.max(s, 5));
+        flow += f; depth += d;
+        $(".gap", row).textContent = `${gap >= 0 ? "+" : ""}${gap.toFixed(2)}%`;
+        $(".gap", row).className = "num gap " + (gap < 0 ? "neg" : "pos");
+        $(".flow", row).textContent = money(f);
+        $(".depth", row).textContent = money(d);
+        const hot = f > d && f > 0;
+        if (hot) over++;
+        $(".flag", row).textContent = hot ? "flow above depth" : "";
+        row.classList.toggle("hot", hot);
+      }
+      $("#lv-flow").textContent = money(flow);
+      $("#lv-depth").textContent = money(depth);
+      $("#lv-note").textContent = `${priced} of ${lv.tokens.length} stocks priced. ` + (over
+        ? `${over} would see more liquidation flow than their pools hold. `
+        : "Every priced stock's pools hold its liquidation flow at today's DEX price. ") +
+        `Updated ${new Date().toLocaleTimeString()}.`;
+    }
+    update();
+    setInterval(update, 60000);
+  }
 })();
