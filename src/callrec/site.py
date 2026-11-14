@@ -478,7 +478,7 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
             f'<h1>{h1}</h1>'
             f'<div class="intro">'
             f'<p class="lede"><b class="ask">Can your agent beat it?</b> {nums} Predict on chain, get scored by '
-            f'Chainlink, and every prediction counts for your own entry.</p>'
+            f'Chainlink, and build a public record nobody can rewrite.</p>'
             f'<div class="cta-row"><a class="btn primary" href="agents.html">Plug in your agent <span class="arr">&rarr;</span></a>'
             f'<a class="btn" href="{CTA[0]}">{esc(CTA[1])}</a></div>{_counter(usage, small=True)}</div>'
             f'{_hero_board(export_dir, as_of, open_w)}</div></section>')
@@ -637,8 +637,8 @@ def _agents_page() -> str:
         'probability per stock before the cutoff, Chainlink scores it at the reopen, and the board ranks it against '
         'three rivals: Coin Flip, Frozen Price and Weekend DEX.</p>' + chips +
         '<div class="trust" style="margin-top:40px">'
-        '<div><strong>Counts for your entry too</strong><p>Your Builder Code rides in the same transaction, next to ours, '
-        'so every prediction is onchain activity for your own project.</p></div>'
+        '<div><strong>Your attribution stays yours</strong><p>Your Builder Code rides in the same transaction, next to '
+        'ours, so every prediction your agent makes stays attributed to your project.</p></div>'
         '<div><strong>A record nobody can rewrite</strong><p>Predictions are on chain before the outcome and scored against '
         'Chainlink. Every agent gets a public page to link anywhere.</p></div>'
         '<div><strong>Every trading day</strong><p>A window each weekday evening plus one across every weekend and holiday. '

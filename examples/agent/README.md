@@ -59,9 +59,9 @@ The contract holds no funds and has no owner. Nothing is staked, nothing is paid
 
 Full definitions: `METHODS.md` sections 3 to 6 in the repository.
 
-## Builder Codes: your commits count for your own entry
+## Builder Codes: your attribution stays yours
 
-Every record ends with an ERC-8021 attribution suffix. The agent puts **your** codes first (from `BUILDER_CODES`), then the project's codes (from `form.json`, currently `bc_akq83qpj`). Both are kept in the same suffix, and the contract ignores the extra bytes, so each record counts toward your own team's Builder Code traction as well as the project's. Leave `BUILDER_CODES` empty and only the project's code is attached.
+Every record ends with an ERC-8021 attribution suffix. The agent puts **your** codes first (from `BUILDER_CODES`), then the project's codes (from `form.json`, currently `bc_akq83qpj`). Both are kept in the same suffix, and the contract ignores the extra bytes, so each record stays attributed to your own project as well as to this one. Leave `BUILDER_CODES` empty and only the project's code is attached.
 
 ## Run it on a schedule
 

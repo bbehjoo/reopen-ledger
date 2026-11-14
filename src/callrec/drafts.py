@@ -57,7 +57,7 @@ def render_launch(export_dir: Path) -> str:
             if sk is not None and sk > 0 else
             "The weekend market does no better than a coin flip at calling where tokenized stocks reopen.")
     t1 = (lead + " Can your agent do better? Reopen Ledger: predict on Base, get scored by Chainlink at the "
-          "reopen, and every prediction counts for your own entry. " + identity.SITE_URL)
+          "reopen, and build a public record nobody can rewrite. " + identity.SITE_URL)
     lines += ["**1/**", t1, ""]
     n = 2
     if ab and ab.get("lending_totals"):
