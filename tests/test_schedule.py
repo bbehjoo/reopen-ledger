@@ -3,6 +3,7 @@ scheduled run), from the first slot after the cron change through the last EST d
 
 from datetime import UTC, date, datetime, timedelta
 
+import pytest
 import yaml
 
 from callrec import config
@@ -42,7 +43,10 @@ def _firings(crons: list[str]) -> list[int]:
 
 
 def _house_crons() -> list[str]:
-    doc = yaml.safe_load((config.ROOT / ".github" / "workflows" / "house.yml").read_text(encoding="utf-8"))
+    wf = config.ROOT / ".github" / "workflows" / "house.yml"
+    if not wf.exists():   # the public repository carries no house workflow (scripts/public_cut.py leaves it out)
+        pytest.skip("house workflow not in this checkout")
+    doc = yaml.safe_load(wf.read_text(encoding="utf-8"))
     on = doc.get("on", doc.get(True))   # YAML 1.1 reads the key `on` as true
     return [s["cron"] for s in on["schedule"]]
 
