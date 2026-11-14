@@ -1,0 +1,34 @@
+# The reference feeds' week and the windows built on it (METHODS.md section 3).
+# Times are US Eastern (America/New_York, via zoneinfo; EDT until 2026-11-01, EST after).
+timezone: America/New_York
+
+# The 24/5 session of the Coinbase equity feeds (Chainlink directory marketHours "us_equities_24/5").
+# Checked against measured update gaps by `callrec calendar check` (docs/research/FEED-HOURS.md).
+session:
+  opens: {weekday: sunday, time: "20:00"}
+  closes: {weekday: friday, time: "20:00"}
+  source: https://reference-data-directory.vercel.app/feeds-ethereum-mainnet-base-1.json
+
+# Full US market holidays inside the measured period. On such a day the session [day-1 20:00, day 20:00]
+# is closed, which joins it to a neighbouring weekend or makes a mid-week closed span.
+closed_days:
+  - date: "2026-09-07"   # Labor Day
+  - date: "2026-11-26"   # Thanksgiving
+  - date: "2026-12-25"   # Christmas
+closed_days_source: https://www.nyse.com/markets/hours-calendars
+
+# Early closes (regular session ends 13:00). Recorded; the daily window still ends at 20:00.
+early_closes:
+  - date: "2026-11-27"
+  - date: "2026-12-24"
+
+windows:
+  # closed span window (kind 1): from the session close to the reopen; outcome read at reopen + settle
+  closed_settle_minutes: 60
+  # commits for a closed span window count until this long before the reopen
+  closed_cutoff_minutes_before_reopen: 120
+  # daily window (kind 2): one per open session day d, [d-1 20:00, d 20:00] (Monday: from the reopen
+  # settle time); commits count until the window starts
+  # a window's value at a time is stale when the feed's last update is older than this (outside a
+  # closed span), and the token's call is void
+  stale_after_hours: 26

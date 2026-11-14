@@ -1,0 +1,72 @@
+# Chain facts this project relies on. Every value has a source and the date it was read.
+chain_id: 8453
+
+# RPC roles (keyless free tiers, measured 2026-11-08 with read-only calls). A role may list fallbacks.
+# Overridable per role by env: RPC_LOGS, RPC_STATE, RPC_ARCHIVE, RPC_SEPOLIA.
+rpc:
+  logs:      # eth_getLogs
+    - https://base-rpc.publicnode.com     # 10,000-block ranges, but only from about block 51,000,000 (early
+                                          # September 2026); older ranges answer 403 "Archive requests require
+                                          # a personal token"
+    - https://gateway.tenderly.co/public/base   # old ranges work, at most 1,000 blocks per request
+    # base.drpc.org refuses August ranges at any size ("ranges over 10000 blocks are not supported on free
+    # plan", even for 1,000 blocks), so it is not a logs endpoint here
+  state:     # eth_call at the latest block, block headers
+    - https://mainnet.base.org            # getLogs answers -32011 "request limit reached"; eth_call fine
+    - https://base-rpc.publicnode.com
+  archive:   # eth_call at historical blocks
+    - https://base.drpc.org
+    - https://gateway.tenderly.co/public/base   # getLogs capped at 1,000 blocks without a key
+    - https://mainnet.base.org
+  sepolia:
+    - https://sepolia.base.org
+    - https://base-sepolia-rpc.publicnode.com
+  # not usable keyless any more: rpc-base.blockmachine.io serves logs for the most recent 100 blocks only
+  # and no historical state (error text read 2026-11-08)
+
+# Block number <-> time. Block n of a segment is at first_ts_ms + (n - first_block) * block_ms.
+block_time:
+  - first_block: 0
+    first_ts_ms: 1686789347000
+    block_ms: 2000
+    source: https://mainnet.base.org
+    verified: "2026-11-08: block 53556126 has timestamp 1793901599 = 1686789347 + 2 * 53556126"
+  - first_block: 53556128
+    first_ts_ms: 1793901601200
+    block_ms: 200
+    source: https://github.com/base/base/releases/tag/v1.5.1
+    verified: >-
+      2026-11-08: blocks 53556127, 53556128, 53556129 have timestampMs 1793901601000, 1793901601200,
+      1793901601400 (Denim, 200 ms blocks from 2026-11-05 18:00:01 UTC); block 54900000 has timestampMs
+      1794170375600 = 1793901601200 + 200 * (54900000 - 53556128)
+
+reorg_guard_seconds: 60   # ingest stays this far behind the head
+
+tokens_api: https://api.coinbase.com/v1/tokenized-stocks
+usdc: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+weth: "0x4200000000000000000000000000000000000006"
+eth_usd_feed: "0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70"   # Chainlink ETH/USD on Base (checked in feeds build)
+
+# B20 token events (https://docs.base.org/specifications/b20/reference/interfaces/ib20 and ib20-asset,
+# read 2026-11-08). Transfer is not in this list: it is ingested only where a measurement needs it.
+b20_events:
+  UIMultiplierUpdated: "0x2205df4534432b2f60654a3fdb48737ffdaf3e9edb1a498bd985bc026b15b055"
+  MultiplierUpdated: "0x4dbe4840d7465bd162f67814cea0b519567a2e0e578bcde61e7f4ced361e5a3d"
+  UIMultiplierUpdateCancelled: "0x883856335ba5f60c18b9817c4505d3c7d3f6223dcf39516b30c508c46a5e1cad"
+  Announcement: "0xccebf8218a62875909564adef86a6f4df81503cb617221e793357d62f8e813f7"
+  EndAnnouncement: "0x96d64dafe2c790596430196b982ad1da3221cb3b0f4e6e2df77f2e4f71a90037"
+  Paused: "0x43e072977b8112813d7c2aa0b63d3c121c1fe3e714e6d2eacb5735fe4027e976"
+  Unpaused: "0xdc6281474ea3dea2a856e225c7ba3edf427de9164495817c4d49a595e683fed4"
+  PolicyUpdated: "0x8b4790f7ff717fc8f60f07ae099e47ef318dc04b37ae98056b50a22b79056626"
+  NameUpdated: "0x74321da206c1b9fa34367f7ece59ca49371dcd13820b9a5c3767ae1ecceed51a"
+  SymbolUpdated: "0x64e8b5c6dcea43dd79766bb3b8af7c45968d12b68c960cf2da23856f34d598d4"
+  ExtraMetadataUpdated: "0xd7bb345be29e78d635203d40fe0567e7ef19d5cd5cc5fcd25f768b8063e82aa1"
+  Seized: "0xa9aec5d8b86e2fa2fd6ac3af62f2622e3dfdab1967d4cbbb56a5df7d74cb887c"
+  SupplyCapUpdated: "0x6d14f44808ce024f263432bc38d019a9951fbe674e9898b54844dbc8dc09c23a"
+
+# Chainlink OCR2 aggregator events (topic0 from logs of the NVDA aggregator, block 0x338cc10)
+chainlink_events:
+  AnswerUpdated: "0x0559884fd3a460db3073b7fc896cc77986f16e378210ded43186175bf646fc5f"  # (int256 indexed current, uint256 indexed roundId, uint256 updatedAt)
+
+# Stocks launched on Base 2026-08-24/25; backfills start at this block (2026-08-24 00:00:00 UTC).
+backfill_start_block: 50370126

@@ -1,0 +1,226 @@
+# DRAFT: lending markets on Base (chain 8453) that accept Coinbase B20 stock tokens as collateral.
+# Built 2026-11-08 by read-only research (docs/research/LENDING.md has the method, the reads and the math).
+# Every market was read on-chain at the block in `as_of`; sizes are snapshots, not configuration.
+# Units: lltv / collateral_factor as fractions; bonuses as multipliers (1.055 = 5.5 % bonus).
+schema: lending-markets/v0-draft
+as_of:
+  morpho_block: 54954595          # 2026-11-08T23:41:34Z
+  aave_v4_block: 54953835
+chain_id: 8453
+
+protocols:
+  morpho_blue:
+    singleton: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb'
+    source: https://docs.morpho.org/get-started/resources/addresses/
+    code_source: https://github.com/morpho-org/morpho-blue/blob/bc479b91828f697d88a8cd6adaee4e6992b80ec6/src/Morpho.sol
+    oracle_factory: '0x2DC205F24BCb6B311E5cdf0745B0741648Aebd3d'   # MorphoChainlinkOracleV2Factory (docs page above)
+    irm: '0x46415998764C29aB2a25CbeA6254146D50D22687'              # AdaptiveCurveIrm, used by every market below
+    liquidation:
+      liquidation_cursor: 0.3
+      max_liquidation_incentive_factor: 1.15
+      lif_formula: min(1.15, 1 / (1 - 0.3 * (1 - lltv)))
+      close_factor: none            # any amount up to the whole position once collateral*price*lltv < debt
+      pre_liquidation: none registered for these markets (Morpho API preLiquidations countTotal = 0)
+      oracle_staleness_check: none  # price() reads latestRoundData().answer only
+    api: https://api.morpho.org/graphql
+  aave_v4:
+    hub: '0xa4d5947Eb727A052bae69C593FfC84247EC9864E'        # EQUITIES_HUB (proxy)
+    spoke: '0x17905Db0e4A3514467539956c084180616AE7B8D'      # MAG7_SPOKE (proxy), first block with code 51478830
+    spoke_oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47'   # AaveOracle, 8 decimals, reads latestAnswer()
+    liquidation_logic: '0x88dF535473C5adf1f57789734A05E555F7Deb8DB'
+    tokenization_spoke_usdc: '0x7081CE7EB1282c53CF38EA9B622f6269cb8FeFDc'
+    treasury_spoke: '0x5F8d0102F5B51Fae6DE9d2F2561bda63Fb5Db674'
+    source: https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol
+    code_source: https://github.com/aave/aave-v4/tree/2524fe4018a42750300e114f2a8c4355df62a878/src/spoke
+    liquidation:                    # Spoke.getLiquidationConfig() at as_of
+      target_health_factor: 1.24
+      health_factor_for_max_bonus: 0.90
+      liquidation_bonus_factor: 0.90   # min bonus = 1 + 0.90 * (max_bonus - 1)
+      dust_threshold_usd: 1000
+      close_factor: none (repay up to the amount that restores target_health_factor; whole position when dust rules apply)
+      oracle_staleness_check: none  # AaveOracle reads source.latestAnswer() and requires > 0 only
+    debt_reserve:
+      reserve_id: 7
+      token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'    # USDC
+      price_source: '0xC7d0f8dCC1F860ca752054c59Ea82Ba2A5AaB50c'
+
+feeds:                              # Chainlink 24/5 feeds read by every market below; answer = token price (underlying x multiplier), 8 decimals
+  source: https://docs.base.org/specifications/b20/tokenized-stocks-on-base
+  directory: https://reference-data-directory.vercel.app/feeds-ethereum-mainnet-base-1.json
+  AAPLc: '0x787f13dEa48Db0897CbCDD985de77809D837F988'
+  AMZNc: '0x06A8E4b3aBB3B7543d8396FB2B763d22820cB295'
+  GOOGLc: '0x5bF49E0ffA937CE2FfF033c739aD7C634c4D34F2'
+  METAc: '0x6526aE6797A76123638b863AeE4dD27Ba4E4b27D'
+  MSFTc: '0xeB10A6c9aa7E537aEd766C08c35Dae35B321b18c'
+  NVDAc: '0x04689a41629776563E6822F76f2e57D148d28513'
+  TSLAc: '0xFaf869185383a24F8cb00e27BdA6b63B9905DCb4'
+  SPCXc: '0x6A634B235903C4ad6376892180d6fF8612e3Fa68'
+
+markets:
+  # ---------------- Morpho Blue: markets with collateral or debt ----------------
+  - protocol: morpho_blue
+    id: '0xae1a30486234bf7e7ac166c7c03d9bc5f2cd8a39be2c48e73c665ac7148c3c28'
+    collateral_symbol: AAPLc
+    collateral_token: '0xb200000000000000000000C2e324d24d7eEcd1fb'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'   # USDC
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563   # 1 / 0.8875
+    oracle: '0xEcC5c9bf18CB2CfC94C2f7EFf8BDd5837A60AB0e'       # MorphoChainlinkOracleV2
+    oracle_reads: {base_feed_1: '0x787f13dEa48Db0897CbCDD985de77809D837F988', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51002661
+    listed: true
+    snapshot: {collateral_tokens: 101.38141628, borrow_usdc: 14741.724699, supply_usdc: 16333.393462}
+    source: https://app.morpho.org/base/market/0xae1a30486234bf7e7ac166c7c03d9bc5f2cd8a39be2c48e73c665ac7148c3c28
+  - protocol: morpho_blue
+    id: '0xb4b42dd66cef25614b94510a910d54b2c148e7621d22b4271566724beda63d13'
+    collateral_symbol: NVDAc
+    collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x4F698C04d01d9CebCDd9494c189aBdD6C5453f84'
+    oracle_reads: {base_feed_1: '0x04689a41629776563E6822F76f2e57D148d28513', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51002643
+    listed: true
+    snapshot: {collateral_tokens: 129.89327927, borrow_usdc: 11522.926571, supply_usdc: 12653.252834}
+    source: https://app.morpho.org/base/market/0xb4b42dd66cef25614b94510a910d54b2c148e7621d22b4271566724beda63d13
+  - protocol: morpho_blue
+    id: '0x44b343b5087c0bd34207cb5c199f12030777bf6b8c0a128438246f1212f37ca5'
+    collateral_symbol: METAc
+    collateral_token: '0xb2000000000000000000008bC8786B856E61707C'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x4752B27dFc1931eb9a5DFEFC7FBC9d0af9020dC7'
+    oracle_reads: {base_feed_1: '0x6526aE6797A76123638b863AeE4dD27Ba4E4b27D', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51002679
+    listed: true
+    snapshot: {collateral_tokens: 36.28954785, borrow_usdc: 10943.330019, supply_usdc: 11799.941594}
+    source: https://app.morpho.org/base/market/0x44b343b5087c0bd34207cb5c199f12030777bf6b8c0a128438246f1212f37ca5
+  - protocol: morpho_blue
+    id: '0xce983b9ee6344e16ebbcc66812f23caafc63ae83fcc14fa29b66c7e69e9cecf6'
+    collateral_symbol: SPCXc
+    collateral_token: '0xb2000000000000000000007b9fcbd005511aCBd5'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x9079857a2b5FFfC3d87052b11b866a185B4A6483'
+    oracle_reads: {base_feed_1: '0x6A634B235903C4ad6376892180d6fF8612e3Fa68', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51002618
+    listed: true
+    snapshot: {collateral_tokens: 94.50456791, borrow_usdc: 5180.941482, supply_usdc: 5747.738921}
+    source: https://app.morpho.org/base/market/0xce983b9ee6344e16ebbcc66812f23caafc63ae83fcc14fa29b66c7e69e9cecf6
+  - protocol: morpho_blue
+    id: '0xa3913d896b7e9c0e0a84f1be27d376cf2065616101cb7c44674af8a154e684cc'
+    collateral_symbol: GOOGLc
+    collateral_token: '0xb2000000000000000000002D0BA3164cc74f58B7'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.77
+    liquidation_incentive_factor: 1.074113856   # 1 / 0.931
+    oracle: '0x24DC11055aa5b2C5692E4B77d7285c4f0fd9Cf99'
+    oracle_reads: {base_feed_1: '0x5bF49E0ffA937CE2FfF033c739aD7C634c4D34F2', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51002696
+    listed: true
+    snapshot: {collateral_tokens: 39.36923432, borrow_usdc: 4676.798464, supply_usdc: 5263.377296}
+    source: https://app.morpho.org/base/market/0xa3913d896b7e9c0e0a84f1be27d376cf2065616101cb7c44674af8a154e684cc
+  - protocol: morpho_blue
+    id: '0xcca091ada0a486dd74743ab5f1b1b972adefaad357e2634fd7362a0d798dcd42'
+    collateral_symbol: AMZNc
+    collateral_token: '0xb200000000000000000000d9192b6B456483C2E8'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x52cE337EC871EC8f3490285b70A42aAb07814769'
+    oracle_reads: {base_feed_1: '0x06A8E4b3aBB3B7543d8396FB2B763d22820cB295', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51573522
+    listed: true
+    snapshot: {collateral_tokens: 0.29059091, borrow_usdc: 25.065749, supply_usdc: 27.121527}
+    source: https://app.morpho.org/base/market/0xcca091ada0a486dd74743ab5f1b1b972adefaad357e2634fd7362a0d798dcd42
+  - protocol: morpho_blue
+    id: '0x4f9329a87a70e722cdab07b3647ef705671b25079d4f3bae559be5cfe12a7318'
+    collateral_symbol: MSFTc
+    collateral_token: '0xB200000000000000000000Ab99cFa739E253872B'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x5a4CEB3240d50A16a8BBBBc0F72C53018B8E38be'
+    oracle_reads: {base_feed_1: '0xeB10A6c9aa7E537aEd766C08c35Dae35B321b18c', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51573514
+    listed: true
+    snapshot: {collateral_tokens: 0.13972026, borrow_usdc: 25.073642, supply_usdc: 26.702004}
+    source: https://app.morpho.org/base/market/0x4f9329a87a70e722cdab07b3647ef705671b25079d4f3bae559be5cfe12a7318
+  - protocol: morpho_blue
+    id: '0xc819df1685193012fc1d189e4ae22f6658442805f121303aebb04c81bd6d55d5'
+    collateral_symbol: TSLAc
+    collateral_token: '0xb2000000000000000000001e800a7f5189430cD0'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0xFDD26bC94502a281f333e9593501d9A3C5a9905c'
+    oracle_reads: {base_feed_1: '0xFaf869185383a24F8cb00e27BdA6b63B9905DCb4', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51573518
+    listed: true
+    snapshot: {collateral_tokens: 0.00109748, borrow_usdc: 0.000991, supply_usdc: 0.001104}
+    source: https://app.morpho.org/base/market/0xc819df1685193012fc1d189e4ae22f6658442805f121303aebb04c81bd6d55d5
+  - protocol: morpho_blue
+    id: '0x0cc78b1f4993015116e90626a18a1ba0e1ca73d0b75781b231d02fa5536e62a5'
+    collateral_symbol: GOOGLc
+    collateral_token: '0xb2000000000000000000002D0BA3164cc74f58B7'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.625
+    liquidation_incentive_factor: 1.126760563
+    oracle: '0x24DC11055aa5b2C5692E4B77d7285c4f0fd9Cf99'
+    oracle_reads: {base_feed_1: '0x5bF49E0ffA937CE2FfF033c739aD7C634c4D34F2', base_feed_2: null, quote_feed_1: null, quote_feed_2: null, scale_factor: '1e26'}
+    creation_block: 51573510
+    listed: true
+    snapshot: {collateral_tokens: 0.00114261, borrow_usdc: 0.000993, supply_usdc: 0.001105}
+    source: https://app.morpho.org/base/market/0x0cc78b1f4993015116e90626a18a1ba0e1ca73d0b75781b231d02fa5536e62a5
+  # ---------------- Morpho Blue: unlisted markets (dust or empty; kept so the enumeration is complete) ----------------
+  - protocol: morpho_blue
+    id: '0x91360eea2686ef7ce4966b4e82cf6ff712af02baf0f7211459780d9f5af1612a'
+    collateral_symbol: NVDAc
+    collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C'
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    lltv: 0.77
+    oracle: '0xE0AE3137a30393410B595E1C1d572a1449A969ea'   # not a MorphoChainlinkOracleV2 (feed getters revert); price() answers
+    oracle_reads: unknown (no verified-source read done)
+    creation_block: 51016554
+    listed: false
+    snapshot: {collateral_tokens: 0.04405328, borrow_usdc: 0.010659, supply_usdc: 98.000233}
+    source: https://app.morpho.org/base/market/0x91360eea2686ef7ce4966b4e82cf6ff712af02baf0f7211459780d9f5af1612a
+  - {protocol: morpho_blue, id: '0xfef5641f70e19a87e369304daa9ba823754f3db1e6481d757fcae0442cffe479', collateral_symbol: NVDAc, collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.77, oracle: '0x1E2b20B4703F97710c2600eA73179c6CD1E00b02', oracle_reads: 'price() reverts at as_of: positions cannot be liquidated', creation_block: 50987467, listed: false, snapshot: {collateral_tokens: 0.00172031, borrow_usdc: 0.15}, source: 'https://app.morpho.org/base/market/0xfef5641f70e19a87e369304daa9ba823754f3db1e6481d757fcae0442cffe479'}
+  - {protocol: morpho_blue, id: '0xa8835b567d1808f1fc9970d635b374d0f376b9f74e4b5840b2c74c5597cac88a', collateral_symbol: METAc, collateral_token: '0xb2000000000000000000008bC8786B856E61707C', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.86, oracle: '0x4490497FB4f49061FB99F3E4De0bC4D182377cAA', oracle_reads: 'not a MorphoChainlinkOracleV2; price() = 541.13 USD per token at as_of (differs from the META feed)', creation_block: 50182178, listed: false, snapshot: {collateral_tokens: 0.00003329, borrow_usdc: 0, supply_usdc: 3.0}, source: 'https://app.morpho.org/base/market/0xa8835b567d1808f1fc9970d635b374d0f376b9f74e4b5840b2c74c5597cac88a'}
+  - {protocol: morpho_blue, id: '0x4e8fcfab7ec82d20d1b179b274de9739d684aba8c7b09314948a1ed8fd786d97', collateral_symbol: GOOGLc, collateral_token: '0xb2000000000000000000002D0BA3164cc74f58B7', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0x3475e8D809dB0AE01c17758404778516039Ae7d2', oracle_reads: {base_feed_1: '0x5bF49E0ffA937CE2FfF033c739aD7C634c4D34F2'}, creation_block: 52521327, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 1.0}, source: 'https://app.morpho.org/base/market/0x4e8fcfab7ec82d20d1b179b274de9739d684aba8c7b09314948a1ed8fd786d97'}
+  - {protocol: morpho_blue, id: '0xcf7cced126f93840c1b98706cbeb91d7a90f00799d813995683b5c144782ac77', collateral_symbol: SPCXc, collateral_token: '0xb2000000000000000000007b9fcbd005511aCBd5', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0xd2f719512DD4B7390EA01de7A20e0a8aE32354c3', oracle_reads: {base_feed_1: '0x6A634B235903C4ad6376892180d6fF8612e3Fa68'}, creation_block: 52582900, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 1.0}, source: 'https://app.morpho.org/base/market/0xcf7cced126f93840c1b98706cbeb91d7a90f00799d813995683b5c144782ac77'}
+  - {protocol: morpho_blue, id: '0xcce338a21d208d72f416a967daa5b040a6710c560ccb98854f2f9ebaa8d87376', collateral_symbol: METAc, collateral_token: '0xb2000000000000000000008bC8786B856E61707C', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0xb25491504F627637E77CA4701FA46C2F16B65d6B', oracle_reads: {base_feed_1: '0x6526aE6797A76123638b863AeE4dD27Ba4E4b27D'}, creation_block: 52582900, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 1.0}, source: 'https://app.morpho.org/base/market/0xcce338a21d208d72f416a967daa5b040a6710c560ccb98854f2f9ebaa8d87376'}
+  - {protocol: morpho_blue, id: '0xaba747cd9c548324d7baab447bae58f1b23d8a96597415e7cdd58b9471060026', collateral_symbol: NVDAc, collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0x67b878530ba7FbE5A1CD1020E8fFE20fcb30943C', oracle_reads: {base_feed_1: '0x04689a41629776563E6822F76f2e57D148d28513'}, creation_block: 52521327, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 1.0}, source: 'https://app.morpho.org/base/market/0xaba747cd9c548324d7baab447bae58f1b23d8a96597415e7cdd58b9471060026'}
+  - {protocol: morpho_blue, id: '0x5c800e8607e95fb96196570e229aef9a8a66595d4233a58fc406373bfac675db', collateral_symbol: NVDAc, collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.77, oracle: '0x39712F36c013C09Cf4D62D0F695DD74eBe67FD19', oracle_reads: 'price() reverts at as_of', creation_block: 51009018, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 0}, source: 'https://app.morpho.org/base/market/0x5c800e8607e95fb96196570e229aef9a8a66595d4233a58fc406373bfac675db'}
+  - {protocol: morpho_blue, id: '0xb50ecaba0652b5a51bde9a747e9b7a2075c7ab68fd3c6ef7c05eabf6bb0f1d28', collateral_symbol: AAPLc, collateral_token: '0xb200000000000000000000C2e324d24d7eEcd1fb', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0xf94C3C8aEb3E79376868a23f42a31Cb3B6a3F132', oracle_reads: 'price() reverts at as_of', creation_block: 52530895, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 0}, source: 'https://app.morpho.org/base/market/0xb50ecaba0652b5a51bde9a747e9b7a2075c7ab68fd3c6ef7c05eabf6bb0f1d28'}
+  - {protocol: morpho_blue, id: '0x560a19b8432903078816b6ed89ee2c2bdb9bf140b3a0cdd17ba6c2b3e214608a', collateral_symbol: AAPLc, collateral_token: '0xb200000000000000000000C2e324d24d7eEcd1fb', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.98, oracle: '0xE6Ef8C3e2372cfBB5a01F5F9e6A111cef6309C4C', oracle_reads: 'ChainlinkOracleV2 with no feeds: constant price() = 1e34 (1 USDC per AAPLc)', creation_block: 53161500, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 0.001}, source: 'https://app.morpho.org/base/market/0x560a19b8432903078816b6ed89ee2c2bdb9bf140b3a0cdd17ba6c2b3e214608a'}
+  - {protocol: morpho_blue, id: '0x26d61964fa3ab7dbaf904661c1c20de82a96ade9c4702a3f7346f15d0b55edf2', collateral_symbol: AAPLc, collateral_token: '0xb200000000000000000000C2e324d24d7eEcd1fb', loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', lltv: 0.625, oracle: '0x66B97bad8053BA427316a4a3CDbB7Fe7A852ABA0', oracle_reads: {base_feed_1: '0x787f13dEa48Db0897CbCDD985de77809D837F988'}, creation_block: 52474368, listed: false, snapshot: {collateral_tokens: 0, borrow_usdc: 0, supply_usdc: 2.000066}, source: 'https://app.morpho.org/base/market/0x26d61964fa3ab7dbaf904661c1c20de82a96ade9c4702a3f7346f15d0b55edf2'}
+
+  # ---------------- Aave V4, Equities Hub / MAG7 spoke: one spoke, eight collateral reserves, one USDC debt reserve ----------------
+  # collateral_factor, max_liquidation_bonus and liquidation_fee come from getDynamicReserveConfig(reserveId, key);
+  # every reserve and every user read had dynamicConfigKey 0 at as_of, but each user keeps the key of their last update.
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 0', collateral_symbol: AAPLc, collateral_token: '0xb200000000000000000000C2e324d24d7eEcd1fb', loan_token: USDC (reserve 7), collateral_factor: 0.78, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x787f13dEa48Db0897CbCDD985de77809D837F988', creation_block: 51478830, snapshot: {supplied_tokens: 2327.50777799}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 1', collateral_symbol: AMZNc, collateral_token: '0xb200000000000000000000d9192b6B456483C2E8', loan_token: USDC (reserve 7), collateral_factor: 0.73, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x06A8E4b3aBB3B7543d8396FB2B763d22820cB295', creation_block: 51478830, snapshot: {supplied_tokens: 1954.29042387}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 2', collateral_symbol: GOOGLc, collateral_token: '0xb2000000000000000000002D0BA3164cc74f58B7', loan_token: USDC (reserve 7), collateral_factor: 0.76, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x5bF49E0ffA937CE2FfF033c739aD7C634c4D34F2', creation_block: 51478830, snapshot: {supplied_tokens: 19326.72382223}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 3', collateral_symbol: METAc, collateral_token: '0xb2000000000000000000008bC8786B856E61707C', loan_token: USDC (reserve 7), collateral_factor: 0.65, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x6526aE6797A76123638b863AeE4dD27Ba4E4b27D', creation_block: 51478830, snapshot: {supplied_tokens: 5175.94597839}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 4', collateral_symbol: MSFTc, collateral_token: '0xB200000000000000000000Ab99cFa739E253872B', loan_token: USDC (reserve 7), collateral_factor: 0.79, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0xeB10A6c9aa7E537aEd766C08c35Dae35B321b18c', creation_block: 51478830, snapshot: {supplied_tokens: 639.4411693}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 5', collateral_symbol: NVDAc, collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C', loan_token: USDC (reserve 7), collateral_factor: 0.70, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x04689a41629776563E6822F76f2e57D148d28513', creation_block: 51478830, snapshot: {supplied_tokens: 16219.7047902}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 6', collateral_symbol: TSLAc, collateral_token: '0xb2000000000000000000001e800a7f5189430cD0', loan_token: USDC (reserve 7), collateral_factor: 0.65, max_liquidation_bonus: 1.055, liquidation_fee: 0.10, collateral_risk_bps: 0, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0xFaf869185383a24F8cb00e27BdA6b63B9905DCb4', creation_block: 51478830, snapshot: {supplied_tokens: 2971.58317675}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+  - {protocol: aave_v4, id: 'spoke 0x17905Db0e4A3514467539956c084180616AE7B8D reserve 8', collateral_symbol: SPCXc, collateral_token: '0xb2000000000000000000007b9fcbd005511aCBd5', loan_token: USDC (reserve 7), collateral_factor: 0.55, max_liquidation_bonus: 1.065, liquidation_fee: 0.10, collateral_risk_bps: 1000, oracle: '0xaBaf048fD7675Ea34a84332371ffd5D55E322A47', feed: '0x6A634B235903C4ad6376892180d6fF8612e3Fa68', creation_block: 51478830, snapshot: {supplied_tokens: 7197.24764677}, source: 'https://github.com/aave-dao/aave-address-book/blob/5ae5e47f5d2bb88e0282ba68329eeea312bd6554/src/AaveV4Base.sol'}
+
+  # ---------------- Euler v2 (EVK): listed collateral exists, no stock collateral backs debt at as_of ----------------
+  - protocol: euler_v2
+    id: '0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e'   # USDC borrow vault; LTVList includes the NVDAc escrow vault below
+    collateral_symbol: NVDAc
+    collateral_token: '0xb20000000000000000000078ee7ce2fE4908108C'
+    collateral_vault: '0xfe885b1cfd237e8ed2d839335143752ee15856ba'   # totalAssets 0 at as_of
+    loan_token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    borrow_ltv: 0.90
+    liquidation_ltv: 0.92
+    oracle: '0xc0a9a8cdafb7490476f11ef85d1208434b59f3c8'   # router of the borrow vault, unit of account USD (840); feed not resolved
+    creation_block: null
+    snapshot: {stock_collateral_usd: 0}
+    source: https://raw.githubusercontent.com/euler-xyz/euler-interfaces/master/addresses/8453/CoreAddresses.json

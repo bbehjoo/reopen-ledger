@@ -1,0 +1,46 @@
+# secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+keys/*.secret
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+clients/ts/dist/
+*.tsbuildinfo
+
+# foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts/lib/
+
+# local scratch (raw chain data under data/raw IS committed: it is the replay input), except the swap streams:
+# about 40k swaps a day since Aug 24 is hundreds of MB even compressed. Those day files are kept in the CI cache
+# and re-read from the chain on demand (`callrec ingest swaps`); the manifest records the SHA-256 of every
+# day file's uncompressed content, and the serialisation is deterministic, so a re-read can be checked.
+data/raw/swaps/
+data/raw/swaps_v4/
+data/cache/
+data/scratch/
+site/build/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# private copies of offchain pages (only their hashes are published)
+data/private/

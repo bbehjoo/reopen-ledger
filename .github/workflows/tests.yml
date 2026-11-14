@@ -1,0 +1,22 @@
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc  # v6.4.3
+      - run: uv sync --frozen
+      - run: uv run pytest -q
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with: {node-version: "22"}
+      - run: cd clients/ts && npm ci && npm test
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf  # v1.9.2
+        with: {version: "stable"}
+      - name: Contract tests, and the committed artifact is what this source compiles to
+        run: |
+          cd contracts && forge test && forge build --force
+          cd .. && uv run pytest -q tests/test_deploy.py::test_committed_artifact_is_the_current_source

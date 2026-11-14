@@ -1,0 +1,8 @@
+# House wallets (METHODS.md section 7). Labelled on the site and excluded from every usage figure.
+# Derived from one mnemonic (src/callrec/house.py), path m/44'/60'/0'/0/<index>.
+wallets:
+  - {index: 0, role: "anchor", address: "0xe2C704A966d130C24F7DE0967E18d82521E6F4cc"}
+  - {index: 1, role: "null", address: "0x004A5d100c64C080CD19B83F406c0a9CBB51f456"}
+  - {index: 2, role: "persistence", address: "0x8aF87b69A94805865522d5a905336d0791d45a9C"}
+  - {index: 3, role: "dex_implied", address: "0x398aCc2fDa7180EBc15028C727CcDB3Dcc8CDB01"}
+  - {index: 4, role: "coverage", address: "0x35D75863dbbdBdd79b9eA29d7a486BFC8a36C200"}

@@ -1,0 +1,6 @@
+# This project's Builder Code (ERC-8021 schema 0). Registered 2026-11-10 for the anchor wallet with
+# POST https://api.base.dev/v1/agents/builder-codes {"walletAddress": ...}; the answer is recorded below.
+# Appended to every house record and daily anchor (src/callrec/housecommit.py). Contracts ignore it.
+builder_code: "bc_akq83qpj"
+wallet: "0xe2C704A966d130C24F7DE0967E18d82521E6F4cc"
+registered: "2026-11-10"
