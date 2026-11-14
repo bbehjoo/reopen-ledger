@@ -167,7 +167,7 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
         f'<output for="hp-{esc(s)}">50%</output></div>' for s in pick)
     return (f'<div class="panel board-live" aria-live="off"><div class="head"><div>'
             f'<span class="state" id="state"><i></i><span>Reference</span></span>'
-            f'<div class="clock" id="clock">--:--:--</div><div class="clock-k" id="clock-k">Freeze clock</div></div></div>'
+            f'<div class="clock" id="clock">Fri 20:00 ET</div><div class="clock-k" id="clock-k">The reference freezes every Friday 20:00 ET and reopens Sunday 20:00 ET.</div></div></div>'
             f'<div class="pick-q">Chance each one reopens <b>higher</b>:</div>{rows}'
             f'<div class="pick-go"><a class="btn primary" id="hp-go" href="{CTA[0]}">Commit on Base <span class="arr">&rarr;</span></a>'
             f'<span>One transaction. No stake, gas only.</span></div>'
@@ -428,8 +428,8 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
             f'in the 5% below, token by token, from a snapshot of Base itself.</p>'
             f'<div class="seg" role="group" aria-label="Shock size">'
             + "".join(f'<button type="button" data-s="{s}" aria-pressed="false">&minus;{s}%</button>' for s in ("5", "10", "20"))
-            + f'</div><div class="readout"><div class="flow"><div class="big" id="ab-flow">$0</div><div class="k">liquidation flow</div></div>'
-            f'<div><div class="big" id="ab-depth">$0</div><div class="k">pool depth in the 5% below</div></div></div>'
+            + f'</div><div class="readout"><div class="flow"><div class="big" id="ab-flow">{usd(sum(t["flow"]["20"] for t in toks))}</div><div class="k">liquidation flow</div></div>'
+            f'<div><div class="big" id="ab-depth">{usd(sum(t["depth"]["20"] for t in toks))}</div><div class="k">pool depth in the 5% below</div></div></div>'
             f'<p class="shock-note" id="ab-note"></p>'
             f'<p><a href="absorb.html">Per token, per market &rarr;</a></p></div>'
             f'<div class="panel flows rv"><div class="legend"><span><i style="background:var(--line-2)"></i>pool depth</span>'
@@ -547,9 +547,11 @@ def _open_table(open_w: list[dict]) -> str:
 def _tape_table(rows: list[dict], sym: dict) -> str:
     out = []
     for t in sorted(rows, key=lambda t: sym.get(t["token"], t["token"])):
-        out.append([esc(sym.get(t["token"], short(t["token"]))), fnum(t["frozen_ref"], 2), fnum(t["twap_last_hour"], 2),
-                    fnum(t["reopen_ref"], 2), fnum(t["gap_bps"], 0, sign=True), fnum(t["reopen_bps"], 0, sign=True),
-                    fnum(t["tape_error_bps"], 0, sign=True), fnum(t["max_abs_gap_bps"], 0), esc(t["swaps_span"]),
+        # a void row's DEX-derived values are kept in tape.csv as measured, but never shown as if usable
+        dx = (lambda k: None) if t["void"] else (lambda k: t[k])
+        out.append([esc(sym.get(t["token"], short(t["token"]))), fnum(t["frozen_ref"], 2), fnum(dx("twap_last_hour"), 2),
+                    fnum(t["reopen_ref"], 2), fnum(dx("gap_bps"), 0, sign=True), fnum(t["reopen_bps"], 0, sign=True),
+                    fnum(dx("tape_error_bps"), 0, sign=True), fnum(dx("max_abs_gap_bps"), 0), esc(t["swaps_span"]),
                     usd(t["volume_span_usd"]), fnum(t["alt_247_ref"], 2), esc(t["void"] or "")])
     return table([("token", False), ("frozen ref", True), ("DEX last hour", True), ("reopen ref", True),
                   ("gap bps", True), ("reopen bps", True), ("error bps", True), ("max gap bps", True),

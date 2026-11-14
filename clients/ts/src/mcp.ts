@@ -30,7 +30,7 @@ function text(obj: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(obj, null, 1) }] };
 }
 
-const server = new McpServer({ name: "callrec-placeholder", version: "0.1.0" });
+const server = new McpServer({ name: "reopen-ledger", version: "0.1.0" });
 
 server.tool("open_windows", "Windows open for records: id, label, cutoff (a record counts only if mined by then), slate tokens.",
   {}, async () => {
