@@ -46,6 +46,18 @@
   }
   tick(); setInterval(tick, 1000);
 
+  // hero prediction card: sliders carry their values to the full form
+  const go = document.getElementById("hp-go");
+  if (go) {
+    const picks = $$(".pick input[type=range]");
+    const sync = () => {
+      go.href = "commit.html?p=" + picks.map((i) => `${i.dataset.sym}:${i.value}`).join(",");
+      for (const i of picks) i.parentElement.querySelector("output").textContent = `${i.value}%`;
+    };
+    for (const i of picks) i.addEventListener("input", sync);
+    sync();
+  }
+
   // shock toggle
   const ab = data("absorb-data");
   const usd = (v) => v >= 1e6 ? `$${(v / 1e6).toFixed(2)}M` : v >= 1e3 ? `$${(v / 1e3).toFixed(1)}k` : `$${Math.round(v)}`;

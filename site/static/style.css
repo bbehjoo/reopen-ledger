@@ -310,3 +310,24 @@ footer p { margin: 0; max-width: 78ch; line-height: 1.55; }
 .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
 @media (prefers-reduced-motion: no-preference) { .live-dot { animation: pulse 1.8s var(--ease) infinite; } }
 .chart.narrow { max-width: 720px; margin: 8px 0 24px; }
+
+/* prediction-first hero */
+.hero .kicker { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; margin: 0 0 -14px; font-size: clamp(16px, 1.5vw, 19px); color: var(--muted); }
+.pick-q { font-size: 14px; color: var(--muted); padding: 16px 0 4px; }
+.pick-q b { color: var(--fg); font-weight: 600; }
+.pick { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 52px; gap: 14px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.pick label { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pick .s { font-weight: 650; letter-spacing: -.01em; font-size: 15px; }
+.pick .n { color: var(--dim); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pick output { text-align: right; font: 600 16px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--accent-text); }
+.pick-go { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 0 14px; }
+.pick-go span { font-size: 13px; color: var(--muted); }
+.hero .wrap { grid-template-columns: minmax(0, 1.3fr) minmax(0, .9fr); grid-template-rows: auto auto 1fr; gap: 26px 56px; }
+.hero .kicker { grid-column: 1; margin: 8px 0 0; }
+.hero h1 { grid-column: 1; font-size: clamp(42px, 4.9vw, 70px); }
+.hero .intro { grid-column: 1; }
+.hero .panel { grid-column: 2; grid-row: 1 / span 3; }
+.hero .panel .clock { font-size: clamp(30px, 3.4vw, 42px); }
+@media (max-width: 960px) { .hero .kicker, .hero h1, .hero .intro, .hero .panel { grid-column: 1 / -1; grid-row: auto; } .hero h1 span { display: inline; } }
+.steps.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 860px) { .steps.three { grid-template-columns: 1fr; } }

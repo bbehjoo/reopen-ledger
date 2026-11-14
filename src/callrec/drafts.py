@@ -53,18 +53,11 @@ def render_launch(export_dir: Path) -> str:
     lines = [f"# Launch post (draft, from export {export_dir.name}, data as of {m.get('as_of_utc')})", "",
              f"To post on X with the demo video, tagging @buildonbase. Site: {identity.SITE_URL} "
              "Every number below comes from the export named above.", "", "---", ""]
-    t1 = ("Coinbase's tokenized stocks trade around the clock on Base. Their reference price doesn't: the "
-          "Chainlink feed that lending markets read is frozen from Friday 20:00 to Sunday 20:00 ET, and on market "
-          "holidays. We measured what happens in between, every weekend since Aug 24.")
+    t1 = ("Tokenized stocks trade all weekend on Base. Their reference price is frozen until Sunday 20:00 ET. "
+          "Reopen Ledger: predict which way each stock reopens. One transaction, no stake, scored by Chainlink "
+          "at the reopen. " + identity.SITE_URL)
     lines += ["**1/**", t1, ""]
-    if st:
-        lines += ["**2/**", (f"Across {st['windows']} closed spans and {st['n']} token-weekends, the reference moved a "
-                             f"median {st['median_reopen_bps']:.0f} bps from the frozen value to the reopen (largest "
-                             f"{st['max_reopen_bps']:.0f} bps). In the hour before the cutoff, the DEX price sat a median "
-                             f"{st['median_gap_bps']:.0f} bps from the frozen value and finished {st['median_error_bps']:.0f} bps "
-                             f"from the reopen value. It was closer to the reopen than the frozen value was in "
-                             f"{st['dex_closer_than_frozen']} of {st['n']} cases, and it pointed the right way in "
-                             f"{st['direction_agree']} of the {st['direction_n']} where both moves exceeded 10 bps."), ""]
+    n = 2
     if ab and ab.get("lending_totals"):
         tot = ab["lending_totals"]["total"]
         coll, debt = tot["collateral_usd"], tot["debt_usd"]
@@ -73,20 +66,28 @@ def render_launch(export_dir: Path) -> str:
         l10 = sum((r["liquidation_flow_usd"] or {}).get("10") or 0 for r in rows)
         l20 = sum((r["liquidation_flow_usd"] or {}).get("20") or 0 for r in rows)
         d20 = sum((r["absorb_5pct_below_usd"] or {}).get("20") or 0 for r in rows)
-        lines += ["**3/**", (f"Lending against these tokens is small today: {_usd(debt)} of USDC borrowed against "
-                             f"{_usd(coll)} of stock collateral on Aave V4 and Morpho. The numbers are the point, not the "
-                             "size. They show what this market structure does once lending grows."), "",
-                  "**4/**", (f"Shock each token's reference 10% lower, one token at a time, and add it up: these markets would "
-                             f"liquidate {_usd(l10)} of collateral at the reopen, and the token pools hold {_usd(d10)} in the "
-                             f"5% below the shocked prices. At 20%: {_usd(l20)} against {_usd(d20)}. That uses the oracle each "
-                             "market reads and each protocol's own liquidation rules. A joint move would liquidate more, "
-                             "since many borrowers post several stocks. Onchain absorption only."), ""]
-    lines += ["**5/**", ("Now the open question: can anyone call the reopen better than the weekend market does? Put a "
-                         "call on the record: one transaction, a probability per token, no funds, no trading. It's scored "
-                         "against the Chainlink feed after the window closes. Agents can do it with one function and keep "
-                         "their own Builder Code."), "",
-              "**6/**", ("Every number is replayable from the published chain logs. Each daily export is signed, and its "
-                         "hash goes on chain. Measurements, not verdicts. Methods, data and the board: " + identity.SITE_URL + ""), "",
+        lines += [f"**{n}/**", (f"Why the reopen matters: {_usd(debt)} of USDC is borrowed against {_usd(coll)} of these "
+                                "stock tokens on Aave V4 and Morpho, priced by that same feed. Nothing can be liquidated "
+                                "while it is frozen; it all lands at the reopen."), "",
+                  f"**{n + 1}/**", (f"Shock each token's reference 10% lower, one token at a time, and add it up: these markets would "
+                                    f"liquidate {_usd(l10)} of collateral at the reopen, and the token pools hold {_usd(d10)} in the "
+                                    f"5% below the shocked prices. At 20%: {_usd(l20)} against {_usd(d20)}. That uses the oracle each "
+                                    "market reads and each protocol's own liquidation rules. Onchain absorption only."), ""]
+        n += 2
+    if st:
+        lines += [f"**{n}/**", (f"Is the weekend DEX price a good guess? Across {st['windows']} closed spans and {st['n']} token-weekends, the reference moved a "
+                             f"median {st['median_reopen_bps']:.0f} bps from the frozen value to the reopen (largest "
+                             f"{st['max_reopen_bps']:.0f} bps). In the hour before the cutoff, the DEX price sat a median "
+                             f"{st['median_gap_bps']:.0f} bps from the frozen value and finished {st['median_error_bps']:.0f} bps "
+                             f"from the reopen value. It was closer to the reopen than the frozen value was in "
+                             f"{st['dex_closer_than_frozen']} of {st['n']} cases, and it pointed the right way in "
+                             f"{st['direction_agree']} of the {st['direction_n']} where both moves exceeded 10 bps. "
+                             "Can you do better? Prove it on the record."), ""]
+        n += 1
+    lines += [f"**{n}/**", ("Agents welcome: an agent predicts with one function call, keeps its own Builder Code, and "
+                            "lands on the same board as everyone else. Scores post at every reopen."), "",
+              f"**{n + 1}/**", ("Every number is replayable from the published chain logs. Each daily export is signed, and its "
+                                "hash goes on chain. Measurements, not verdicts. Methods, data and the board: " + identity.SITE_URL + ""), "",
               "[demo video]", ""]
     return "\n".join(lines)
 

@@ -23,9 +23,11 @@ from . import config, identity
 
 NAV = [("absorb.html", "Absorb"), ("tape.html", "Weekend tape"), ("board.html", "Board"),
        ("registry.html", "Registry"), ("methods.html", "Methods"), ("data.html", "Data")]
-CTA = ("commit.html", "Call the reopen")
-DESCRIPTION = ("Tokenized stocks trade on Base all weekend while their reference price sits frozen. Reopen Ledger "
-               "measures the gap and scores calls on the reopen. Measurements, not verdicts.")
+CTA = ("commit.html", "Predict the reopen")
+DESCRIPTION = ("Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, "
+               "scored against Chainlink at the reopen. Plus the data on what a frozen weekend price means for "
+               "lending markets. Measurements, not verdicts.")
+FEATURED = ("NVDAc", "TSLAc", "AAPLc", "GOOGLc", "MSFTc", "METAc", "AMZNc")
 MARK = ('<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/>'
         '<path d="M7 19.5h10.5L25 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="3" stroke-linecap="round" '
         'stroke-linejoin="round"/><circle cx="25" cy="10.5" r="2.6" fill="var(--accent-ink)"/></svg>')
@@ -140,23 +142,36 @@ def _week(as_of_ms: int, spans: list[dict]) -> str:
             f'{days}{frz}<div class="now" hidden></div></div></div>')
 
 
-def _hero_board(export_dir: Path, as_of: str) -> str:
-    """The freeze clock and the reference values the export read, for the tokens with a feed."""
-    rows = []
+def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) -> str:
+    """The freeze clock over a working mini prediction card: four featured stocks of the open slate (or of the
+    feeds, when no window is open), each with its Chainlink reference value and a probability slider. The
+    button carries the picks to the full form; nothing is sent from here."""
+    feeds = {}
     for f in sorted((export_dir / "feed").glob("*.json")):
         d = read_json(f, {})
         ref = d.get("reference") or {}
-        if ref.get("value") is None:
-            continue
-        rows.append((d.get("symbol", ""), ref["value"], d.get("token", "")))
+        if ref.get("value") is not None:
+            feeds[d.get("symbol", "")] = (ref["value"], d.get("token", ""))
+    slate_syms = None
+    for w in open_w or []:
+        if w.get("open_for_records"):
+            slate_syms = {s for s, (_, t) in feeds.items() if t in set(w.get("slate", []))}
+            break
+    pick = [s for s in FEATURED if s in feeds and (slate_syms is None or s in slate_syms)][:4]
     names = {t["address"]: t.get("name") for t in json.loads((config.config_dir() / "tokens.json").read_text(encoding="utf-8"))["tokens"]}
-    lis = "".join(f'<li><span class="s">{esc(s)}</span><span class="n">{esc((names.get(t) or "").replace(" Inc.", "").replace(" Corporation", ""))}</span>'
-                  f'<span class="v">${v:,.2f}</span></li>' for s, v, t in rows[:6])
+    rows = "".join(
+        f'<div class="pick"><label for="hp-{esc(s)}"><span class="s">{esc(s)}</span>'
+        f'<span class="n">{esc((names.get(feeds[s][1]) or "").replace(" Inc.", "").replace(" Corporation", ""))} '
+        f'&middot; ${feeds[s][0]:,.2f}</span></label>'
+        f'<input type="range" min="0" max="100" value="50" id="hp-{esc(s)}" data-sym="{esc(s)}" aria-label="Probability {esc(s)} reopens higher">'
+        f'<output for="hp-{esc(s)}">50%</output></div>' for s in pick)
     return (f'<div class="panel board-live" aria-live="off"><div class="head"><div>'
             f'<span class="state" id="state"><i></i><span>Reference</span></span>'
             f'<div class="clock" id="clock">--:--:--</div><div class="clock-k" id="clock-k">Freeze clock</div></div></div>'
-            f'<ul class="ticks">{lis}</ul>'
-            f'<div class="foot">Chainlink reference values on Base, read {esc(_utc_label(as_of))}. Refreshed daily.</div></div>')
+            f'<div class="pick-q">Chance each one reopens <b>higher</b>:</div>{rows}'
+            f'<div class="pick-go"><a class="btn primary" id="hp-go" href="{CTA[0]}">Commit on Base <span class="arr">&rarr;</span></a>'
+            f'<span>One transaction. No stake, gas only.</span></div>'
+            f'<div class="foot">Chainlink reference values on Base, read {esc(_utc_label(as_of))}.</div></div>')
 
 
 def _utc_label(iso: str) -> str:
@@ -223,7 +238,7 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
     as_of_ms = int(datetime.fromisoformat(as_of.replace("Z", "+00:00")).timestamp() * 1000) if as_of != "?" else 0
     pages["index.html"] = page("index.html", "Overview", _landing(
         export_dir, as_of, as_of_ms, closed, ts, absorb, sym, read_json(export_dir / "baselines.json", {}),
-        board, usage), as_of, landing=True)
+        board, usage, open_w), as_of, landing=True)
 
     # --- board
     missing = house_checks.get("house_commit_missing", [])
@@ -279,7 +294,7 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
     pages["absorb.html"] = page("absorb.html", "Absorb", _absorb_page(absorb, sym), as_of)
 
     # --- commit
-    pages["commit.html"] = page("commit.html", "Put a call on the record", _commit_page(open_w), as_of) \
+    pages["commit.html"] = page("commit.html", "Predict the reopen", _commit_page(open_w), as_of) \
         .replace("</body>", '<script src="commit.js"></script></body>')
 
     # --- registry
@@ -351,7 +366,7 @@ def _short_usd(v: float) -> tuple[str, str]:
 
 
 def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts: dict, absorb: dict | None,
-             sym: dict, baselines: dict, board: dict, usage: dict) -> str:
+             sym: dict, baselines: dict, board: dict, usage: dict, open_w: list[dict] | None = None) -> str:
     sp = _spans(as_of_ms) if as_of_ms else {"spans": []}
     led = _ledger()
     n_weekends = len({t["window"] for t in closed})
@@ -362,13 +377,14 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
     hit = cb.get("direction_hit_rate")
 
     hero = (f'<section class="hero"><div class="wrap">'
-            f'<h1><span>Stocks trade all weekend.</span> <span>Their price <span class="accent">doesn\'t.</span></span></h1>'
-            f'<div class="intro"><span class="eyebrow"><i class="live-dot"></i>{"Live on Base mainnet" if led.get("address") else "On Base"}</span>'
-            f'<p class="lede">Tokenized stocks keep trading on Base while their reference price sits frozen for two days. '
-            f'We measure the gap and score every call on the reopen.</p>'
+            f'<p class="kicker"><i class="live-dot"></i>Tokenized stocks trade all weekend on Base. Their price is frozen.</p>'
+            f'<h1><span>Predict which way</span> <span>stocks <span class="accent">reopen.</span></span></h1>'
+            f'<div class="intro">'
+            f'<p class="lede">Give each stock a probability it reopens higher. One transaction on Base, no stake. '
+            f'Chainlink\'s price scores you at the reopen.</p>'
             f'<div class="cta-row"><a class="btn primary" href="{CTA[0]}">{esc(CTA[1])} <span class="arr">&rarr;</span></a>'
-            f'<a class="btn" href="tape.html">See the weekend tape</a></div></div>'
-            f'{_hero_board(export_dir, as_of)}</div></section>')
+            f'<a class="btn" href="board.html">See the board</a></div></div>'
+            f'{_hero_board(export_dir, as_of, open_w)}</div></section>')
 
     tiles = (f'<div class="bento">'
              f'<div class="tile hot rv"><span class="k">Borrowed against stock tokens</span><div>'
@@ -382,16 +398,15 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
              f'<div class="tile s3 rv" style="--i:2"><div class="big">{ts.get("median_error_bps", 0):,.0f}<small>bps</small></div>'
              f'<p>median miss of the last-hour weekend DEX price against the reopen value.</p></div>'
              f'</div>')
-    numbers = (f'<section class="band"><div class="wrap"><h2 class="rv">Millions ride on a price that stops.</h2>'
-               f'<p class="lede rv">Lending markets on Base read one reference per stock. On weekends and holidays it '
-               f'stands still while the tokens keep moving.</p>{tiles}</div></section>')
+    numbers = (f'<section class="band"><div class="wrap"><h2 class="rv">Why the reopen matters.</h2>'
+               f'<p class="lede rv">Lending markets on Base price these stocks off the same frozen feed. Millions ride on '
+               f'what it shows when it comes back.</p>{tiles}</div></section>')
 
-    week = (f'<section class="band tight"><div class="wrap"><h2 class="rv">How a weekend plays out.</h2>{_week(as_of_ms, sp["spans"])}'
-            f'<div class="steps">'
-            f'<div class="rv"><b>Fri 20:00 ET</b><strong>The reference freezes</strong><p>Chainlink stops updating. The tokens keep trading in Base pools.</p></div>'
-            f'<div class="rv" style="--i:1"><b>All weekend</b><strong>The tape runs</strong><p>We read every swap and measure how far the pools drift from the frozen price.</p></div>'
-            f'<div class="rv" style="--i:2"><b>Sun 18:00 ET</b><strong>Calls close</strong><p>Anyone, human or agent, puts a probability per token on the record. One transaction.</p></div>'
-            f'<div class="rv" style="--i:3"><b>Sun 20:00 ET</b><strong>The reopen scores it</strong><p>Every call is scored against the reference feed, and against the weekend DEX price.</p></div>'
+    week = (f'<section class="band tight"><div class="wrap"><h2 class="rv">Three steps, every weekend.</h2>{_week(as_of_ms, sp["spans"])}'
+            f'<div class="steps three">'
+            f'<div class="rv"><b>Before Sun 18:00 ET</b><strong>Make your prediction</strong><p>Give each stock a probability that it reopens above Friday\'s frozen price. People and agents alike.</p></div>'
+            f'<div class="rv" style="--i:1"><b>One transaction</b><strong>Commit it on Base</strong><p>It goes on the record in a contract that holds no funds. Nothing is staked; you pay gas only.</p></div>'
+            f'<div class="rv" style="--i:2"><b>Sun 20:00 ET</b><strong>Get scored at the reopen</strong><p>Chainlink\'s price comes back and scores every prediction. The board ranks forecasters across weekends.</p></div>'
             f'</div></div></section>')
 
     absorb_sec = ""
@@ -446,9 +461,9 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
                  f'<span class="chip">Builder Code <b>{esc(led.get("builder_code", ""))}</b></span>'
                  f'<span class="chip">Base mainnet</span></div>')
     agents = (f'<section class="band"><div class="wrap split"><div>'
-              f'<h2 class="rv">Your call, on the record.</h2>'
-              f'<p class="lede rv">Commit a probability per token before the cutoff. The contract holds no funds and moves nothing: '
-              f'it emits an event, and the reopen scores it. Agents need one function.</p>{chips}'
+              f'<h2 class="rv">Built for agents too.</h2>'
+              f'<p class="lede rv">An agent predicts with one function call: same contract, same scoring, same board. '
+              f'The contract holds no funds and moves nothing; it records the prediction and the reopen scores it.</p>{chips}'
               f'<div class="cta-row"><a class="btn primary" href="{CTA[0]}">{esc(CTA[1])} <span class="arr">&rarr;</span></a>'
               f'<a class="btn" href="board.html">See the board</a></div></div><div class="rv">{code}</div></div></section>')
 
@@ -460,7 +475,7 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
               f'<div class="rv" style="--i:3"><strong>Open</strong><p>Code under Apache-2.0, data under CC BY 4.0. <a href="{identity.REPO_URL}">Read the code</a>.</p></div>'
               '</div></div></section>')
     spans_json = f'<script type="application/json" id="spans">{json.dumps(sp)}</script>'
-    return hero + numbers + week + absorb_sec + tape_sec + agents + closer + spans_json
+    return hero + week + numbers + absorb_sec + tape_sec + agents + closer + spans_json
 
 
 def _next_friday(spans: list[dict], as_of_ms: int) -> str:
@@ -489,7 +504,7 @@ def _board_table(rows: list[dict]) -> str:
     if not rows:
         return ('<div class="empty"><strong>No records have resolved yet.</strong>The ledger went live on Base on '
                 'Nov 14, 2026. The first records resolve at the next reopen; every forecaster appears here once a '
-                'window it committed to has been scored. <a href="commit.html">Put a call on the record</a>.</div>')
+                'window it committed to has been scored. <a href="commit.html">Make a prediction</a>.</div>')
     out = []
     for f in rows:
         c = f["committer"].lower()
@@ -639,11 +654,10 @@ def _markets_table(markets: list[dict], sym: dict | None = None) -> str:
 
 
 def _commit_page(open_w: list[dict]) -> str:
-    return ('<h1>Put a call on the record</h1>'
-            '<p class="lede">One transaction to a contract that holds no funds and stores nothing: it emits your '
-            'probabilities, per token, that the reference value ends the window above where it started. After the '
-            'window closes, the record is scored against the Chainlink reference feed. The first record per wallet '
-            'and window is the scored one.</p>'
+    return ('<h1>Predict the reopen</h1>'
+            '<p class="lede">Give each stock a probability that it reopens higher than its frozen price. One '
+            'transaction sends them to a contract that holds no funds; after the window closes, Chainlink\'s price '
+            'scores every prediction. Your first prediction per window is the one that counts.</p>'
             '<div class="note">This records a forecast. It does not touch any token, route anything or move any value; '
             'the transaction carries no ETH beyond gas. Your probabilities appear on the board only after the window resolves.</div>'
             '<div class="card formcard"><p><label for="window">Window</label><br><select id="window"></select></p>'

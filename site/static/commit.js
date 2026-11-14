@@ -58,6 +58,13 @@ async function main() {
     sel.appendChild(o);
   }
   const list = document.getElementById("tokens");
+  // picks carried over from the landing page, e.g. ?p=NVDAc:62,TSLAc:41
+  const preset = new Map();
+  for (const kv of (new URLSearchParams(location.search).get("p") || "").split(",")) {
+    const [sym, val] = kv.split(":");
+    const n = Number(val);
+    if (sym && Number.isInteger(n) && n >= 0 && n <= 100) preset.set(sym, n);
+  }
   if (!open.ledger) { status.textContent = "The contract is not deployed yet; records open at launch."; return; }
   for (const t of open.slate) {
     const row = document.createElement("div");
@@ -70,6 +77,8 @@ async function main() {
     const input = row.querySelector("input");
     const out = row.querySelector("output");
     input.addEventListener("input", () => { out.textContent = `${input.value}%`; });
+    const v = preset.get(t.symbol);
+    if (v !== undefined) { input.value = String(v); out.textContent = `${v}%`; }
   }
   document.getElementById("ledger").textContent = open.ledger.address;
   document.getElementById("commit").addEventListener("click", async () => {
@@ -85,7 +94,7 @@ async function main() {
       const data = calldata(Number(sel.value), encodeCalls(calls), open.builder_codes || []);
       status.textContent = "Waiting for the wallet...";
       const hash = await eth.request({ method: "eth_sendTransaction", params: [{ from, to: open.ledger.address, data, value: "0x0" }] });
-      status.innerHTML = `On the record: transaction <code>${hash}</code>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
+      status.innerHTML = `On the record: transaction <a href="https://basescan.org/tx/${hash}"><code>${hash}</code></a>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
     } catch (e) {
       status.textContent = `Not sent: ${e && e.message ? e.message : e}`;
     }
