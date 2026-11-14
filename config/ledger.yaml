@@ -1,0 +1,9 @@
+# CallLedger deployments, written by `callrec ledger deploy`. One entry per network.
+base:
+  address: '0x32E9d4e3c865b802689D39caAA30c7328de281C0'
+  block: 57166093
+  builder_code: bc_akq83qpj
+  chain_id: 8453
+  deployer: '0xe2C704A966d130C24F7DE0967E18d82521E6F4cc'
+  runtime_code_bytes: 1158
+  tx: '0x481ceb7e93f8510af292f27a0493ebc362fd7d5f7ee6be308943621345c82bda'

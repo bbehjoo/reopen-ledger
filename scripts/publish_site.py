@@ -37,7 +37,7 @@ def main() -> int:
     exp = Path(a.export) if a.export else newest_export()
     out = ROOT.parent / "reopen-ledger-site"
     if out.exists():
-        shutil.rmtree(out)
+        public_cut.rmtree(out)
     pages = site.build_site(exp, out)
     (out / ".nojekyll").write_text("", encoding="utf-8")
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())

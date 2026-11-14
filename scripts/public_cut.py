@@ -34,6 +34,14 @@ sys.path.insert(0, str(ROOT / "tests"))
 from callrec import identity  # noqa: E402
 from callrec.language import scan  # noqa: E402
 
+
+def rmtree(p: Path) -> None:
+    """shutil.rmtree that also removes read-only files (git marks its objects read-only on Windows)."""
+    def writable(func, path, _exc):
+        os.chmod(path, 0o666)
+        func(path)
+    shutil.rmtree(p, onexc=writable)
+
 EXCLUDE_FILES = {"CRITIQUE.md", "PROJECT-STATE.md", "CLAUDE.md", "docs/NAMING.md"}
 EXCLUDE_DIRS = ("drafts/", ".github/workflows/")
 KEEP_WORKFLOWS = {".github/workflows/tests.yml"}
@@ -120,7 +128,7 @@ def push(out: Path, message: str) -> str:
            "GIT_COMMITTER_NAME": AUTHOR[0], "GIT_COMMITTER_EMAIL": AUTHOR[1]}
     work = out.parent / (out.name + "-git")
     if work.exists():
-        shutil.rmtree(work)
+        rmtree(work)
     r = subprocess.run(["git", "clone", "-q", PUBLIC_REMOTE, str(work)], capture_output=True, text=True)
     if r.returncode != 0:      # empty or new repository
         work.mkdir(parents=True)
@@ -128,7 +136,7 @@ def push(out: Path, message: str) -> str:
         run(["git", "remote", "add", "origin", PUBLIC_REMOTE], work)
     for p in work.iterdir():
         if p.name != ".git":
-            shutil.rmtree(p) if p.is_dir() else p.unlink()
+            rmtree(p) if p.is_dir() else p.unlink()
     shutil.copytree(out, work, dirs_exist_ok=True)
     run(["git", "add", "-A"], work)
     if not run(["git", "status", "--porcelain"], work).strip():
@@ -146,7 +154,7 @@ def main() -> int:
     a = ap.parse_args()
     out = Path(a.out).resolve()
     if out.exists():
-        shutil.rmtree(out)
+        rmtree(out)
     out.mkdir(parents=True)
     files = export_head(out)
     problems = gate(out, files)
