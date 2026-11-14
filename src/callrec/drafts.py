@@ -86,7 +86,7 @@ def render_launch(export_dir: Path) -> str:
                          "against the Chainlink feed after the window closes. Agents can do it with one function and keep "
                          "their own Builder Code."), "",
               "**6/**", ("Every number is replayable from the published chain logs. Each daily export is signed, and its "
-                         "hash goes on chain. Measurements, not verdicts. Methods, data and the board: [link]"), "",
+                         "hash goes on chain. Measurements, not verdicts. Methods, data and the board: " + identity.SITE_URL + ""), "",
               "[demo video]", ""]
     return "\n".join(lines)
 

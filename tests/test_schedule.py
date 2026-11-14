@@ -47,21 +47,51 @@ def _house_crons() -> list[str]:
     return [s["cron"] for s in on["schedule"]]
 
 
-def test_every_house_slot_gets_three_firings():
-    fire = _firings(_house_crons())
-    hit: dict[tuple[int, str], int] = {}
-    for f in fire:
-        for w, role, _ in due_slots(f):
-            hit[(w.id, role)] = hit.get((w.id, role), 0) + 1
-    # every slot that opens in the range, found by sampling every 5 minutes
+def _all_slots() -> set[tuple[int, str]]:
+    """Every (window, role) slot that opens in the range, found by sampling every 5 minutes."""
     every: set[tuple[int, str]] = set()
     t = int(datetime(FIRST.year, FIRST.month, FIRST.day, 6, tzinfo=UTC).timestamp() * 1000)
     end = int(datetime(LAST.year, LAST.month, LAST.day, 23, 59, tzinfo=UTC).timestamp() * 1000)
     while t < end:
         every |= {(w.id, role) for w, role, _ in due_slots(t)}
         t += 300_000
-    short = {k: hit.get(k, 0) for k in every if hit.get(k, 0) < 3}
-    assert not short, f"slots with fewer than 3 firings: {sorted(short.items())[:10]}"
+    return every
+
+
+def _hits(fire: list[int]) -> dict[tuple[int, str], int]:
+    hit: dict[tuple[int, str], int] = {}
+    for f in fire:
+        for w, role, _ in due_slots(f):
+            hit[(w.id, role)] = hit.get((w.id, role), 0) + 1
+    return hit
+
+
+def _tick_crons() -> list[str]:
+    doc = yaml.safe_load((config.ROOT / "config" / "house_ticks.yaml").read_text(encoding="utf-8"))
+    return [t["cron"] for t in doc["ticks"]]
+
+
+def test_punctual_ticks_give_every_house_slot_two_firings():
+    hit = _hits(_firings(_tick_crons()))
+    short = {k: hit.get(k, 0) for k in _all_slots() if hit.get(k, 0) < 2}
+    assert not short, f"slots with fewer than 2 ticks: {sorted(short.items())[:10]}"
+
+
+def test_late_github_cron_still_covers_null_and_persistence():
+    """GitHub ran scheduled jobs 6 to 8 hours late; its cron alone must still reach every null and
+    persistence slot when every run is 0, 4 or 8 hours late."""
+    base = _firings(_house_crons())
+    slots = {k for k in _all_slots() if k[1] in ("null", "persistence")}
+    for delay_h in (0, 4, 8):
+        hit = _hits([f + delay_h * 3_600_000 for f in base])
+        missed = sorted(k for k in slots if not hit.get(k))
+        assert not missed, f"{delay_h} h late: missed {missed[:10]}"
+
+
+def test_tick_crons_respect_the_routine_minimum_interval():
+    for c in _tick_crons():
+        mi, hh = c.split()[:2]
+        assert len(_field(mi, 0, 59)) == 1, f"{c}: a routine fires at most once an hour"
 
 
 def test_cron_parser_reads_ranges_and_lists():

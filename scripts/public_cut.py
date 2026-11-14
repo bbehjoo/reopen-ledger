@@ -43,7 +43,7 @@ LEGAL = {"LICENSE", "DATA-LICENSE"}
 # private identifiers, spelled backwards so this file does not carry them either
 PRIVATE = [w[::-1] for w in ("gnarheb", "oojheb gnarheb", "5oojhebb", "moc.liamg@5oojhebb")]
 AUTHOR = ("Reopen Ledger", "reopen-ledger@users.noreply.github.com")
-PUBLIC_REMOTE = "https://github.com/bbehjoo/reopen-ledger.git"
+PUBLIC_REMOTE = os.environ.get("PUBLIC_REMOTE", "https://github.com/bbehjoo/reopen-ledger.git")   # CI: ssh + deploy key
 
 
 def keep(path: str) -> bool:

@@ -1,0 +1,14 @@
+# Punctual triggers of the house job (METHODS.md section 7). GitHub's own cron ran this repository's
+# scheduled jobs 6 to 8 hours late (measured 2026-11-11 to 11-13), so each line below is a Claude cloud
+# routine that pushes an empty commit to the branch claude/tick at that time (UTC); the push starts
+# .github/workflows/house.yml at once (tested 2026-11-14: fired 01:11, push 01:12:25, job 01:12:28).
+# Manage the routines at https://claude.ai/code/routines/<routine>. A routine fires at most once an hour, hence one routine per line.
+# tests/test_schedule.py checks that these give every house slot at least two firings through 2027-03-13
+# (EST; move every line one hour earlier before DST starts on 2027-03-14).
+ticks:
+  - {name: "reopen-ledger tick 00:10", routine: "trig_011uacayYLDVrmEA93eyaTaV", cron: "10 0 * * 2-5"}       # daily records, Tue-Fri windows
+  - {name: "reopen-ledger tick 00:40", routine: "trig_01U7ZW4e7ArPnMYzPkMVfbfE", cron: "40 0 * * 2-5"}
+  - {name: "reopen-ledger tick 01:10", routine: "trig_019gJCm8Sm6K3iLKAFM2b8Yo", cron: "10 1 * * *"}         # Monday's window, Friday close, holidays
+  - {name: "reopen-ledger tick 01:40", routine: "trig_01SPjS8jJCrNwjQsHn2vbPPk", cron: "40 1 * * *"}
+  - {name: "reopen-ledger tick Sunday", routine: "trig_01VdYor5wacfzm8XjFCgXbzN", cron: "10 21,22 * * 0"}    # DEX-implied before Sunday's cutoff
+  - {name: "reopen-ledger tick Thanksgiving", routine: "trig_016YvhjZiEchbQbsNjXbHa5V", cron: "10 21,22 26 11 *"}

@@ -419,7 +419,7 @@ def _commit_page(open_w: list[dict]) -> str:
             '<code>commit(uint32 windowId, uint16 1, bytes data)</code> yourself; the encoding is in '
             '<a href="methods.html">METHODS section 4</a>. Append your own Builder Code in the ERC-8021 suffix; it is kept.</p>'
             '<h2>House schedule</h2><p>The project\'s own forecasters commit once per window (METHODS section 7). '
-            'Daily windows: null, persistence and DEX-implied in the hour before 20:00 ET. Closed spans: null and '
+            'Daily windows: null and persistence in the 12 hours before 20:00 ET, DEX-implied in the hour before. Closed spans: null and '
             'persistence after the Friday close, DEX-implied in the two hours before the cutoff (Sunday 16:00 to '
             '18:00 ET), and the coverage call within two hours of the close. All house wallets are labelled '
             'and excluded from every usage figure.</p>')

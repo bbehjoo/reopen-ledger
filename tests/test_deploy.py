@@ -45,7 +45,7 @@ def test_existing_record_search_starts_an_hour_before_the_house_slot():
     ws = {w.id: w for w in windows_between(date(2026, 11, 16), date(2026, 11, 22))}
     daily, closed = ws[220261117], ws[120261120]
     sb = lambda ms: schedule().block_at_or_before_ms(ms)  # noqa: E731
-    assert housecommit.since_block_for(n, daily, {}) == sb(daily.cutoff_ms - 3 * 3_600_000)
+    assert housecommit.since_block_for(n, daily, {}) == sb(daily.cutoff_ms - 13 * 3_600_000)
     assert housecommit.since_block_for(n, closed, {}) == sb(closed.start_ms - 3_600_000)
     assert housecommit.since_block_for(n, closed, {"block": 10**9}) == 10**9   # never before the deploy
     assert housecommit.since_block_for(n, None, {}, since_ms=closed.start_ms) == sb(closed.start_ms - 3_600_000)

@@ -1,0 +1,950 @@
+{
+ "flag": "R1_lookalike_symbol",
+ "rule": "tokens seen in the DexScreener and GeckoTerminal responses gathered here (token pairs, pool lists, symbol searches) on Base, at an address not on the official list, whose symbol equals an official symbol (case-insensitive), equals its ticker without the trailing c (3+ letters), adds the wt prefix (or another one-letter prefix to a 4+ letter ticker), or whose name equals or contains a multi-word official name",
+ "tokens": [
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x0200a9540c4ca734588e3fcb341883f6c6c19ba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=4"
+   ],
+   "symbol": "META"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x05dd678bee4a8a5a19d80e5fb95882ba1da84fbd",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": "Strategy Inc Protocol (MSTRc)",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=MSTRc"
+   ],
+   "symbol": "MSTRc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x1020ec8aa3f709a1f3d8705cdba89b950451bd88",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped Apple Inc. ST0x",
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000C2e324d24d7eEcd1fb",
+     "symbol": "AAPLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=AAPLc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb200000000000000000000C2e324d24d7eEcd1fb",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000c2e324d24d7eecd1fb/pools?page=1"
+   ],
+   "symbol": "wtAAPL"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x19f89aaef8a93f38a974beca9776f09ab844887f",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000007b9fcbd005511aCBd5",
+     "symbol": "SPCXc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000007b9fcbd005511acbd5/pools?page=1"
+   ],
+   "symbol": "wtSPCX"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x219a8d384a10bf19b9f24cb5cc53f79dd0e5a03d",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped Tesla Inc ST0x",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000001e800a7f5189430cD0",
+     "symbol": "TSLAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=TSLAc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb2000000000000000000001e800a7f5189430cD0",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000001e800a7f5189430cd0/pools?page=1"
+   ],
+   "symbol": "wtTSLA"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x22d71c6553c585e0ae6d37aba2df35642ea40aa7",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000004884b426556b92883d/pools?page=2"
+   ],
+   "symbol": "MSTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x345c77838a623a2128a00509f977a973ce2f5f43",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": "NVIDIA Curenncy",
+   "resembles": [
+    {
+     "address": "0xb20000000000000000000078ee7ce2fE4908108C",
+     "symbol": "NVDAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=NVDAc"
+   ],
+   "symbol": "NVDAc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x515a3ac2a6ab590bdfa970cafffd7fadc680886e",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped Microsoft Corporation ST0x",
+   "resembles": [
+    {
+     "address": "0xB200000000000000000000Ab99cFa739E253872B",
+     "symbol": "MSFTc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=MSFTc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xB200000000000000000000Ab99cFa739E253872B",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000ab99cfa739e253872b/pools?page=1"
+   ],
+   "symbol": "wtMSFT"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x5480cf18e34d0a9f916909ad41ae91da394f84dc",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": "Space Exploration Tech Token (SPCXc)",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000007b9fcbd005511aCBd5",
+     "symbol": "SPCXc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=SPCXc"
+   ],
+   "symbol": "SPCXc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x56a0435b426938da425ba7b22df6418ea56dfee1",
+   "match": [
+    "ticker_with_prefix_b"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000004884b426556b92883d/pools?page=3"
+   ],
+   "symbol": "BMSTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x5cb370837f7e282a6c2472709d0b486680ef26f8",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": "Moon Strategy",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=MSTR"
+   ],
+   "symbol": "MSTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x5e6c50cf338252cd63c9991b52fface001714d72",
+   "match": [
+    "name_contains_official_name",
+    "same_symbol_case_insensitive"
+   ],
+   "name": "Circle Internet Group Inc. Tokenized Stock (CRCLc)",
+   "resembles": [
+    {
+     "address": "0xB20000000000000000000019f6E7C675b73C2e4D",
+     "symbol": "CRCLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=CRCLc"
+   ],
+   "symbol": "CRCLc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x643656351199945f593e62fa4748ff4f7b6ab099",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000004fc7a0C25178A0D633",
+     "symbol": "FLYc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d9192b6b456483c2e8/pools?page=1"
+   ],
+   "symbol": "FLY"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x6a2357df4975c667b171be53da6ffe6debf7030c",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000002D0BA3164cc74f58B7",
+     "symbol": "GOOGLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000002d0ba3164cc74f58b7/pools?page=1"
+   ],
+   "symbol": "wtGOOGL"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x7102347975b2f2a2b2e881874d031554812709cb",
+   "match": [
+    "same_name",
+    "same_symbol_case_insensitive"
+   ],
+   "name": "Apple Inc",
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000C2e324d24d7eEcd1fb",
+     "symbol": "AAPLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=AAPLc"
+   ],
+   "symbol": "AAPLc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x72d48616828cefe7bf041a913e1c933569eb8ba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000397293Cb8cda9a10c5",
+     "symbol": "SNDKc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000397293cb8cda9a10c5/pools?page=3"
+   ],
+   "symbol": "SNDK"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x73e472765a4a881c546d4085dc90c88886fbfee1",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=5"
+   ],
+   "symbol": "METAC"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x8157217a9403aa334d9cef5f976bc2619ac5dba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000002D0BA3164cc74f58B7",
+     "symbol": "GOOGLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000002d0ba3164cc74f58b7/pools?page=4"
+   ],
+   "symbol": "GOOGL"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0x8e6d19c2427ecf1c19f0def007626356edadc940",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMD"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xa03a8ed1492a9d3b507830f186ca417c84805307",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMD"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xa5ab81bfb107eaa101fe8bc72990887415d1cccc",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": "AAPL",
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000C2e324d24d7eEcd1fb",
+     "symbol": "AAPLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=AAPL",
+    "https://api.dexscreener.com/latest/dex/search?q=AAPLc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb200000000000000000000C2e324d24d7eEcd1fb"
+   ],
+   "symbol": "AAPL"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xa9eba911ae0f79167ff5ca730a7ac5401b632bcd",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000001e800a7f5189430cD0",
+     "symbol": "TSLAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000001e800a7f5189430cd0/pools?page=5"
+   ],
+   "symbol": "TSLAC"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xaa83377eb536a1d4f0a1a0ceee3eccd8038ae183",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB20000000000000000000065ca0F772a5502E976",
+     "symbol": "PURRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000c2e324d24d7eecd1fb/pools?page=4"
+   ],
+   "symbol": "PURR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb09db8c20bfce8d0f077d9f4c37d07804a4b0aaa",
+   "match": [
+    "same_symbol_case_insensitive"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMDc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb2000000000000000000005a7ccde6dcc813a901",
+   "match": [
+    "same_symbol_case_insensitive",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMDc"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb2000000000000000000005c4f76509b0c72fb01",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000FEC679b39992F67627",
+     "symbol": "VVVc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d9192b6b456483c2e8/pools?page=4"
+   ],
+   "symbol": "VVV"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb2000000000000000000007701d9c315e1fd3901",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000d9192b6B456483C2E8",
+     "symbol": "AMZNc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d9192b6b456483c2e8/pools?page=4"
+   ],
+   "symbol": "AMZN"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb2000000000000000000007d1f7a30d7fc12a3d6",
+   "match": [
+    "same_symbol_case_insensitive",
+    "official_address_pattern"
+   ],
+   "name": "Artfficial Cat",
+   "resembles": [
+    {
+     "address": "0xb20000000000000000000072B5C2B2D18Ee8A2a5",
+     "symbol": "AIc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb20000000000000000000078ee7ce2fE4908108C",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb20000000000000000000078ee7ce2fe4908108c/pools?page=2"
+   ],
+   "symbol": "AIC"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb200000000000000000000802dcad33fe3221101",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000004884b426556b92883d/pools?page=4"
+   ],
+   "symbol": "MSTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb20000000000000000000080623f50b24baec401",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000004fc7a0C25178A0D633",
+     "symbol": "FLYc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000001e800a7f5189430cd0/pools?page=5"
+   ],
+   "symbol": "FLY"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb200000000000000000000ad6953edb229f2f401",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000d9192b6B456483C2E8",
+     "symbol": "AMZNc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d9192b6b456483c2e8/pools?page=4"
+   ],
+   "symbol": "AMZN"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb200000000000000000000c86475d3ea2fb4a901",
+   "match": [
+    "symbol_equals_ticker_without_c",
+    "official_address_pattern"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000397293Cb8cda9a10c5",
+     "symbol": "SNDKc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000397293cb8cda9a10c5/pools?page=2"
+   ],
+   "symbol": "SNDK"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb27a25b1fcc74c699ac529e9974a3f999976245b",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000004fc7a0C25178A0D633",
+     "symbol": "FLYc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d61efd9f54a23ef9eb/pools?page=1"
+   ],
+   "symbol": "FLY"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb7395ecc0d463736a5542c557aebb4061d9beba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000007d16372840dF4dAbbe",
+     "symbol": "PLTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000007d16372840df4dabbe/pools?page=1"
+   ],
+   "symbol": "PLTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xb818cd38218621a162f8779932e4232583903f6b",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=2"
+   ],
+   "symbol": "META"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xcb4311a957d74d90d0a979b01e4e293468699157",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMD"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xcf600264d1b9711a46581b87c4415be855305ba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000002D0BA3164cc74f58B7",
+     "symbol": "GOOGLc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000002d0ba3164cc74f58b7/pools?page=3"
+   ],
+   "symbol": "GOOGL"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xd539c6d8bdbc31acff46466ee4a99938e10ffee1",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB200000000000000000000eDA6C2c6F11E0F838f",
+     "symbol": "LITEc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000001e800a7f5189430cd0/pools?page=2"
+   ],
+   "symbol": "LITE"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xda17e3e67253342bc60c0c8b5d873ca833c1744b",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB200000000000000000000B1a29cF17A1819288a",
+     "symbol": "ASTSc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000007b9fcbd005511acbd5/pools?page=1"
+   ],
+   "symbol": "ASTS"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xdfbe3e3e94d803e56048ad610695844f9429fc29",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=3"
+   ],
+   "symbol": "META"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xe17495ebb61c4529aff180ed3c408621f79561ba",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000004884b426556b92883d/pools?page=4"
+   ],
+   "symbol": "MSTR"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xe1d17029e0cf59c1a302a00e27515638887e4d9f",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000d9192b6b456483c2e8/pools?page=3"
+   ],
+   "symbol": "AMD"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xe4b832e88eede7cb48aadf081ee167cd782929d1",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000e410ae30ABDdA3Aee0",
+     "symbol": "SAMc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000002d0ba3164cc74f58b7/pools?page=5"
+   ],
+   "symbol": "SAM"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xea98dda92861b382fbdf2587d03e1876d7e96904",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=3"
+   ],
+   "symbol": "META"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xeea4dfda85da55dc0bc58a5672565683c44d9ba3",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000008bC8786B856E61707C",
+     "symbol": "METAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000008bc8786b856e61707c/pools?page=4"
+   ],
+   "symbol": "META"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xeee88b0c88c09c757a7633f0f2a2e45b306d9462",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB2000000000000000000000d8Ce462E99ee7A47B",
+     "symbol": "AMDc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000000d8ce462e99ee7a47b/pools?page=1"
+   ],
+   "symbol": "AMD"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xef35739d959a3e7e7a931776f4b6428ae3f35fe4",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": "SpaceXStock",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000007b9fcbd005511aCBd5",
+     "symbol": "SPCXc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=SPCX"
+   ],
+   "symbol": "SPCX"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xf6fcc5132dc24bafa991c27e3be954531ccffee1",
+   "match": [
+    "symbol_equals_ticker_without_c"
+   ],
+   "name": null,
+   "resembles": [
+    {
+     "address": "0xB200000000000000000000b5e07d13B2D68D60Dd",
+     "symbol": "WOOFc"
+    }
+   ],
+   "seen_in": [
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000007b9fcbd005511acbd5/pools?page=5"
+   ],
+   "symbol": "WOOF"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xfb5b41acdba20a3230f84be995173cfb98b8d6e7",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped NVIDIA Corporation ST0x",
+   "resembles": [
+    {
+     "address": "0xb20000000000000000000078ee7ce2fE4908108C",
+     "symbol": "NVDAc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=NVDAc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb20000000000000000000078ee7ce2fE4908108C",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb20000000000000000000078ee7ce2fe4908108c/pools?page=1"
+   ],
+   "symbol": "wtNVDA"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xfcd17ac4c4bf6a72c93018096f3fc09e66573ff9",
+   "match": [
+    "name_contains_official_name",
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped SK hynix Inc. ADR ST0x",
+   "resembles": [
+    {
+     "address": "0xb200000000000000000000187f7071D6E321a7d2",
+     "symbol": "SKHYc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=SKHYc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb200000000000000000000187f7071D6E321a7d2",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb200000000000000000000187f7071d6e321a7d2/pools?page=1"
+   ],
+   "symbol": "wtSKHY"
+  },
+  {
+   "R1_lookalike_symbol": true,
+   "address": "0xff05e1bd696900dc6a52ca35ca61bb1024eda8e2",
+   "match": [
+    "ticker_with_prefix_wt"
+   ],
+   "name": "Wrapped MicroStrategy Incorporated ST0x",
+   "resembles": [
+    {
+     "address": "0xb2000000000000000000004884b426556b92883d",
+     "symbol": "MSTRc"
+    }
+   ],
+   "seen_in": [
+    "https://api.dexscreener.com/latest/dex/search?q=MSTRc",
+    "https://api.dexscreener.com/token-pairs/v1/base/0xb2000000000000000000004884b426556b92883d",
+    "https://api.geckoterminal.com/api/v2/networks/base/tokens/0xb2000000000000000000004884b426556b92883d/pools?page=1"
+   ],
+   "symbol": "wtMSTR"
+  }
+ ]
+}

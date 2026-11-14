@@ -50,8 +50,8 @@ def since_block_for(n: tx.Net, w: Window | None, ledger_entry: dict, since_ms: i
     deploy = int(ledger_entry.get("block", 0))
     if n.name == "base":
         from .chain import schedule
-        if w is not None:
-            ref_ms = min(w.start_ms, w.cutoff_ms - 2 * HOUR_MS) - HOUR_MS
+        if w is not None:   # earliest house send: the span start, or 12 h before a daily cutoff (housedue)
+            ref_ms = min(w.start_ms, w.cutoff_ms - 12 * HOUR_MS) - HOUR_MS
         elif since_ms is not None:
             ref_ms = since_ms - HOUR_MS
         else:

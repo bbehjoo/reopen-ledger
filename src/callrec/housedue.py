@@ -6,7 +6,8 @@ Slots (US Eastern):
   closed window   null, persistence: from the span start to the cutoff
                   dex_implied: the 2 hours before the cutoff
                   coverage (schema 2): the 2 hours after the span start
-  daily window    null, persistence, dex_implied: the hour before the cutoff
+  daily window    null, persistence: the 12 hours before the cutoff
+                  dex_implied: the hour before the cutoff
 """
 
 from __future__ import annotations
@@ -33,9 +34,17 @@ def due_slots(now_ms: int) -> list[tuple[Window, str, int]]:
                 out.append((w, "dex_implied", 1))
             if w.start_ms <= now_ms < w.start_ms + 2 * HOUR:
                 out.append((w, "coverage", 2))
-        elif w.cutoff_ms - HOUR <= now_ms:
-            out += [(w, "null", 1), (w, "persistence", 1), (w, "dex_implied", 1)]
+        else:
+            # null and persistence do not depend on the send time, so their slot is wide enough for a
+            # scheduled job that starts hours late; the DEX-implied record reads the last hour's prices
+            if w.cutoff_ms - EARLY_HOURS * HOUR <= now_ms:
+                out += [(w, "null", 1), (w, "persistence", 1)]
+            if w.cutoff_ms - HOUR <= now_ms:
+                out.append((w, "dex_implied", 1))
     return out
+
+
+EARLY_HOURS = 12   # daily windows: null and persistence may be sent from 12 hours before the cutoff
 
 
 def run_due(network: str, now_ms: int | None = None, dry_run: bool = False, coverage_data=None) -> list[dict]:

@@ -1,4 +1,4 @@
-# METHODS (version 0.1.1)
+# METHODS (version 0.2.0)
 
 Reopen Ledger publishes three things about Coinbase-issued tokenized stocks on Base:
 
@@ -175,14 +175,16 @@ second weekend value; they are not used in any score.
 
 | Wallet (role) | Records | When |
 |---|---|---|
-| null | schema 1, p = 0.5 on every slate token | every window, before its cutoff |
-| persistence | schema 1, p = 0.5 and a point call of 0 | every window, before its cutoff |
+| null | schema 1, p = 0.5 on every slate token | daily windows: in the 12 hours before the cutoff; closed windows: from the span start to the cutoff |
+| persistence | schema 1, p = 0.5 and a point call of 0 | daily windows: in the 12 hours before the cutoff; closed windows: from the span start to the cutoff |
 | dex_implied | schema 1, the DEX-implied p and point call (section 6); p = 0.5 and no point call where the DEX baseline is void | closed windows: in the 2 hours before the cutoff; daily windows: in the hour before the cutoff |
 | coverage | schema 2, the coverage call (section 8) | each closed window, within 2 hours after the span start |
 | anchor | schema 3, the daily export hash | once a day |
 
 Each runs from a scheduled job, at most one transaction per role per window (the job reads the chain
-first and does nothing if the record exists). A Monday job reads the chain for the past closed window's
+first and does nothing if the record exists). The job is started at fixed times by scheduled pushes
+(`config/house_ticks.yaml`), with GitHub's own schedule as a backstop: GitHub ran it 6 to 8 hours late in
+the first week, so the null and persistence slots of daily windows are 12 hours wide. A Monday job reads the chain for the past closed window's
 house records and publishes `house_commit_missing` (with the expected role and window) if one is absent.
 House wallets never trade and never hold the measured tokens. They appear on the board, labelled, and
 are excluded from every usage figure.
@@ -275,3 +277,6 @@ so a round trip that crosses midnight UTC is not joined.
   system. An export's as_of is clamped to the data actually read: a Linux replay of the 2026-11-09 export
   gave 25 of 26 files identical, and the 26th, volume_quality.json, differed because that export was dated
   02:05 with swaps read only to 01:59. No measurement definition changed.
+- 0.2.0 (2026-11-13): house schedule (section 7). Null and persistence records of daily windows may be sent
+  in the 12 hours before the cutoff (was the last hour), because scheduled jobs ran hours late. Their
+  content does not depend on the send time. No measurement definition changed.

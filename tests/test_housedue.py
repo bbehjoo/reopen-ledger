@@ -34,7 +34,9 @@ def test_daily_window_hour_before_cutoff():
     # daily window for Tue Nov 17 starts (and is cut off) Mon Nov 16 20:00 ET
     got = roles(ms(2026, 11, 16, 19, 15))
     assert {(220261117, "null"), (220261117, "persistence"), (220261117, "dex_implied")} <= set(got)
-    assert not any(w == 220261117 for w, _ in roles(ms(2026, 11, 16, 18, 30)))
+    early = roles(ms(2026, 11, 16, 18, 30))        # null and persistence from 12 h before; DEX-implied not yet
+    assert (220261117, "null") in early and (220261117, "dex_implied") not in early
+    assert not any(w == 220261117 for w, _ in roles(ms(2026, 11, 16, 7, 30)))
 
 
 def test_thanksgiving_span_has_its_own_slots():
