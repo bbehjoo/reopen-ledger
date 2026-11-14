@@ -14,7 +14,7 @@ import io
 import json
 import re
 import shutil
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import markdown
@@ -27,6 +27,7 @@ CTA = ("commit.html", "Predict the reopen")
 DESCRIPTION = ("Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, "
                "scored against Chainlink at the reopen. Plus the data on what a frozen weekend price means for "
                "lending markets. Measurements, not verdicts.")
+TEMPLATE_URL = "https://github.com/bbehjoo/reopen-ledger-agent"
 FEATURED = ("NVDAc", "TSLAc", "AAPLc", "GOOGLc", "MSFTc", "METAc", "AMZNc")
 MARK = ('<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/>'
         '<path d="M7 19.5h10.5L25 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="3" stroke-linecap="round" '
@@ -102,6 +103,41 @@ Measurements, not verdicts; nothing here is advice. Coinbase tokenized stocks ar
 
 HOUSE_NAMES = {"null": "Coin Flip", "persistence": "Frozen Price", "dex_implied": "Weekend DEX", "coverage": "Coverage",
                "anchor": "Anchor"}
+
+
+def _badges(export_dir: Path, board: dict, open_w: list[dict], out: Path) -> set[str]:
+    """badge/<wallet>.json in the shields.io endpoint format, for every scored forecaster ("beat the market k/n":
+    windows where its mean Brier was below the Weekend DEX baseline's on the same pairs) and every wallet with a
+    record in an open window ("on the record")."""
+    made = set()
+    d = out / "badge"
+    d.mkdir(parents=True, exist_ok=True)
+
+    def write(c: str, message: str, good: bool) -> None:
+        doc = {"schemaVersion": 1, "label": identity.NAME, "message": message,
+               "color": "ff6a2b" if good else "636973", "labelColor": "14161a"}
+        (d / f"{c}.json").write_text(json.dumps(doc, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+        made.add(c)
+
+    for f in board.get("forecasters", []):
+        c = f["committer"].lower()
+        wins = [w for w in read_json(export_dir / "forecasters" / f"{c}.json", {"windows": []})["windows"] if w.get("pairs")]
+        beat = sum(1 for w in wins if sum(p["brier"] for p in w["pairs"]) < sum(p["baseline_brier"] for p in w["pairs"]))
+        write(c, f"beat the market {beat}/{len(wins)}" if wins else "on the record", bool(wins) and beat * 2 >= len(wins))
+    for w in open_w:
+        for c in w.get("committed", []):
+            if c.lower() not in made:
+                write(c.lower(), "on the record", True)
+    return made
+
+
+def _badge_img(c: str) -> str:
+    from urllib.parse import quote
+    return "https://img.shields.io/endpoint?url=" + quote(f"{identity.SITE_URL}badge/{c}.json", "")
+
+
+def _badge_md(c: str) -> str:
+    return f"[![{identity.NAME}]({_badge_img(c)})]({identity.SITE_URL}f/{c}.html)"
 
 
 def _share(text: str, url: str) -> str:
@@ -194,7 +230,7 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
 
 def _utc_label(iso: str) -> str:
     try:
-        d = datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(timezone.utc)
+        d = datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(UTC)
     except ValueError:
         return iso
     return d.strftime("%b ") + str(d.day) + d.strftime(", %H:%M UTC")
@@ -262,13 +298,14 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
     from . import cards
     made = cards.build_cards(export_dir, out)
     reveal = ""
-    if made:
-        when = cards._when(made["window"]["label"])
+    for item in (made or {}).get("windows", []):
+        when = cards._when(item["window"]["label"])
         text = (f"{when}: who beat the weekend market? Predictions on Base, scored against Chainlink at the reopen."
-                if made["window"].get("kind") == 1 else f"{when}: who called the session? Scored against Chainlink.")
-        reveal = (f'<div class="reveal"><img src="{made["window_card"]}" width="1200" height="675" '
-                  f'alt="Results for {esc(when)}: each forecaster, how many stocks it called, and its score against Weekend DEX and Coin Flip">'
-                  f'<a class="btn small" href="{_share(text, identity.SITE_URL + "board.html")}">Share on X</a></div>')
+                if item["window"].get("kind") == 1 else f"{when}: who called the session? Scored against Chainlink.")
+        reveal += (f'<div class="reveal"><img src="{item["card"]}" width="1200" height="675" '
+                   f'alt="Results for {esc(when)}: each forecaster, how many stocks it called, and its score against Weekend DEX and Coin Flip">'
+                   f'<a class="btn small" href="{_share(text, identity.SITE_URL + "board.html")}">Share on X</a></div>')
+    badges = _badges(export_dir, board, open_w, out)
 
     # --- board
     missing = house_checks.get("house_commit_missing", [])
@@ -296,12 +333,16 @@ def build_site(export_dir: Path, out: Path) -> list[str]:
                              fnum(p["baseline_brier"], 4)])
         tag = house_tag(f.get("house_role"))
         card = (made or {}).get("forecaster_cards", {}).get(c)
-        mine = next((r for r in (made or {}).get("results", []) if r["committer"] == c), None)
+        mine = (made or {}).get("latest", {}).get(c)
         share = ""
+        if c in badges:
+            md = _badge_md(c)
+            share += (f'<div class="badge-row"><img src="{esc(_badge_img(c))}" alt="Reopen Ledger badge" height="20">'
+                      f'<code>{esc(md)}</code></div>')
         if card and mine:
             line = (f"Called {mine['called']} of {mine['decided']} at the reopen. " if mine["decided"] else "On the record. ")
             line += ("Beat the weekend market. " if mine["score"] < mine["dex"] else "")
-            share = (f'<div class="reveal"><img src="{card}" width="1200" height="675" alt="{esc(line)}">'
+            share += (f'<div class="reveal"><img src="{card}" width="1200" height="675" alt="{esc(line)}">'
                      f'<a class="btn small" href="{_share(line + "Can your agent do better?", identity.SITE_URL + f"f/{c}.html")}">Share on X</a></div>')
         body = (f'<h1 class="mono">{esc(c)}{tag}</h1>{share}'
                 f'<div class="grid"><div class="card stat"><div class="v">{f["windows_scored"]}</div><div class="k">windows scored</div></div>'
@@ -464,11 +505,11 @@ def _landing(export_dir: Path, as_of: str, as_of_ms: int, closed: list[dict], ts
                        f'<div class="b depth"></div><div class="b flow"></div></div><span class="v"></span></div>'
                        for i, t in enumerate(toks))
         absorb_sec = (
-            f'<section class="band"><div class="wrap split"><div>'
-            f'<h2 class="rv">What if it reopens lower?</h2>'
-            f'<p class="lede rv">Pick a shock. We set the collateral that would be liquidated against the pool depth '
-            f'in the 5% below, token by token, from a snapshot of Base itself.</p>'
-            f'<div class="seg" role="group" aria-label="Shock size">'
+            '<section class="band"><div class="wrap split"><div>'
+            '<h2 class="rv">What if it reopens lower?</h2>'
+            '<p class="lede rv">Pick a shock. We set the collateral that would be liquidated against the pool depth '
+            'in the 5% below, token by token, from a snapshot of Base itself.</p>'
+            '<div class="seg" role="group" aria-label="Shock size">'
             + "".join(f'<button type="button" data-s="{s}" aria-pressed="false">&minus;{s}%</button>' for s in ("5", "10", "20"))
             + f'</div><div class="readout"><div class="flow"><div class="big" id="ab-flow">{usd(sum(t["flow"]["20"] for t in toks))}</div><div class="k">liquidation flow</div></div>'
             f'<div><div class="big" id="ab-depth">{usd(sum(t["depth"]["20"] for t in toks))}</div><div class="k">pool depth in the 5% below</div></div></div>'
@@ -544,15 +585,19 @@ def _agents_page() -> str:
         'One scheduled job covers them all.</p></div>'
         '<div><strong>Nothing at stake</strong><p>The contract holds no funds and moves nothing. Gas is the only cost, a '
         'fraction of a cent on Base.</p></div></div>'
-        '<h2>Three steps</h2>'
+        '<h2>Three steps, no server</h2>'
         '<div class="steps three">'
-        '<div><b>1. Get the starter</b><strong>Clone and install</strong><p>A single-file agent in TypeScript '
-        '(viem only) or Python (web3 only). It reads the open window and slate from this site.</p></div>'
-        '<div><b>2. Set two variables</b><strong>Key and Builder Code</strong><p><code>PRIVATE_KEY</code> for a Base '
+        f'<div><b>1. Use the template</b><strong>One click on GitHub</strong><p><a href="{TEMPLATE_URL}/generate">'
+        'Create your repo from the agent template</a>. A workflow in it predicts once a day for every window that '
+        'closes in the next 24 hours.</p></div>'
+        '<div><b>2. Add two secrets</b><strong>Key and Builder Code</strong><p><code>PRIVATE_KEY</code> for a Base '
         'wallet with a little ETH for gas, and <code>BUILDER_CODES</code> with your own code.</p></div>'
-        '<div><b>3. Dry run, then go live</b><strong>Put your model in <code>predict()</code></strong><p>Run with '
-        '<code>--dry-run</code> to see the exact calldata, then schedule it before each cutoff.</p></div></div>'
-        f'<pre class="code" style="margin-top:28px">git clone {repo}\ncd reopen-ledger/examples/agent && npm i\n\n'
+        '<div><b>3. Put your model in <code>predict()</code></b><strong>Then leave it running</strong><p>A dry run '
+        'from the Actions tab shows the exact calldata first. After that it runs every day by itself.</p></div></div>'
+        f'<div class="cta-row"><a class="btn primary" href="{TEMPLATE_URL}/generate">Use the template <span class="arr">&rarr;</span></a>'
+        f'<a class="btn" href="{TEMPLATE_URL}">See the template</a></div>'
+        '<h2>Or run it yourself</h2>'
+        f'<pre class="code" style="margin-top:20px">git clone {repo}\ncd reopen-ledger/examples/agent && npm i\n\n'
         '<span class="c"># your wallet and your Builder Code</span>\n'
         'export PRIVATE_KEY=0x...  BUILDER_CODES=bc_yourcode\n\n'
         'npm run dry      <span class="c"># prints window, probabilities, calldata</span>\n'
@@ -564,6 +609,11 @@ def _agents_page() -> str:
         'commit encoding. Build it from a clone (<code>cd clients/ts &amp;&amp; npm i &amp;&amp; npm run build</code>) '
         'and add it to your MCP client:</p>'
         f'<pre class="code">{esc(mcp)}</pre>'
+        '<h2>Show your record</h2>'
+        '<p>Every forecaster gets a badge for its README and demo, live from the board: <em>on the record</em> from '
+        'its first prediction, then <em>beat the market k/n</em> once windows are scored. Copy it from your '
+        'forecaster page, or use this with your wallet address in lowercase:</p>'
+        f'<pre class="code">{esc(_badge_md("0xYOUR_WALLET").replace("0xyour_wallet", "0xYOUR_WALLET"))}</pre>'
         '<h2>What counts</h2>'
         '<div class="facts">'
         '<div><span>A prediction counts if it is mined before the window\'s cutoff</span><strong>Sun 18:00 ET</strong></div>'
@@ -608,7 +658,8 @@ def _board_table(rows: list[dict]) -> str:
     for f in rows:
         c = f["committer"].lower()
         tag = house_tag(f.get("house_role"))
-        out.append([esc(f["rank"] or ""), f'<a class="mono" href="f/{c}.html">{esc(short(c))}</a>{tag}',
+        rank = esc(f["rank"]) if f.get("rank") else '<span class="tag" title="ranked once it has enough scored windows">new</span>'
+        out.append([rank, f'<a class="mono" href="f/{c}.html">{esc(short(c))}</a>{tag}',
                     esc(f["windows_scored"]), fnum(f["brier"], 4), fnum(f["skill_vs_dex"], 3, sign=True),
                     fnum(f["skill_vs_50"], 3, sign=True), fnum(f["edge_lcb"], 4, sign=True)])
     return table([("rank", True), ("forecaster", False), ("windows", True), ("Brier", True), ("skill vs DEX", True),
@@ -647,7 +698,7 @@ def _tape_table(rows: list[dict], sym: dict) -> str:
     out = []
     for t in sorted(rows, key=lambda t: sym.get(t["token"], t["token"])):
         # a void row's DEX-derived values are kept in tape.csv as measured, but never shown as if usable
-        dx = (lambda k: None) if t["void"] else (lambda k: t[k])
+        dx = (lambda k: None) if t["void"] else (lambda k, t=t: t[k])
         out.append([esc(sym.get(t["token"], short(t["token"]))), fnum(t["frozen_ref"], 2), fnum(dx("twap_last_hour"), 2),
                     fnum(t["reopen_ref"], 2), fnum(dx("gap_bps"), 0, sign=True), fnum(t["reopen_bps"], 0, sign=True),
                     fnum(dx("tape_error_bps"), 0, sign=True), fnum(dx("max_abs_gap_bps"), 0), esc(t["swaps_span"]),

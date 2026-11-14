@@ -88,12 +88,12 @@ def window_results(export_dir: Path, window_id: int) -> list[dict]:
     return sorted(out, key=lambda r: (r["score"], r["name"]))
 
 
-def latest_scored_window(export_dir: Path) -> dict | None:
+def latest_scored_window(export_dir: Path, kinds: tuple[int, ...] = (1, 2)) -> dict | None:
     """The most recent resolved window with at least one scored forecaster (closed windows first)."""
     export_dir = Path(export_dir)
     windows = json.loads((export_dir / "windows.json").read_text(encoding="utf-8")).get("windows", [])
-    for kind in (1, 2):
-        for w in sorted((w for w in windows if w.get("kind") == kind), key=lambda w: -int(w["id"])):
+    for kind in kinds:
+        for w in sorted((w for w in windows if w.get("kind") == kind), key=lambda w: -int(w["end_ms"])):
             if window_results(export_dir, w["id"]):
                 return w
     return None
@@ -165,15 +165,24 @@ def render_forecaster_card(window: dict, r: dict, path: Path) -> Path:
 
 
 def build_cards(export_dir: Path, out: Path) -> dict:
-    """Writes cards/<window>.png and cards/f/<wallet>.png for the latest scored window; returns what it made."""
-    w = latest_scored_window(export_dir)
-    if not w:
+    """Window cards for the latest scored weekend (or holiday) and the latest scored weekday session, and one
+    card per forecaster for its most recent of those. Returns what it made; the newest window comes first."""
+    shown = [w for w in (latest_scored_window(export_dir, (1,)), latest_scored_window(export_dir, (2,))) if w]
+    if not shown:
         return {}
-    res = window_results(export_dir, w["id"])
-    made = {"window": w, "results": res, "window_card": f"cards/{w['id']}.png", "forecaster_cards": {}}
-    render_window_card(w, res, Path(out) / made["window_card"])
-    for r in res:
-        rel = f"cards/f/{r['committer']}.png"
-        render_forecaster_card(w, r, Path(out) / rel)
-        made["forecaster_cards"][r["committer"]] = rel
+    shown.sort(key=lambda w: -int(w["end_ms"]))
+    made = {"windows": [], "forecaster_cards": {}, "latest": {}}
+    for w in shown:
+        res = window_results(export_dir, w["id"])
+        rel = f"cards/{w['id']}.png"
+        render_window_card(w, res, Path(out) / rel)
+        made["windows"].append({"window": w, "card": rel, "results": res})
+        for r in res:
+            if r["committer"] in made["forecaster_cards"]:
+                continue   # already carded from a more recent window
+            frel = f"cards/f/{r['committer']}.png"
+            render_forecaster_card(w, r, Path(out) / frel)
+            made["forecaster_cards"][r["committer"]] = frel
+            made["latest"][r["committer"]] = r
+    made["window"], made["window_card"] = shown[0], made["windows"][0]["card"]
     return made

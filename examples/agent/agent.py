@@ -160,6 +160,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fixture", action="store_true", help="fixed example with no network (needs --dry-run)")
     ap.add_argument("--kind", choices=["any", "closed", "daily"], default="any")
     ap.add_argument("--window", type=int, default=0, help="a specific open window id")
+    ap.add_argument("--due-within", type=float, default=0, metavar="HOURS",
+                    help="record every open window whose cutoff falls within the next HOURS (for a once-a-day "
+                         "schedule use 24: each window then gets exactly one run, holidays included)")
     a = ap.parse_args(argv)
 
     if a.fixture:
@@ -177,17 +180,37 @@ def main(argv: list[str] | None = None) -> int:
         if form["ledger"]["address"].lower() != EXPECTED_LEDGER and not os.environ.get("LEDGER_OVERRIDE"):
             raise SystemExit(f"error: form.json names ledger {form['ledger']['address']}, expected "
                              f"{EXPECTED_LEDGER} (set LEDGER_OVERRIDE=1 to accept)")
-        window = pick_window(form["windows"], a.kind, a.window, int(time.time() * 1000))
-        if window is None:
-            print("No window is open for records right now (or none matches --kind/--window). Nothing sent.")
-            return 2
+        now = int(time.time() * 1000)
+        if a.due_within:
+            kind_id = {"closed": 1, "daily": 2}.get(a.kind, 0)
+            windows = sorted((w for w in form["windows"]
+                              if MARGIN_MS < w["cutoff_ms"] - now <= a.due_within * 3_600_000
+                              and (not kind_id or w["id"] // 100_000_000 == kind_id)), key=lambda w: w["cutoff_ms"])
+            if not windows:
+                print(f"No window has its cutoff in the next {a.due_within:g} hours. Nothing sent.")
+                return 0
+        else:
+            w = pick_window(form["windows"], a.kind, a.window, now)
+            if w is None:
+                print("No window is open for records right now (or none matches --kind/--window). Nothing sent.")
+                return 2
+            windows = [w]
         slate = form["slate"]
         ledger = form["ledger"]["address"]
         own = split_codes(os.environ.get("BUILDER_CODES"))
         codes = own + [c for c in form.get("builder_codes") or [] if c not in own]
-        probs = predict(slate, window)
 
     on_slate = {t["address"].lower(): t for t in slate}
+    if a.fixture:
+        return record(window, slate, probs, codes, ledger, on_slate, a.dry_run)
+    for window in windows:
+        rc = record(window, slate, predict(slate, window), codes, ledger, on_slate, a.dry_run)
+        if rc:
+            return rc
+    return 0
+
+
+def record(window, slate, probs, codes, ledger, on_slate, dry_run) -> int:
     calls = []
     for token, p in probs.items():
         if token.lower() not in on_slate:
@@ -204,7 +227,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"to       {ledger}")
     print(f"calldata {data}")
 
-    if a.dry_run:
+    if dry_run:
         print("dry run: nothing sent")
         return 0
     send(ledger, data, window)

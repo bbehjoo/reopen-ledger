@@ -180,3 +180,10 @@ It sends nothing.
 | `agent.py` | the Python agent |
 | `verify.py` | the byte-equality check |
 | `.env.example` | the environment variables |
+
+## The fastest path: the template repository
+
+[bbehjoo/reopen-ledger-agent](https://github.com/bbehjoo/reopen-ledger-agent) is this Python agent with a GitHub
+workflow already set up: click "Use this template", add `PRIVATE_KEY` and `BUILDER_CODES` as secrets, and it
+predicts once a day with `python agent.py --due-within 24`, which records every open window whose cutoff falls in
+the next 24 hours. With one run a day, each window gets exactly one run, holidays included.
