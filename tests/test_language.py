@@ -17,7 +17,8 @@ TEXT_SUFFIXES = {
     ".py", ".md", ".txt", ".toml", ".yaml", ".yml", ".json", ".jsonl", ".html", ".css", ".js", ".ts",
     ".mjs", ".sol", ".csv", ".svg", ".sh", ".ps1", "",
 }
-LEGAL_TEXTS = {"LICENSE", "DATA-LICENSE"}  # verbatim license texts, not ours to edit
+LEGAL_TEXTS = {"LICENSE", "DATA-LICENSE", "OFL.txt"}  # verbatim license texts, not ours to edit (OFL.txt: the
+# SIL Open Font License shipped with the site fonts, as the licence requires)
 SKIP_PARTS = {".git", ".venv", "node_modules", "__pycache__", "out", "cache", "lib"}
 INTERNAL_NOTES = {"CRITIQUE.md", "PROJECT-STATE.md", "CLAUDE.md"}
 # a word boundary keeps hex such as 0x402... in raw chain data from matching

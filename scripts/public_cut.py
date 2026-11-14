@@ -47,7 +47,7 @@ EXCLUDE_DIRS = ("drafts/", ".github/workflows/")
 KEEP_WORKFLOWS = {".github/workflows/tests.yml"}
 TEXT = {".py", ".md", ".txt", ".toml", ".yaml", ".yml", ".json", ".jsonl", ".html", ".css", ".js", ".ts",
         ".mjs", ".sol", ".csv", ".svg", ".sh", ".ps1", ""}
-LEGAL = {"LICENSE", "DATA-LICENSE"}
+LEGAL = {"LICENSE", "DATA-LICENSE", "OFL.txt"}
 # private identifiers, spelled backwards so this file does not carry them either
 PRIVATE = [w[::-1] for w in ("gnarheb", "oojheb gnarheb", "5oojhebb", "moc.liamg@5oojhebb")]
 AUTHOR = ("Reopen Ledger", "reopen-ledger@users.noreply.github.com")
