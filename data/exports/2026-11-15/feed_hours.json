@@ -1,0 +1,1060 @@
+{
+ "closed_windows": [
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-08-28 Fri 16:11 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-04 Fri 15:03 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-11 Fri 15:42 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-18 Fri 17:21 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-25 Fri 19:06 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-02 Fri 19:08 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-09 Fri 15:59 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-16 Fri 17:47 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-23 Fri 19:54 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-30 Fri 19:38 EDT",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-11-06 Fri 18:04 EST",
+   "symbol": "CRCLc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-08-28 Fri 15:54 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-04 Fri 16:02 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-11 Fri 11:47 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 15:49 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-25 Fri 14:52 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-02 Fri 15:55 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-09 Fri 12:05 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-16 Fri 16:44 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-23 Fri 16:05 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-30 Fri 15:08 EDT",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-11-06 Fri 16:42 EST",
+   "symbol": "TSLAc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-08-28 Fri 11:59 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-04 Fri 10:24 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-11 Fri 14:45 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-18 Fri 17:41 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-25 Fri 15:34 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-02 Fri 15:12 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-09 Fri 13:15 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-16 Fri 14:20 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-23 Fri 13:33 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-30 Fri 16:40 EDT",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-11-06 Fri 12:37 EST",
+   "symbol": "GOOGLc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-08-28 Fri 15:41 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-04 Fri 16:17 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-11 Fri 17:46 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 16:03 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-25 Fri 14:11 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-02 Fri 12:41 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-09 Fri 15:35 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-16 Fri 18:33 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-23 Fri 19:54 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-30 Fri 19:18 EDT",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-11-06 Fri 19:59 EST",
+   "symbol": "SNDKc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-08-28 Fri 15:49 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-04 Fri 17:29 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-11 Fri 15:55 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 19:33 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-25 Fri 15:55 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-10-02 Fri 16:06 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-09 Fri 14:50 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-16 Fri 19:37 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-23 Fri 19:57 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-30 Fri 19:34 EDT",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-11-06 Fri 18:00 EST",
+   "symbol": "MSTRc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-08-28 Fri 13:01 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-09-04 Fri 15:55 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-11 Fri 13:26 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:01 EDT",
+   "first_after_reopen_minutes": 1.4,
+   "last_before_start_et": "2026-09-18 Fri 16:03 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-25 Fri 16:01 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-02 Fri 15:55 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-09 Fri 15:39 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-16 Fri 18:08 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-23 Fri 18:51 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-30 Fri 18:16 EDT",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-11-06 Fri 16:06 EST",
+   "symbol": "INTCc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-08-28 Fri 14:50 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-04 Fri 14:04 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-11 Fri 15:33 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 15:55 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-09-25 Fri 15:55 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-02 Fri 13:08 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-09 Fri 11:17 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-10-16 Fri 16:01 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-10-23 Fri 15:54 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-30 Fri 15:51 EDT",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-11-06 Fri 16:39 EST",
+   "symbol": "NVDAc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-08-28 Fri 16:34 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-04 Fri 15:53 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-11 Fri 19:39 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 19:02 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-09-25 Fri 15:32 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-02 Fri 16:08 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-09 Fri 15:55 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-16 Fri 18:52 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-23 Fri 15:42 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-30 Fri 18:26 EDT",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-11-06 Fri 16:04 EST",
+   "symbol": "SPCXc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-08-28 Fri 15:10 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-04 Fri 15:10 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-11 Fri 12:37 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-18 Fri 16:07 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-25 Fri 19:35 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-02 Fri 14:28 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-10-09 Fri 13:36 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-16 Fri 15:56 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-23 Fri 18:50 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.3,
+   "last_before_start_et": "2026-10-30 Fri 17:05 EDT",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-11-06 Fri 15:54 EST",
+   "symbol": "METAc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-08-28 Fri 15:29 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-04 Fri 11:38 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-11 Fri 11:27 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-09-18 Fri 16:41 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-09-25 Fri 12:47 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-02 Fri 09:41 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-09 Fri 14:42 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-10-16 Fri 15:54 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-23 Fri 11:00 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-30 Fri 15:16 EDT",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-11-06 Fri 14:55 EST",
+   "symbol": "MSFTc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-08-28 Fri 13:01 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-09-04 Fri 15:58 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-11 Fri 11:56 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:01 EDT",
+   "first_after_reopen_minutes": 1.6,
+   "last_before_start_et": "2026-09-18 Fri 11:24 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-25 Fri 15:50 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-02 Fri 12:39 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-09 Fri 15:28 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-10-16 Fri 15:35 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-23 Fri 10:25 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-30 Fri 15:51 EDT",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-11-06 Fri 14:58 EST",
+   "symbol": "AAPLc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  },
+  {
+   "first_after_reopen_et": "2026-08-30 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.8,
+   "last_before_start_et": "2026-08-28 Fri 15:28 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120260828
+  },
+  {
+   "first_after_reopen_et": "2026-09-07 Mon 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-09-04 Fri 16:07 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120260904
+  },
+  {
+   "first_after_reopen_et": "2026-09-13 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-09-11 Fri 15:02 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120260911
+  },
+  {
+   "first_after_reopen_et": "2026-09-20 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-18 Fri 14:52 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120260918
+  },
+  {
+   "first_after_reopen_et": "2026-09-27 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.6,
+   "last_before_start_et": "2026-09-25 Fri 12:00 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120260925
+  },
+  {
+   "first_after_reopen_et": "2026-10-04 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.5,
+   "last_before_start_et": "2026-10-02 Fri 11:06 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261002
+  },
+  {
+   "first_after_reopen_et": "2026-10-11 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-10-09 Fri 15:20 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261009
+  },
+  {
+   "first_after_reopen_et": "2026-10-18 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.9,
+   "last_before_start_et": "2026-10-16 Fri 13:13 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261016
+  },
+  {
+   "first_after_reopen_et": "2026-10-25 Sun 20:00 EDT",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-23 Fri 15:43 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261023
+  },
+  {
+   "first_after_reopen_et": "2026-11-01 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.4,
+   "last_before_start_et": "2026-10-30 Fri 15:54 EDT",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261030
+  },
+  {
+   "first_after_reopen_et": "2026-11-08 Sun 20:00 EST",
+   "first_after_reopen_minutes": 0.7,
+   "last_before_start_et": "2026-11-06 Fri 15:41 EST",
+   "symbol": "AMZNc",
+   "updates_inside_span": 0,
+   "window": 120261106
+  }
+ ]
+}
