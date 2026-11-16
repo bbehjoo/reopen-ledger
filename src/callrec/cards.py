@@ -85,6 +85,12 @@ def window_results(export_dir: Path, window_id: int) -> list[dict]:
         out.append({"committer": c, "role": f.get("house_role"), "name": _name(c, f.get("house_role")),
                     "called": called, "decided": len(decided), "pairs": len(pairs), "score": score, "dex": dex,
                     "streak": streak})
+    # When the Weekend DEX house forecaster scored this window, everyone is compared with its actual score (what
+    # the card shows for it), not with the end-of-window baseline it was committed ahead of.
+    dex = next((r for r in out if r["role"] == "dex_implied"), None)
+    if dex:
+        for r in out:
+            r["dex"] = dex["score"]
     return sorted(out, key=lambda r: (r["score"], r["name"]))
 
 
