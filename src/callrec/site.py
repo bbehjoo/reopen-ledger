@@ -225,7 +225,9 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
             f'<div class="clock" id="clock">Fri 20:00 ET</div><div class="clock-k" id="clock-k">The reference freezes every Friday 20:00 ET and reopens Sunday 20:00 ET.</div></div></div>'
             f'<div class="pick-q">Where does each one reopen? Tap one, skip the rest.</div>{rows}'
             f'<div class="pick-go"><a class="btn primary" id="hp-go" href="{CTA[0]}">Commit on Base <span class="arr">&rarr;</span></a>'
-            f'<span>One transaction. No stake, gas only. <a href="{CTA[0]}" id="hp-adv">Advanced: set exact odds</a></span></div>'
+            f'<span>One transaction, no stake. '
+            + ('Free with Coinbase Wallet / Base app; other wallets pay a tiny gas fee. ' if os.environ.get("PAYMASTER_URL") else 'Gas only. ')
+            + f'<a href="{CTA[0]}" id="hp-adv">Advanced: set exact odds</a></span></div>'
             f'<p class="pick-status" id="hp-status" role="status"></p>'
             f'<div class="foot">Chainlink reference values on Base, read {esc(_utc_label(as_of))}.</div></div>')
 
