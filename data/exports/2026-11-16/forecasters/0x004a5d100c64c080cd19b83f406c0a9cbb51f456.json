@@ -1,0 +1,121 @@
+{
+ "committer": "0x004a5d100c64c080cd19b83f406c0a9cbb51f456",
+ "house_role": "null",
+ "windows": [
+  {
+   "late": false,
+   "pairs": [
+    {
+     "baseline_brier": 0.0025,
+     "baseline_p": 0.05,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb20000000000000000000019f6e7c675b73c2e4d"
+    },
+    {
+     "baseline_brier": 0.451853,
+     "baseline_p": 0.6722,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb2000000000000000000001e800a7f5189430cd0"
+    },
+    {
+     "baseline_brier": 0.164755,
+     "baseline_p": 0.4059,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb2000000000000000000002d0ba3164cc74f58b7"
+    },
+    {
+     "baseline_brier": 0.12215,
+     "baseline_p": 0.3495,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb200000000000000000000397293cb8cda9a10c5"
+    },
+    {
+     "baseline_brier": 0.0025,
+     "baseline_p": 0.05,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb2000000000000000000004884b426556b92883d"
+    },
+    {
+     "baseline_brier": 0.028934,
+     "baseline_p": 0.1701,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb2000000000000000000004aff16039ba04bdfbc"
+    },
+    {
+     "baseline_brier": 0.0025,
+     "baseline_p": 0.95,
+     "brier": 0.25,
+     "given": true,
+     "o": 1,
+     "p": 0.5,
+     "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+    },
+    {
+     "baseline_brier": 0.0025,
+     "baseline_p": 0.95,
+     "brier": 0.25,
+     "given": true,
+     "o": 1,
+     "p": 0.5,
+     "token": "0xb2000000000000000000007b9fcbd005511acbd5"
+    },
+    {
+     "baseline_brier": 0.070384,
+     "baseline_p": 0.2653,
+     "brier": 0.25,
+     "given": true,
+     "o": 0,
+     "p": 0.5,
+     "token": "0xb2000000000000000000008bc8786b856e61707c"
+    },
+    {
+     "baseline_brier": 0.292897,
+     "baseline_p": 0.4588,
+     "brier": 0.25,
+     "given": true,
+     "o": 1,
+     "p": 0.5,
+     "token": "0xb200000000000000000000ab99cfa739e253872b"
+    },
+    {
+     "baseline_brier": 0.123482,
+     "baseline_p": 0.6486,
+     "brier": 0.25,
+     "given": true,
+     "o": 1,
+     "p": 0.5,
+     "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+    },
+    {
+     "baseline_brier": 0.402336,
+     "baseline_p": 0.3657,
+     "brier": 0.25,
+     "given": true,
+     "o": 1,
+     "p": 0.5,
+     "token": "0xb200000000000000000000d9192b6b456483c2e8"
+    }
+   ],
+   "record_tx": "0x52de6f5948e17244ed6d5ed6ea15a6ce47967c36985e4c6e8bdcaebda8165655",
+   "window": 120261113
+  }
+ ]
+}
