@@ -68,14 +68,16 @@ def unfreeze(e: Path) -> tuple[str, str | None]:
     dex = next((r for r in res if r["role"] == "dex_implied"), None)
     best = res[0]
     beat = [r for r in res if r["role"] is None and dex and r["score"] < dex["score"]]
-    parts = [f"Unfrozen. {when}, scored against Chainlink:"]
-    parts.append(f"best score {best['score']:.3f} by {best['name']}" + (f", called {best['called']} of {best['decided']}." if best["decided"] else "."))
+    parts = [f"Unfrozen. {when}, scored by Chainlink:"]
     if dex:
-        parts.append(f"Weekend DEX scored {dex['score']:.3f}; a coin flip scores 0.250.")
-    parts.append(f"{len(beat)} outside forecaster{'s' if len(beat) != 1 else ''} beat the weekend market." if beat
-                 else "Nobody outside beat the weekend market this time. Next weekend opens Friday 20:00 ET.")
+        parts.append(f"the weekend market called {dex['called']} of {dex['decided']} and scored {dex['score']:.3f} "
+                     "(a coin flip scores 0.250, lower is better).")
+    if best is not dex:
+        parts.append(f"Best score: {best['name']}, {best['score']:.3f}.")
+    parts.append(f"{len(beat)} outside forecaster{'s' if len(beat) != 1 else ''} beat it." if beat
+                 else "Nobody outside beat it this time. Can your agent? Next weekend opens Friday 20:00 ET.")
     parts.append(f"{identity.SITE_URL}board.html")
-    return " ".join(parts), f"site/build/cards/{w['id']}.png"
+    return " ".join(parts), f"{identity.SITE_URL}cards/{w['id']}.png"
 
 
 def _post(url: str, body=None):
