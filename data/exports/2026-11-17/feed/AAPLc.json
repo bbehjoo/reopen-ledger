@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1794931020000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 43156.842786,
+   "20": 302.212631,
+   "5": 95797.513514
+  },
+  "liquidation_flow_usd": {
+   "10": 0.0,
+   "20": 14485.459288,
+   "5": 0.0
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 59.049928,
+  "impact_10k_bps": 1.163428,
+  "move_1pct_usd": 83489.537479,
+  "move_2pct_usd": 134749.080287,
+  "snapshot_block": 58062160
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 58698653,
+  "feed_proxy": "0x787f13dea48db0897cbcdd985de77809d837f988",
+  "frozen_now": false,
+  "hours_since_update": 0.253833,
+  "updated_ms": 1794930106200,
+  "value": 352.36123
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "AJxn_6CQwwSvTlpVfuRe7RQDoMK3cHENXQ__sduAWW4pGZ9lJ04IBClQlGwpp2tOId72dqh7ZBiJA2ooIO1LCw"
+ },
+ "symbol": "AAPLc",
+ "tier": "no_flags",
+ "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+}
