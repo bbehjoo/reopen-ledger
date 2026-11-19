@@ -35,7 +35,7 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     exp = Path(a.export) if a.export else newest_export()
-    out = ROOT.parent / "reopen-ledger-site"
+    out = ROOT.parent / "Reopen Ledger" / "work" / "reopen-ledger-site"
     if out.exists():
         public_cut.rmtree(out)
     if not os.environ.get("PAYMASTER_URL"):   # locally from .env; in CI from the PAYMASTER_URL secret

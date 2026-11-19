@@ -1,6 +1,6 @@
 """Cut the public repository from this one, check it, and (with --push) publish it.
 
-    uv run python scripts/public_cut.py --out ../reopen-ledger-public [--push]
+    uv run python scripts/public_cut.py [--out "../Reopen Ledger/work/reopen-ledger-public"] [--push]
 
 The cut is every file tracked at HEAD (`git archive`), minus the internal notes, the drafts and the workflows
 that hold keys. Before anything is written to the public repository the cut must pass the gate:
@@ -47,7 +47,7 @@ EXCLUDE_DIRS = ("drafts/", ".github/workflows/")
 KEEP_WORKFLOWS = {".github/workflows/tests.yml"}
 TEXT = {".py", ".md", ".txt", ".toml", ".yaml", ".yml", ".json", ".jsonl", ".html", ".css", ".js", ".ts",
         ".mjs", ".sol", ".csv", ".svg", ".sh", ".ps1", ""}
-LEGAL = {"LICENSE", "DATA-LICENSE", "OFL.txt"}
+LEGAL = {"LICENSE", "DATA-LICENSE", "OFL.txt", "base-account.min.js"}   # third-party texts kept verbatim
 # private identifiers, spelled backwards so this file does not carry them either
 PRIVATE = [w[::-1] for w in ("gnarheb", "oojheb gnarheb", "5oojhebb", "moc.liamg@5oojhebb")]
 AUTHOR = ("Reopen Ledger", "reopen-ledger@users.noreply.github.com")
@@ -152,7 +152,7 @@ def push(out: Path, message: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(ROOT.parent / "reopen-ledger-public"))
+    ap.add_argument("--out", default=str(ROOT.parent / "Reopen Ledger" / "work" / "reopen-ledger-public"))
     ap.add_argument("--push", action="store_true")
     ap.add_argument("--message", default="Update from the working repository")
     a = ap.parse_args()

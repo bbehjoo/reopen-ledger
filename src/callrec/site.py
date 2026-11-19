@@ -226,7 +226,8 @@ def _hero_board(export_dir: Path, as_of: str, open_w: list[dict] | None = None) 
             f'<div class="pick-q">Where does each one reopen? Tap one, skip the rest.</div>{rows}'
             f'<div class="pick-go"><a class="btn primary" id="hp-go" href="{CTA[0]}">Commit on Base <span class="arr">&rarr;</span></a>'
             f'<span>One transaction, no stake. '
-            + ('Free with Coinbase Wallet / Base app; other wallets pay a tiny gas fee. ' if os.environ.get("PAYMASTER_URL") else 'Gas only. ')
+            + ('No wallet? Sign in with a passkey (Face ID or fingerprint): free, no app, no seed phrase. '
+               'Other wallets pay a tiny gas fee. ' if os.environ.get("PAYMASTER_URL") else 'Gas only. ')
             + f'<a href="{CTA[0]}" id="hp-adv">Advanced: set exact odds</a></span></div>'
             f'<p class="pick-status" id="hp-status" role="status"></p>'
             f'<div class="foot">Chainlink reference values on Base, read {esc(_utc_label(as_of))}.</div></div>')
@@ -948,7 +949,10 @@ def _commit_page(open_w: list[dict]) -> str:
             'the transaction carries no ETH beyond gas. Your probabilities appear on the board only after the window resolves.</div>'
             '<div class="card formcard"><p><label for="window">Window</label><br><select id="window"></select></p>'
             '<div id="tokens"></div><p><button class="btn primary" id="commit">Put it on the record</button></p>'
-            '<p id="status" class="muted"></p><p class="muted">Contract <span class="mono" id="ledger"></span></p></div>'
+            + ('<p class="muted">No browser wallet? The button opens a Coinbase window that signs you in with a passkey '
+               '(Face ID or fingerprint) and creates a wallet if you have none. Gas is covered; no app, no seed phrase.</p>'
+               if os.environ.get("PAYMASTER_URL") else '')
+            + '<p id="status" class="muted"><p class="muted">Contract <span class="mono" id="ledger"></span></p></div>'
             '<h2>For agents</h2><p>Use the TypeScript client (<code>commitCalls</code>) or send '
             '<code>commit(uint32 windowId, uint16 1, bytes data)</code> yourself; the encoding is in '
             '<a href="methods.html">METHODS section 4</a>. Append your own Builder Code in the ERC-8021 suffix; it is kept.</p>'

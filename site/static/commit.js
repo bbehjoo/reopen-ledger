@@ -44,14 +44,17 @@ function fmt(ms) {
 // Gas: when the site has a paymaster (form.json paymaster_url, set from a secret at build time) and the wallet
 // supports both paymasterService and dataSuffix, the call is sponsored and keeps its Builder Code. A wallet that
 // cannot keep the code is never sponsored: attribution is not traded for free gas.
-async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, paymasterUrl) {
+// A passkey wallet (below) is a Coinbase smart wallet: it takes both capabilities, so they are sent without asking.
+async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, paymasterUrl, passkey) {
   let caps = null;
-  try {
-    caps = await eth.request({ method: "wallet_getCapabilities", params: [from, [chainHex]] });
-  } catch (e) { caps = null; }
+  if (!passkey) {
+    try {
+      caps = await eth.request({ method: "wallet_getCapabilities", params: [from, [chainHex]] });
+    } catch (e) { caps = null; }
+  }
   const c = caps && (caps[chainHex] || caps[String(parseInt(chainHex, 16))]);
-  const suffixOk = !!(c && c.dataSuffix && c.dataSuffix.supported);
-  const sponsor = !!(paymasterUrl && suffixOk && c.paymasterService && c.paymasterService.supported);
+  const suffixOk = !!(passkey || (c && c.dataSuffix && c.dataSuffix.supported));
+  const sponsor = !!(paymasterUrl && suffixOk && (passkey || (c.paymasterService && c.paymasterService.supported)));
   if (codes.length && suffixOk) {
     const capabilities = { dataSuffix: { value: "0x" + suffix(codes), optional: true } };
     if (sponsor) capabilities.paymasterService = { url: paymasterUrl };
@@ -71,6 +74,37 @@ async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, p
     return id;
   }
   return eth.request({ method: "eth_sendTransaction", params: [{ from, to, data: calldata(windowId, dataHex, codes), value: "0x0" }] });
+}
+
+// Passkey sign-in for visitors without a browser wallet: Coinbase's Base Account SDK (2.6.0, Apache-2.0, vendored
+// unchanged as base-account.min.js), loaded on first use. A Coinbase window creates or opens a smart wallet with a
+// passkey (Face ID, fingerprint or a security key): no app, no seed phrase. Offered only when the site has a
+// paymaster, because a new wallet holds no ETH; the Builder Code goes on every call as with any smart wallet.
+const HERE = (typeof document !== "undefined" && document.currentScript && document.currentScript.src || "").replace(/commit\.js.*$/, "");
+let passkeyP = null;
+function passkeyWallet(open) {
+  if (!passkeyP) {
+    passkeyP = new Promise((ok, no) => {
+      const make = () => {
+        try {
+          const chain = open.ledger.chain_id;
+          const codes = open.builder_codes || [];
+          const preference = { telemetry: false };
+          if (codes.length) preference.attribution = { dataSuffix: "0x" + suffix(codes) };
+          const sdk = window.createBaseAccountSDK({ appName: "Reopen Ledger", appLogoUrl: null, appChainIds: [chain],
+            preference, paymasterUrls: { [chain]: open.paymaster_url } });
+          ok(sdk.getProvider());
+        } catch (e) { no(e); }
+      };
+      if (window.createBaseAccountSDK) { make(); return; }
+      const s = document.createElement("script");
+      s.src = HERE + "base-account.min.js";
+      s.onload = make;
+      s.onerror = () => { passkeyP = null; no(new Error("could not load the passkey sign-in")); };
+      document.head.appendChild(s);
+    });
+  }
+  return passkeyP;
 }
 
 async function main() {
@@ -123,19 +157,23 @@ async function main() {
     mark();
   }
   document.getElementById("ledger").textContent = open.ledger.address;
+  const injected = window.ethereum;
+  let pk = null;
+  if (!injected && open.paymaster_url) passkeyWallet(open).then((p) => { pk = p; }).catch(() => {});
   document.getElementById("commit").addEventListener("click", async () => {
-    const eth = window.ethereum;
-    if (!eth) { status.textContent = "No browser wallet found."; return; }
+    if (!injected && !open.paymaster_url) { status.textContent = "No browser wallet found."; return; }
     try {
+      const eth = injected || pk || await passkeyWallet(open);
+      if (!injected) status.textContent = "Sign in with your passkey (Face ID or fingerprint)...";
       const [from] = await eth.request({ method: "eth_requestAccounts" });
       const chainHex = "0x" + open.ledger.chain_id.toString(16);
-      if ((await eth.request({ method: "eth_chainId" })) !== chainHex) {
+      if (injected && (await eth.request({ method: "eth_chainId" })) !== chainHex) {
         await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
       }
       const calls = [...list.querySelectorAll("input[type=range]")].map((i) => ({ token: i.dataset.token, p: Number(i.value) / 100 }));
       const codes = open.builder_codes || [];
       status.textContent = "Waiting for the wallet...";
-      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status, open.paymaster_url);
+      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status, open.paymaster_url, !injected);
       status.innerHTML = `On the record: transaction <a href="https://basescan.org/tx/${hash}"><code>${hash}</code></a>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
     } catch (e) {
       status.textContent = `Not sent: ${e && e.message ? e.message : e}`;
@@ -144,4 +182,4 @@ async function main() {
 }
 
 if (typeof document !== "undefined") main();
-if (typeof module !== "undefined") module.exports = { encodeCalls, suffix, calldata };
+if (typeof module !== "undefined") module.exports = { encodeCalls, suffix, calldata, send };

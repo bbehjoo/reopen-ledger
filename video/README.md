@@ -23,3 +23,16 @@ ffmpeg -i out/launch-raw.mp4 -c:v copy -af "loudnorm=I=-14:TP=-1.5:LRA=9" -c:a a
 
 `npx remotion studio` opens the timeline for edits. Remotion's own licence applies to Remotion itself (free for
 individuals and small teams; see remotion.dev/license).
+
+## 20-second cut (`Short20`)
+
+The same style and track, 10 bars: what is frozen, a real Weekend DEX record (transaction, block, Builder Code
+from `data/house-log/`), the reopen scoring each call, the real result card, the ask. Data and card come from
+one export:
+
+```sh
+uv run python video/data/make_short.py            # src/short.json and public/card.png (newest scored weekend)
+cd video && npx remotion render Short20 out/short-raw.mp4 --codec=h264 --crf=16
+ffmpeg -i out/short-raw.mp4 -c:v copy -af "loudnorm=I=-14:TP=-1.5:LRA=9" -c:a aac -b:a 192k \
+  -movflags +faststart out/reopen-ledger-20s.mp4
+```

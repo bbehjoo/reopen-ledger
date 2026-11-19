@@ -54,37 +54,48 @@
       const picks = rows.map((r) => { const b = $("button[aria-pressed=true]", r); return b ? `${r.dataset.sym}:${b.dataset.v}` : ""; }).filter(Boolean);
       go.href = "commit.html" + (picks.length ? "?p=" + picks.join(",") : "");
     };
+    // The open window is read once up front, and without a browser wallet the passkey sign-in (commit.js) is loaded
+    // on the first tap, so "Commit on Base" can open the Coinbase window straight from the click.
+    const injected = window.ethereum;
+    let openD = null, pk = null;
+    const openP = fetch("data/form.json", { cache: "no-store" }).then((r) => r.json()).then((o) => (openD = o)).catch(() => null);
+    const warm = () => {
+      if (injected || pk || typeof passkeyWallet !== "function") return;
+      openP.then((o) => o && o.ledger && o.paymaster_url && passkeyWallet(o).then((p) => { pk = p; })).catch(() => {});
+    };
     for (const r of rows) for (const b of $$("button", r)) b.addEventListener("click", () => {
       const on = b.getAttribute("aria-pressed") === "true";
       for (const x of $$("button", r)) x.setAttribute("aria-pressed", "false");
       b.setAttribute("aria-pressed", String(!on));
       sync();
+      warm();
     });
     sync();
-    // With a wallet and at least one tap, "Commit on Base" sends the prediction from here (commit.js send());
-    // without either, the link opens the full form, which explains the rest.
+    // With at least one tap and a wallet (a browser wallet, or a passkey wallet when gas is sponsored), "Commit on
+    // Base" sends the prediction from here (commit.js send()); otherwise the link opens the full form.
     const st = document.getElementById("hp-status");
     go.addEventListener("click", async (ev) => {
       const picks = rows.map((r) => ({ r, b: $("button[aria-pressed=true]", r) })).filter((x) => x.b);
-      const eth = window.ethereum;
-      if (!picks.length || !eth || typeof send !== "function") return;
+      if (!picks.length || typeof send !== "function") return;
+      if (!injected && !(openD && openD.paymaster_url && typeof passkeyWallet === "function")) return;
       ev.preventDefault();
       try {
-        st.textContent = "Reading the open window...";
-        const open = await (await fetch("data/form.json", { cache: "no-store" })).json();
+        const open = openD || await openP;
         const now = Date.now();
-        const win = open.windows.filter((w) => w.cutoff_ms - now > 120000).sort((a, b) => a.cutoff_ms - b.cutoff_ms)[0];
-        if (!open.ledger || !win) { location.href = go.href; return; }
+        const win = open && open.windows.filter((w) => w.cutoff_ms - now > 120000).sort((a, b) => a.cutoff_ms - b.cutoff_ms)[0];
+        if (!open || !open.ledger || !win) { location.href = go.href; return; }
         const onSlate = new Set(open.slate.map((t) => t.address.toLowerCase()));
         const calls = picks.map(({ r, b }) => ({ token: r.dataset.token, p: Number(b.dataset.v) / 100 })).filter((c) => onSlate.has(c.token));
         if (!calls.length) { location.href = go.href; return; }
+        const eth = injected || pk || await passkeyWallet(open);
+        st.textContent = injected ? "Connect your wallet..." : "Sign in with your passkey (Face ID or fingerprint)...";
         const [from] = await eth.request({ method: "eth_requestAccounts" });
         const chainHex = "0x" + open.ledger.chain_id.toString(16);
-        if ((await eth.request({ method: "eth_chainId" })) !== chainHex) {
+        if (injected && (await eth.request({ method: "eth_chainId" })) !== chainHex) {
           await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
         }
-        st.textContent = "Confirm in your wallet...";
-        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st, open.paymaster_url);
+        st.textContent = injected ? "Confirm in your wallet..." : "Confirm in the Coinbase window...";
+        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st, open.paymaster_url, !injected);
         st.innerHTML = `On the record for ${win.label}: <a href="https://basescan.org/tx/${hash}">view the transaction</a>. ` +
           "It stays sealed until the window resolves, then shows on the board.";
       } catch (e) {

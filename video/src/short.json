@@ -1,0 +1,86 @@
+{
+ "export": "2026-11-18",
+ "window": 120261113,
+ "when": "Weekend of Nov 13",
+ "tx": "0xce0c81fb22f37dd3c8a9320c18c8e31e39c353512a49447c867ce84771e980ac",
+ "block": 57934697,
+ "builder_code": "bc_akq83qpj",
+ "calls": [
+  {
+   "s": "AAPLc",
+   "p": 0.66,
+   "o": 1
+  },
+  {
+   "s": "AMZNc",
+   "p": 0.34,
+   "o": 1
+  },
+  {
+   "s": "CRCLc",
+   "p": 0.05,
+   "o": 0
+  },
+  {
+   "s": "GOOGLc",
+   "p": 0.19,
+   "o": 0
+  },
+  {
+   "s": "INTCc",
+   "p": 0.06,
+   "o": 0
+  },
+  {
+   "s": "METAc",
+   "p": 0.21,
+   "o": 0
+  },
+  {
+   "s": "MSFTc",
+   "p": 0.41,
+   "o": 1
+  },
+  {
+   "s": "MSTRc",
+   "p": 0.05,
+   "o": 0
+  },
+  {
+   "s": "NVDAc",
+   "p": 0.95,
+   "o": 1
+  },
+  {
+   "s": "SNDKc",
+   "p": 0.28,
+   "o": 0
+  },
+  {
+   "s": "SPCXc",
+   "p": 0.95,
+   "o": 1
+  },
+  {
+   "s": "TSLAc",
+   "p": 0.66,
+   "o": 0
+  }
+ ],
+ "called": 9,
+ "decided": 12,
+ "scores": [
+  {
+   "name": "Weekend DEX",
+   "score": 0.125
+  },
+  {
+   "name": "Coin Flip",
+   "score": 0.25
+  },
+  {
+   "name": "Frozen Price",
+   "score": 0.25
+  }
+ ]
+}

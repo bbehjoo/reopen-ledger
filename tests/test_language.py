@@ -17,8 +17,10 @@ TEXT_SUFFIXES = {
     ".py", ".md", ".txt", ".toml", ".yaml", ".yml", ".json", ".jsonl", ".html", ".css", ".js", ".ts",
     ".mjs", ".sol", ".csv", ".svg", ".sh", ".ps1", "",
 }
-LEGAL_TEXTS = {"LICENSE", "DATA-LICENSE", "OFL.txt"}  # verbatim license texts, not ours to edit (OFL.txt: the
-# SIL Open Font License shipped with the site fonts, as the licence requires)
+LEGAL_TEXTS = {"LICENSE", "DATA-LICENSE", "OFL.txt", "base-account.min.js"}  # verbatim third-party texts, not
+# ours to edit (OFL.txt: the SIL Open Font License shipped with the site fonts, as the licence requires;
+# base-account.min.js: Coinbase's Base Account SDK 2.6.0, Apache-2.0, vendored unchanged for the passkey sign-in).
+# They are still checked for the earlier project's name below.
 SKIP_PARTS = {".git", ".venv", "node_modules", "__pycache__", "out", "cache", "lib"}
 INTERNAL_NOTES = {"CRITIQUE.md", "PROJECT-STATE.md", "CLAUDE.md"}
 # a word boundary keeps hex such as 0x402... in raw chain data from matching
