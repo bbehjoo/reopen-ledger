@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1795188240000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 74068.329161,
+   "20": 18912.316014,
+   "5": 632669.625444
+  },
+  "liquidation_flow_usd": {
+   "10": 0.0,
+   "20": 0.113825,
+   "5": 0.0
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 20.389375,
+  "impact_10k_bps": 1.143205,
+  "move_1pct_usd": 158422.66758,
+  "move_2pct_usd": 288458.24379,
+  "snapshot_block": 59348535
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 59986516,
+  "feed_proxy": "0x06a8e4b3abb3b7543d8396fb2b763d22820cb295",
+  "frozen_now": false,
+  "hours_since_update": 0.155889,
+  "updated_ms": 1795187678800,
+  "value": 255.9745
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "PNwCF5YnpMOvC1eOkry9whSbgpFD0p_j9GvMr2eg7GfBv5rjapg6cIPT4n_h_T2dtU2JFe8XnUSJ8_E-WS3PBg"
+ },
+ "symbol": "AMZNc",
+ "tier": "no_flags",
+ "token": "0xb200000000000000000000d9192b6b456483c2e8"
+}

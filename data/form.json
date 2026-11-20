@@ -1,0 +1,164 @@
+{
+ "builder_codes": [
+  "bc_akq83qpj"
+ ],
+ "ledger": {
+  "address": "0x32E9d4e3c865b802689D39caAA30c7328de281C0",
+  "chain_id": 8453
+ },
+ "paymaster_url": "https://api.developer.coinbase.com/rpc/v1/base/8hq1ALV2brfErhMYjUj3ZKE9v6PbTgw4",
+ "slate": [
+  {
+   "address": "0xb20000000000000000000019f6e7c675b73c2e4d",
+   "name": "Circle Internet Group Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x0231cf2635d1e17bb5c2462cc7504ba1fbd61f33"
+   },
+   "symbol": "CRCLc"
+  },
+  {
+   "address": "0xb2000000000000000000001e800a7f5189430cd0",
+   "name": "Tesla Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0xfaf869185383a24f8cb00e27bda6b63b9905dcb4"
+   },
+   "symbol": "TSLAc"
+  },
+  {
+   "address": "0xb2000000000000000000002d0ba3164cc74f58b7",
+   "name": "Alphabet Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x5bf49e0ffa937ce2fff033c739ad7c634c4d34f2"
+   },
+   "symbol": "GOOGLc"
+  },
+  {
+   "address": "0xb200000000000000000000397293cb8cda9a10c5",
+   "name": "Sandisk Corporation",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x388b0dc46c0fb05a74bee0994fa5b02c6fcca2ea"
+   },
+   "symbol": "SNDKc"
+  },
+  {
+   "address": "0xb2000000000000000000004884b426556b92883d",
+   "name": "Strategy Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0xb3ce282cd188b35da0e38d8bc7d58e33173d202a"
+   },
+   "symbol": "MSTRc"
+  },
+  {
+   "address": "0xb2000000000000000000004aff16039ba04bdfbc",
+   "name": "Intel Corporation",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0xab657c39bac0d5886250d70849e2e3e008f2eecb"
+   },
+   "symbol": "INTCc"
+  },
+  {
+   "address": "0xb20000000000000000000078ee7ce2fe4908108c",
+   "name": "NVIDIA Corporation",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x04689a41629776563e6822f76f2e57d148d28513"
+   },
+   "symbol": "NVDAc"
+  },
+  {
+   "address": "0xb2000000000000000000007b9fcbd005511acbd5",
+   "name": "Space Exploration Technologies Corp.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x6a634b235903c4ad6376892180d6ff8612e3fa68"
+   },
+   "symbol": "SPCXc"
+  },
+  {
+   "address": "0xb2000000000000000000008bc8786b856e61707c",
+   "name": "Meta Platforms Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x6526ae6797a76123638b863aee4dd27ba4e4b27d"
+   },
+   "symbol": "METAc"
+  },
+  {
+   "address": "0xb200000000000000000000ab99cfa739e253872b",
+   "name": "Microsoft Corporation",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0xeb10a6c9aa7e537aed766c08c35dae35b321b18c"
+   },
+   "symbol": "MSFTc"
+  },
+  {
+   "address": "0xb200000000000000000000c2e324d24d7eecd1fb",
+   "name": "Apple Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x787f13dea48db0897cbcdd985de77809d837f988"
+   },
+   "symbol": "AAPLc"
+  },
+  {
+   "address": "0xb200000000000000000000d9192b6b456483c2e8",
+   "name": "Amazon.com Inc.",
+   "reference_feed": {
+    "decimals": 8,
+    "proxy": "0x06a8e4b3abb3b7543d8396fb2b763d22820cb295"
+   },
+   "symbol": "AMZNc"
+  }
+ ],
+ "windows": [
+  {
+   "cutoff_et": "2026-11-19 Thu 20:00 EST",
+   "cutoff_ms": 1795136400000,
+   "id": 220261120,
+   "label": "daily 2026-11-20 (Fri)",
+   "sigma_bps": 227.22
+  },
+  {
+   "cutoff_et": "2026-11-22 Sun 18:00 EST",
+   "cutoff_ms": 1795388400000,
+   "id": 120261120,
+   "label": "closed 2026-11-20 (Fri) -> 2026-11-22 (Sun)",
+   "sigma_bps": 76.91
+  },
+  {
+   "cutoff_et": "2026-11-22 Sun 21:00 EST",
+   "cutoff_ms": 1795399200000,
+   "id": 220261123,
+   "label": "daily 2026-11-23 (Mon)",
+   "sigma_bps": 227.22
+  },
+  {
+   "cutoff_et": "2026-11-23 Mon 20:00 EST",
+   "cutoff_ms": 1795482000000,
+   "id": 220261124,
+   "label": "daily 2026-11-24 (Tue)",
+   "sigma_bps": 227.22
+  },
+  {
+   "cutoff_et": "2026-11-24 Tue 20:00 EST",
+   "cutoff_ms": 1795568400000,
+   "id": 220261125,
+   "label": "daily 2026-11-25 (Wed)",
+   "sigma_bps": 227.22
+  },
+  {
+   "cutoff_et": "2026-11-26 Thu 18:00 EST",
+   "cutoff_ms": 1795734000000,
+   "id": 120261125,
+   "label": "closed 2026-11-25 (Wed) -> 2026-11-26 (Thu)",
+   "sigma_bps": 76.91
+  }
+ ]
+}

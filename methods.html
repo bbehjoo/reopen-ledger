@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods | Reopen Ledger</title>
+<meta name="description" content="Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, scored against Chainlink at the reopen. Plus the data on what a frozen weekend price means for lending markets. Measurements, not verdicts.">
+<meta name="theme-color" content="#0b0c0e">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Reopen Ledger">
+<meta property="og:title" content="Methods | Reopen Ledger"><meta property="og:description" content="Predict which way tokenized stocks reopen after the weekend. One transaction on Base, no stake, scored against Chainlink at the reopen. Plus the data on what a frozen weekend price means for lending markets. Measurements, not verdicts.">
+<meta property="og:url" content="https://bbehjoo.github.io/reopen-ledger/methods.html">
+<meta property="og:image" content="https://bbehjoo.github.io/reopen-ledger/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://bbehjoo.github.io/reopen-ledger/og.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add("js")</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><path d="M7 19.5h10.5L25 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="10.5" r="2.6" fill="var(--accent-ink)"/></svg>Reopen Ledger</a><nav aria-label="Pages"><a href="agents.html">For agents</a><a href="live.html">Live</a><a href="board.html">Board</a><a href="methods.html" class=on>Methods</a><a href="data.html">Data</a></nav>
+<a class="btn primary small" href="commit.html">Predict the reopen</a></div></header>
+<main id="main" class="inner"><div class="wrap"><div class="prose"><h1>METHODS (version 0.2.0)</h1>
+<p>Reopen Ledger publishes three things about Coinbase-issued tokenized stocks on Base:</p>
+<ol>
+<li><strong>Calls on the record.</strong> Anyone can put a forecast on the record in a public contract before a window
+   opens; every forecast is scored against the Chainlink reference feed after the window closes.</li>
+<li><strong>The weekend tape.</strong> While the reference feed is frozen (nights are not frozen; weekends and market
+   holidays are), the tokens keep trading on DEXs. The tape measures how far the DEX price moves from the
+   frozen reference, and how close the weekend DEX price comes to the value the reference shows at reopen.</li>
+<li><strong>What these markets can absorb.</strong> Pool depth below the current price, set against the collateral that
+   lending markets on Base would liquidate if the reference moved down 5%, 10% or 20%.</li>
+</ol>
+<p>Every published number is a measurement with its inputs. Nothing here is a verdict on any token, pool,
+protocol, issuer or forecaster, and nothing here says what anyone should do in any market.</p>
+<p>Every export is stamped with <code>methods_version</code>. A change to any definition below bumps the version.</p>
+<h2>1. Principles</h2>
+<ul>
+<li><strong>Measurements, not verdicts.</strong> Flags are booleans with a heuristic id and an evidence pointer. Tiers
+  (<code>no_flags</code>, <code>one_flag</code>, <code>flagged</code>, <code>stale</code>, <code>insufficient_data</code>) count flags; they assert nothing else.</li>
+<li><strong>Replayable.</strong> Every published file is a pure function of the raw chain logs in <code>data/raw/</code>, the
+  config files in <code>config/</code> and this document. <code>callrec replay</code> regenerates an export from those inputs
+  and compares it file by file. An export is as of the earliest time (whole minutes) to which every raw
+  stream has been read, never later; the manifest records how far each stream was read
+  (<code>data_read_to_ms</code>). Rows read later can then never change a replay. The daily export is refused when a
+  stream lags the requested time by more than 2 hours.</li>
+<li><strong>Signed and anchored.</strong> Each export's manifest is signed with the key in <code>keys/export-key.json</code>, and
+  the SHA-256 of the manifest is put on the record on Base once a day (schema 3, section 4).</li>
+<li><strong>House wallets are labelled and excluded.</strong> The project's own forecasters commit from the five
+  wallets in <code>config/house.yaml</code>, on the schedule in section 7, one transaction per forecaster per window.
+  No usage figure ever counts them.</li>
+<li><strong>Open probabilities are shown after resolution.</strong> The site shows that a wallet committed to an open
+  window, never its probabilities until the window has resolved. They are public on chain regardless.</li>
+<li><strong>No positions.</strong> The operator holds no position in any measured token, pool or lending market.</li>
+</ul>
+<h2>2. Inputs</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Where</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Official token list</td>
+<td><code>config/tokens.json</code></td>
+<td>Coinbase Tokenized Stocks API, every page, each token checked on chain (<code>symbol</code>, <code>decimals</code>, <code>uiMultiplier</code>)</td>
+</tr>
+<tr>
+<td>Reference feeds</td>
+<td><code>config/feeds.yaml</code></td>
+<td>Chainlink's feed directory for Base ("Coinbase TICKER", <code>us_equities_24/5</code>), plus three 24/7 feeds; every phase aggregator read through the proxy</td>
+</tr>
+<tr>
+<td>Feed updates</td>
+<td><code>data/raw/feeds/</code></td>
+<td>every <code>AnswerUpdated(int256 indexed current, uint256 indexed roundId, uint256 updatedAt)</code> of every phase aggregator since 2026-08-24</td>
+</tr>
+<tr>
+<td>Token events</td>
+<td><code>data/raw/b20/</code></td>
+<td>multiplier, announcement, pause, policy, name, symbol and metadata events of every official token</td>
+</tr>
+<tr>
+<td>Pools</td>
+<td><code>config/pools.yaml</code></td>
+<td>DEX pools trading the tokens, each verified on chain against its factory (123 pools of 46 tokens; method in docs/research/POOLS.md)</td>
+</tr>
+<tr>
+<td>Swaps</td>
+<td><code>data/raw/swaps/</code>, <code>data/raw/swaps_v4/</code></td>
+<td><code>Swap</code> logs of the pools used (below)</td>
+</tr>
+<tr>
+<td>Lending markets</td>
+<td><code>config/lending.yaml</code></td>
+<td>every market on Base that accepts the tokens as collateral (Morpho Blue, Aave V4 Equities Hub; Euler v2 listed, holding none)</td>
+</tr>
+<tr>
+<td>Lending positions</td>
+<td><code>data/raw/morpho/</code>, <code>data/raw/aave_v4/</code>, <code>data/raw/snapshots/lending/</code></td>
+<td>position events (who has a position) and position reads at snapshot blocks</td>
+</tr>
+<tr>
+<td>Depth</td>
+<td><code>data/raw/snapshots/depth/</code></td>
+<td>pool state (price, liquidity, initialized ticks) at snapshot blocks</td>
+</tr>
+<tr>
+<td>Records</td>
+<td><code>data/raw/ledger/</code></td>
+<td>every <code>Committed</code> event of the CallLedger contract</td>
+</tr>
+<tr>
+<td>Offchain pages</td>
+<td><code>data/raw/offchain/index.jsonl</code></td>
+<td>URL, time, status, length and SHA-256 of a daily copy of the issuer's list and token page, the integration docs and the feed directory (copies kept private)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Measured tokens.</strong> Official tokens with a Chainlink 24/5 reference feed (12 at version 0.1.0). The other
+official tokens appear in the registry only.</p>
+<p><strong>Pools used.</strong> Listed pools of measured tokens that pair with USDC, on Aerodrome Slipstream (both factories),
+Uniswap v3 and Uniswap v4 (45 pools at version 0.1.0; they carry about 95% of the measured tokens' listed
+volume). WETH and native-ETH pairs, pairs with other tokens, and pools on factories with a different swap
+event are not used yet.</p>
+<p><strong>Where the swap logs live.</strong> The swap streams hold tens of thousands of logs a day, so they are not kept in
+the repository. They are re-read from the chain (<code>callrec ingest swaps</code>), and the export manifest records
+the SHA-256 of every day file's uncompressed content (the rows, one JSON object per line, sorted keys, LF
+endings). Serialisation is deterministic, so a re-read can be checked byte for byte on any machine; the
+compressed bytes are not hashed, because they depend on the zlib build. Every other raw input is kept in the
+repository.</p>
+<p>Block times come from the block number (<code>config/chain.yaml</code> <code>block_time</code>: 2 s blocks until block 53,556,127,
+200 ms blocks from 53,556,128, both checked against headers). The value of a feed at time t is the answer
+of the latest <code>AnswerUpdated</code>, from any phase aggregator of that feed, whose block time is at or before t.
+Round ids are never used to order or look up values.</p>
+<p>The reference feed already includes the token's multiplier (Chainlink: token price = underlying price x
+multiplier), so DEX prices of the token compare with it directly.</p>
+<h2>3. Windows</h2>
+<p>Times are US Eastern (America/New_York). The 24/5 session of the reference feeds runs from Sunday 20:00
+to Friday 20:00; full market holidays (<code>config/calendar.yaml</code>, from the NYSE calendar) close the session
+that ends at 20:00 on that day.</p>
+<ul>
+<li><strong>Closed window</strong> (kind 1). A closed span runs from a session close to the next reopen: Friday 20:00 to
+  Sunday 20:00, longer around a holiday, or a mid-week holiday span. Its window is dated by the Eastern
+  date the span starts.</li>
+<li>start: the span start (the reference value then is the frozen value);</li>
+<li>cutoff: reopen minus 120 minutes;</li>
+<li>end: reopen plus 60 minutes; the outcome is the reference value then.</li>
+<li><strong>Daily window</strong> (kind 2), one per open session day d: from 20:00 on day d-1 (or from the previous
+  closed window's end) to 20:00 on day d; cutoff = start.</li>
+</ul>
+<p>Window id = kind x 100,000,000 + yyyymmdd. A record counts for a window only if its block time is at or
+before the window's cutoff.</p>
+<h2>4. Records (the CallLedger contract)</h2>
+<p><code>commit(uint32 windowId, uint16 schemaId, bytes data)</code> emits
+<code>Committed(address indexed committer, uint32 indexed windowId, uint16 indexed schemaId, bytes data)</code> and
+stores nothing. The contract has no owner, no admin, no storage and no payable function. Bytes after the
+ABI arguments (ERC-8021 attribution suffixes) are ignored, so a caller's Builder Code rides along.</p>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Meaning</th>
+<th>Encoding of <code>data</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>probability calls</td>
+<td>26 bytes per token, sorted by address: token (20) | p_up_bps uint16 (0 to 10,000) | ret_bps int32 (point call, expected log return in basis points; 0x80000000 = none)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>coverage call</td>
+<td>snapshot block uint64, then 74 bytes per token: token (20) | for 5%, 10%, 20%: depth_usd uint48, liquidation_flow_usd uint48, underwater_debt_usd uint48 (whole dollars; 0xFFFFFFFFFFFF = not measured)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>daily anchor</td>
+<td>SHA-256 of the day's export manifest (32) | export date yyyymmdd uint32</td>
+</tr>
+</tbody>
+</table>
+<p><code>p_up_bps</code> is the probability, in basis points, that the reference value at the window's end is above
+its value at the window's start. The first record per (committer, window, schema) is the scored one;
+later records are kept and shown, never scored.</p>
+<h2>5. Scoring</h2>
+<p><strong>Slate.</strong> A window's slate is every official token with a 24/5 reference feed that updated at least
+once in the seven days before the window starts. The slate is fixed from data before the window opens.</p>
+<p><strong>Outcome.</strong> For slate token k in window W: o = 1 if ref(W.end) &gt; ref(W.start), 0 if below. The token is
+void for W, with the reason published, when:
+- either value is missing (<code>missing_reference</code>);
+- a token event falls inside W: a multiplier update scheduled or applied, a cancellation, an
+  announcement, a pause or unpause (<code>token_event_in_window</code>);
+- for a closed window, the feed has not updated after the reopen by W.end (<code>no_update_after_reopen</code>);
+- for a daily window, the end value is more than 26 hours old (<code>stale_reference</code>);
+- the two values are equal (<code>unchanged_reference</code>).</p>
+<p><strong>Brier score.</strong> For a forecaster that committed to W before its cutoff: (p - o)^2 per non-void slate
+token, where a slate token it left out counts as p = 0.5.</p>
+<p><strong>Baselines.</strong> Computed for every window, whether or not the house committed:
+- <em>50%</em>: p = 0.5 everywhere (Brier 0.25).
+- <em>DEX-implied</em> (section 6): from the gap between the DEX price and the frozen or current reference.
+- <em>Persistence</em> (point calls only): an expected return of 0.</p>
+<p><strong>Per forecaster</strong>, over the windows it committed to:
+- <code>brier</code>: mean Brier over its scored (window, token) pairs;
+- <code>skill_vs_dex</code> = 1 - brier / (DEX-implied baseline's Brier on the same pairs);
+- <code>skill_vs_50</code> = 1 - brier / 0.25 (a forecaster at 50% everywhere scores exactly 0);
+- <code>edge_lcb</code>: with d_w = mean over W's tokens of (baseline Brier - forecaster Brier), the one-sided 95%
+  lower bound mean(d) - 1.645 x sd(d) / sqrt(n) over its n scored windows.</p>
+<p><strong>Ranking.</strong> By <code>edge_lcb</code>, for forecasters with at least 5 scored windows; the rest are listed unranked.</p>
+<p><strong>What the board cannot show yet.</strong> With a few dozen windows, skill and luck cannot be told apart. The
+lower bound and the minimum count reduce, not remove, the chance that a ranking reflects luck; with many
+forecasters, the best of them will look skilled by chance. The site says so next to the ranking.</p>
+<p><strong>Point calls</strong> (ret_bps given): squared error, in bps^2, of the realised log return
+ln(ref(end)/ref(start)) x 10,000, reported against persistence (0) on the same pairs. Not ranked.</p>
+<h2>6. The weekend tape and the DEX-implied baseline</h2>
+<p>For each closed window and token, from the Swap logs of the token's listed pools:
+- the DEX price path: after each swap, the pool's price in USD (USDC = 1; WETH pairs at the Chainlink
+  ETH/USD value at that time);
+- the time-weighted DEX price (TWAP) of the primary pool (the listed pool with the most USDC volume over
+  the trailing 30 days) over [span start, cutoff], and its last-hour TWAP before the cutoff;
+- <code>gap_bps</code> = ln(TWAP_last_hour / frozen reference) x 10,000;
+- <code>reopen_bps</code> = ln(reference at window end / frozen reference) x 10,000;
+- <code>tape_error_bps</code> = reopen_bps - gap_bps (how far the weekend market was from the reopen value);
+- void when the primary pool has fewer than 5 swaps or less than $1,000 of volume in the last 12 hours
+  before the cutoff (<code>dex_thin</code>), or when the last-hour price is more than 30% from the reference
+  (<code>dex_price_outlier</code>: a broken or empty pool).</p>
+<p><strong>DEX-implied probability.</strong> p = Phi(gap_bps / sigma), clipped to [0.05, 0.95]. Sigma is 1.4826 x the
+median absolute <code>tape_error_bps</code> over every earlier closed window (all tokens, non-void rows, windows
+that ended before this window's start). That equals the standard deviation for normal errors, and one
+broken pool cannot swamp it. Its floor is 25 bps, and the prior is 150 bps until 4 earlier windows exist. Its point call is
+gap_bps. For daily windows the gap is taken at the cutoff, against the then-current reference, with a
+separate sigma from earlier daily windows (prior 150 bps). Where the DEX baseline is void the baseline
+is p = 0.5.</p>
+<p>The three 24/7 Chainlink feeds (GOOGL, NVDA, TSLA) are shown on the tape next to the DEX price as a
+second weekend value; they are not used in any score.</p>
+<h2>7. House forecasters and schedule</h2>
+<table>
+<thead>
+<tr>
+<th>Wallet (role)</th>
+<th>Records</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>null</td>
+<td>schema 1, p = 0.5 on every slate token</td>
+<td>daily windows: in the 12 hours before the cutoff; closed windows: from the span start to the cutoff</td>
+</tr>
+<tr>
+<td>persistence</td>
+<td>schema 1, p = 0.5 and a point call of 0</td>
+<td>daily windows: in the 12 hours before the cutoff; closed windows: from the span start to the cutoff</td>
+</tr>
+<tr>
+<td>dex_implied</td>
+<td>schema 1, the DEX-implied p and point call (section 6); p = 0.5 and no point call where the DEX baseline is void</td>
+<td>closed windows: in the 2 hours before the cutoff; daily windows: in the hour before the cutoff</td>
+</tr>
+<tr>
+<td>coverage</td>
+<td>schema 2, the coverage call (section 8)</td>
+<td>each closed window, within 2 hours after the span start</td>
+</tr>
+<tr>
+<td>anchor</td>
+<td>schema 3, the daily export hash</td>
+<td>once a day</td>
+</tr>
+</tbody>
+</table>
+<p>Each runs from a scheduled job, at most one transaction per role per window (the job reads the chain
+first and does nothing if the record exists). The job is started at fixed times by scheduled pushes
+(<code>config/house_ticks.yaml</code>), with GitHub's own schedule as a backstop: GitHub ran it 6 to 8 hours late in
+the first week, so the null and persistence slots of daily windows are 12 hours wide. A Monday job reads the chain for the past closed window's
+house records and publishes <code>house_commit_missing</code> (with the expected role and window) if one is absent.
+House wallets never trade and never hold the measured tokens. They appear on the board, labelled, and
+are excluded from every usage figure.</p>
+<h2>8. What these markets can absorb</h2>
+<p><strong>Depth</strong> (per token, from pool state at a block, liquidity providers assumed not to move):
+- <code>move_1pct_usd</code>, <code>move_2pct_usd</code>: USD paid out by the pools as the price moves down 1% / 2% from each
+  pool's current price;
+- impact of a token-to-USDC swap of $10,000 and $100,000 in the primary pool (before the pool fee);
+- <code>absorb_5pct_below_usd[s]</code>: USD the pools pay out between ref x (1 - s) and ref x (1 - s) x 0.95, for
+  s = 5%, 10%, 20%: the depth that would meet liquidation flow at a shocked price.</p>
+<p>Concentrated-liquidity pools are walked tick by tick; constant-product pools use the closed form.</p>
+<p><strong>Liquidation flow</strong> L(s): for every borrower position in a listed lending market that uses the token as
+collateral, the collateral that becomes liquidatable if the price the market's oracle reads falls by s,
+valued at the shocked price, using the market's own liquidation threshold, close factor and incentive.
+While the reference is frozen nothing can be liquidated; the flow arrives at the reopen, at the gap price.
+- Each token is shocked alone; other prices are unchanged.
+- <em>Morpho Blue:</em> liquidatable when collateral x price x LLTV &lt; debt; no close factor; seized collateral =
+  min(collateral, debt x LIF / price) with LIF = min(1.15, 1 / (1 - 0.3 x (1 - LLTV))).
+- <em>Aave V4:</em> only reserves the user enabled as collateral count. Health factor = sum(collateral x price x
+  collateral factor) / debt. The repaid amount restores the target health factor (1.24), or takes the
+  whole debt or reserve under the $1,000 dust rules. The bonus slides with the health factor. The shocked
+  reserve is liquidated first.
+- Both protocols read the Chainlink 24/5 feeds without a staleness check (docs/research/LENDING.md).</p>
+<p><strong>Underwater debt</strong> U(s): the debt of positions whose collateral, at the shocked price, is worth less than
+the debt.</p>
+<p><strong>Coverage</strong> = depth / L(s) is published with the dollar figures beside it. Coverage below 1.0 means the
+measured depth in the 5% below the shocked price is smaller than the measured liquidation flow.</p>
+<p><strong>Limits.</strong> These measure onchain absorption only: no offchain venue, no liquidator inventory, no
+liquidity added after the snapshot, no other collateral of the same borrower. A lending market whose
+positions cannot be read is listed with its reported totals as unmeasured, never silently left out.</p>
+<p><strong>Scoring the coverage call.</strong> Every closed window with a house coverage record: the depth committed at
+the span start, compared with the depth at the same price levels in the first snapshot taken in the two
+hours after the reopen (<code>depth_change_pct</code>). When a token's reopen move is 5% or more, the committed
+liquidation flow is also compared with the collateral seized by <code>Liquidate</code> (Morpho) and
+<code>LiquidationCall</code> (Aave V4) events in the 24 hours after the reopen. Every miss stays on the page.</p>
+<p><strong>Snapshots</strong> are taken once a day, in each coverage slot, and in the hour after each reopen. The depth
+engine was checked against Uniswap's QuoterV2 at one block and agreed to rounding
+(docs/research/DEPTH-CHECK.md).</p>
+<h2>9. Market quality flags (per token, per day)</h2>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Boolean</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1_stale_reference</td>
+<td>the 24/5 feed's last update is older than 26 hours outside a closed span</td>
+<td>feed update block</td>
+</tr>
+<tr>
+<td>S2_dex_gap_large</td>
+<td>the primary pool's price differs from the reference by more than 2% outside a closed span</td>
+<td>price, block</td>
+</tr>
+<tr>
+<td>R1_lookalike_symbol</td>
+<td>a token in a listed pool's Swap logs has an official token's symbol but is not on the list</td>
+<td>token address</td>
+</tr>
+<tr>
+<td>D1_depth_thin</td>
+<td><code>move_2pct_usd</code> below $10,000</td>
+<td>depth snapshot</td>
+</tr>
+</tbody>
+</table>
+<p>Tier: <code>stale</code> if S1; else <code>insufficient_data</code> if no depth snapshot; else <code>no_flags</code> / <code>one_flag</code> /
+<code>flagged</code> (two or more).</p>
+<h3>9b. Volume shares by heuristic (supporting numbers)</h3>
+<p>Per token, over the listed pools, since 2026-08-24 and over the last 7 days: the share of USD swap volume
+carrying each boolean. No address is named.</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Boolean, per swap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OV1_round_trip_10m</td>
+<td>the same address takes both directions in the token's pools within 10 minutes (both legs)</td>
+</tr>
+<tr>
+<td>OV3_sandwich_leg</td>
+<td>in one block and pool, an address's swap, then another address's swap in the same direction, then the first address's swap in the other direction (the first address's two legs)</td>
+</tr>
+<tr>
+<td>OV2_shared_funding</td>
+<td>not measured (needs every address's funding graph); published as null</td>
+</tr>
+</tbody>
+</table>
+<p>The address of a swap is its <code>recipient</code>, a proxy; an address that receives more than 200 swaps in the
+token's pools on one UTC day is treated as router-like and left out of OV1. Swaps are grouped by UTC day,
+so a round trip that crosses midnight UTC is not joined.</p>
+<h2>10. Disclosures</h2>
+<ul>
+<li>This project is entered in Base's "Stocks Maxxing" builder competition (Nov 5 to Dec 5, 2026). A
+  prize, if any, is accepted as an open-competition award and will be disclosed here with its amount.
+  No measured party (issuer, pool, lending protocol, forecaster) pays for anything here.</li>
+<li>The operator holds no position in any measured token, pool or lending market.</li>
+<li>Coinbase tokenized stocks are offered only to persons in eligible jurisdictions outside the United
+  States. Nothing here is an offer, a solicitation or advice of any kind.</li>
+</ul>
+<h2>Changelog</h2>
+<ul>
+<li>0.1.0 (2026-11-08): first version.</li>
+<li>0.1.1 (2026-11-10): the manifest hashes a compressed day file's uncompressed content (manifest schema
+  v2). The first re-read in CI matched no compressed file, because the gzip header records the operating
+  system. An export's as_of is clamped to the data actually read: a Linux replay of the 2026-11-09 export
+  gave 25 of 26 files identical, and the 26th, volume_quality.json, differed because that export was dated
+  02:05 with swaps read only to 01:59. No measurement definition changed.</li>
+<li>0.2.0 (2026-11-13): house schedule (section 7). Null and persistence records of daily windows may be sent
+  in the 12 hours before the cutoff (was the last hour), because scheduled jobs ran hours late. Their
+  content does not depend on the send time. No measurement definition changed.</li>
+</ul></div></div></main>
+<footer><div class="wrap"><p>Data as of 2026-11-20T15:24:00Z. Every number is replayable from the published inputs.
+Measurements, not verdicts; nothing here is advice. Coinbase tokenized stocks are offered only to persons in eligible jurisdictions outside the United States.</p>
+<div class="links"><a href="data.html">Data</a><a href="methods.html">Methods</a><a href="registry.html">Registry</a><a href="https://github.com/bbehjoo/reopen-ledger">Code</a></div></div></footer>
+<script src="site.js" defer></script>
+</body></html>
