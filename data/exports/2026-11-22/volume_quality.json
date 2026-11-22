@@ -1,0 +1,269 @@
+{
+ "router_like_threshold": 200,
+ "rows": [
+  {
+   "OV1_round_trip_10m_share": 0.066537,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.066537,
+   "period": "since_2026-08-24",
+   "swaps": 40857,
+   "symbol": "CRCLc",
+   "token": "0xb20000000000000000000019f6e7c675b73c2e4d",
+   "volume_usd": 1589454.543908
+  },
+  {
+   "OV1_round_trip_10m_share": 0.098533,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.098533,
+   "period": "last_7_days",
+   "swaps": 24919,
+   "symbol": "CRCLc",
+   "token": "0xb20000000000000000000019f6e7c675b73c2e4d",
+   "volume_usd": 803126.901997
+  },
+  {
+   "OV1_round_trip_10m_share": 0.070726,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.001692,
+   "either_share": 0.072381,
+   "period": "since_2026-08-24",
+   "swaps": 447468,
+   "symbol": "TSLAc",
+   "token": "0xb2000000000000000000001e800a7f5189430cd0",
+   "volume_usd": 323903146.322128
+  },
+  {
+   "OV1_round_trip_10m_share": 0.069268,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.069268,
+   "period": "last_7_days",
+   "swaps": 75920,
+   "symbol": "TSLAc",
+   "token": "0xb2000000000000000000001e800a7f5189430cd0",
+   "volume_usd": 40453246.529792
+  },
+  {
+   "OV1_round_trip_10m_share": 0.078185,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.001485,
+   "either_share": 0.079571,
+   "period": "since_2026-08-24",
+   "swaps": 479367,
+   "symbol": "GOOGLc",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7",
+   "volume_usd": 620961261.667024
+  },
+  {
+   "OV1_round_trip_10m_share": 0.061013,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.061013,
+   "period": "last_7_days",
+   "swaps": 71633,
+   "symbol": "GOOGLc",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7",
+   "volume_usd": 67657318.871306
+  },
+  {
+   "OV1_round_trip_10m_share": 0.030086,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.00168,
+   "either_share": 0.031671,
+   "period": "since_2026-08-24",
+   "swaps": 1059449,
+   "symbol": "SNDKc",
+   "token": "0xb200000000000000000000397293cb8cda9a10c5",
+   "volume_usd": 940073612.114563
+  },
+  {
+   "OV1_round_trip_10m_share": 0.025991,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 7.6e-05,
+   "either_share": 0.026026,
+   "period": "last_7_days",
+   "swaps": 209443,
+   "symbol": "SNDKc",
+   "token": "0xb200000000000000000000397293cb8cda9a10c5",
+   "volume_usd": 168943503.336393
+  },
+  {
+   "OV1_round_trip_10m_share": 0.030983,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.00204,
+   "either_share": 0.032972,
+   "period": "since_2026-08-24",
+   "swaps": 1039174,
+   "symbol": "MSTRc",
+   "token": "0xb2000000000000000000004884b426556b92883d",
+   "volume_usd": 957448935.666721
+  },
+  {
+   "OV1_round_trip_10m_share": 0.029969,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.000125,
+   "either_share": 0.030093,
+   "period": "last_7_days",
+   "swaps": 202340,
+   "symbol": "MSTRc",
+   "token": "0xb2000000000000000000004884b426556b92883d",
+   "volume_usd": 106745780.43376
+  },
+  {
+   "OV1_round_trip_10m_share": 0.063387,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.063387,
+   "period": "since_2026-08-24",
+   "swaps": 56322,
+   "symbol": "INTCc",
+   "token": "0xb2000000000000000000004aff16039ba04bdfbc",
+   "volume_usd": 1825878.139931
+  },
+  {
+   "OV1_round_trip_10m_share": 0.049007,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.049007,
+   "period": "last_7_days",
+   "swaps": 38093,
+   "symbol": "INTCc",
+   "token": "0xb2000000000000000000004aff16039ba04bdfbc",
+   "volume_usd": 1065742.129635
+  },
+  {
+   "OV1_round_trip_10m_share": 0.065311,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.002694,
+   "either_share": 0.067834,
+   "period": "since_2026-08-24",
+   "swaps": 855150,
+   "symbol": "NVDAc",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c",
+   "volume_usd": 742022187.147171
+  },
+  {
+   "OV1_round_trip_10m_share": 0.056286,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 2e-06,
+   "either_share": 0.056286,
+   "period": "last_7_days",
+   "swaps": 131878,
+   "symbol": "NVDAc",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c",
+   "volume_usd": 102495425.189846
+  },
+  {
+   "OV1_round_trip_10m_share": 0.052971,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.002963,
+   "either_share": 0.055752,
+   "period": "since_2026-08-24",
+   "swaps": 639076,
+   "symbol": "SPCXc",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5",
+   "volume_usd": 472551072.088747
+  },
+  {
+   "OV1_round_trip_10m_share": 0.068754,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.068754,
+   "period": "last_7_days",
+   "swaps": 98503,
+   "symbol": "SPCXc",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5",
+   "volume_usd": 79481743.664848
+  },
+  {
+   "OV1_round_trip_10m_share": 0.056071,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.002434,
+   "either_share": 0.058259,
+   "period": "since_2026-08-24",
+   "swaps": 568078,
+   "symbol": "METAc",
+   "token": "0xb2000000000000000000008bc8786b856e61707c",
+   "volume_usd": 787499522.497077
+  },
+  {
+   "OV1_round_trip_10m_share": 0.052739,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.052739,
+   "period": "last_7_days",
+   "swaps": 70451,
+   "symbol": "METAc",
+   "token": "0xb2000000000000000000008bc8786b856e61707c",
+   "volume_usd": 67840180.459064
+  },
+  {
+   "OV1_round_trip_10m_share": 0.095306,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0012,
+   "either_share": 0.096373,
+   "period": "since_2026-08-24",
+   "swaps": 291936,
+   "symbol": "MSFTc",
+   "token": "0xb200000000000000000000ab99cfa739e253872b",
+   "volume_usd": 320613711.587888
+  },
+  {
+   "OV1_round_trip_10m_share": 0.09185,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.09185,
+   "period": "last_7_days",
+   "swaps": 45745,
+   "symbol": "MSFTc",
+   "token": "0xb200000000000000000000ab99cfa739e253872b",
+   "volume_usd": 33278639.376129
+  },
+  {
+   "OV1_round_trip_10m_share": 0.090141,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.001716,
+   "either_share": 0.091755,
+   "period": "since_2026-08-24",
+   "swaps": 489855,
+   "symbol": "AAPLc",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb",
+   "volume_usd": 448550854.03875
+  },
+  {
+   "OV1_round_trip_10m_share": 0.098378,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.098378,
+   "period": "last_7_days",
+   "swaps": 40318,
+   "symbol": "AAPLc",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb",
+   "volume_usd": 34773548.038071
+  },
+  {
+   "OV1_round_trip_10m_share": 0.066288,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.001433,
+   "either_share": 0.067617,
+   "period": "since_2026-08-24",
+   "swaps": 414766,
+   "symbol": "AMZNc",
+   "token": "0xb200000000000000000000d9192b6b456483c2e8",
+   "volume_usd": 495775714.362816
+  },
+  {
+   "OV1_round_trip_10m_share": 0.052645,
+   "OV2_shared_funding_share": null,
+   "OV3_sandwich_leg_share": 0.0,
+   "either_share": 0.052645,
+   "period": "last_7_days",
+   "swaps": 73452,
+   "symbol": "AMZNc",
+   "token": "0xb200000000000000000000d9192b6b456483c2e8",
+   "volume_usd": 81248443.520964
+  }
+ ]
+}

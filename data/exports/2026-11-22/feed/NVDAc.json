@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1795357860000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 23581.467481,
+   "20": 10708.308202,
+   "5": 42493.719046
+  },
+  "liquidation_flow_usd": {
+   "10": 10498.986827,
+   "20": 61235.655918,
+   "5": 4281.399792
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 63.939942,
+  "impact_10k_bps": 1.905088,
+  "move_1pct_usd": 73617.320122,
+  "move_2pct_usd": 100198.741888,
+  "snapshot_block": 60409064
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 60138924,
+  "feed_proxy": "0x04689a41629776563e6822f76f2e57d148d28513",
+  "frozen_now": true,
+  "hours_since_update": 38.805444,
+  "updated_ms": 1795218160400,
+  "value": 129.8248
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "xUkBt1WLyF_pGn1VyCX3uXVMYPBbQQDItE5xk7C1QHHdRbj0G9N9Xs2eMO59HiSAj7EDHt-zulho_GVnvsw5Cw"
+ },
+ "symbol": "NVDAc",
+ "tier": "no_flags",
+ "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+}
