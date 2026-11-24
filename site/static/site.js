@@ -95,7 +95,7 @@
           await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainHex }] });
         }
         st.textContent = injected ? "Confirm in your wallet..." : "Confirm in the Coinbase window...";
-        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st, open.paymaster_url, !injected);
+        const hash = await send(eth, from, chainHex, open.ledger.address, win.id, encodeCalls(calls), open.builder_codes || [], st, open.paymaster_url, !injected, open.paymaster_context);
         st.innerHTML = `On the record for ${win.label}: <a href="https://basescan.org/tx/${hash}">view the transaction</a>. ` +
           "It stays sealed until the window resolves, then shows on the board.";
       } catch (e) {

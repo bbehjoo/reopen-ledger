@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1795494600000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 10701.439877,
+   "20": 1019.57004,
+   "5": 74576.942466
+  },
+  "liquidation_flow_usd": {
+   "10": 1381.292828,
+   "20": 31097.938963,
+   "5": 0.0
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 64.807992,
+  "impact_10k_bps": 4.737767,
+  "move_1pct_usd": 82605.437826,
+  "move_2pct_usd": 129414.945323,
+  "snapshot_block": 61335260
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 61359714,
+  "feed_proxy": "0x787f13dea48db0897cbcdd985de77809d837f988",
+  "frozen_now": false,
+  "hours_since_update": 8.967111,
+  "updated_ms": 1795462318400,
+  "value": 350.490294
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "p0isjy0m_V3lZ5M7qkGtYqcDE2B4_Ij-_fVk-8RUW6qnz-uzh6b7LqoOOYanPxpE8XU1f3Oqy4-28tN_HAWLDA"
+ },
+ "symbol": "AAPLc",
+ "tier": "no_flags",
+ "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+}

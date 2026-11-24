@@ -45,7 +45,7 @@ function fmt(ms) {
 // supports both paymasterService and dataSuffix, the call is sponsored and keeps its Builder Code. A wallet that
 // cannot keep the code is never sponsored: attribution is not traded for free gas.
 // A passkey wallet (below) is a Coinbase smart wallet: it takes both capabilities, so they are sent without asking.
-async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, paymasterUrl, passkey) {
+async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, paymasterUrl, passkey, paymasterContext) {
   let caps = null;
   if (!passkey) {
     try {
@@ -57,7 +57,10 @@ async function send(eth, from, chainHex, to, windowId, dataHex, codes, status, p
   const sponsor = !!(paymasterUrl && suffixOk && (passkey || (c.paymasterService && c.paymasterService.supported)));
   if (codes.length && suffixOk) {
     const capabilities = { dataSuffix: { value: "0x" + suffix(codes), optional: true } };
-    if (sponsor) capabilities.paymasterService = { url: paymasterUrl };
+    if (sponsor) {
+      capabilities.paymasterService = { url: paymasterUrl };
+      if (paymasterContext) capabilities.paymasterService.context = paymasterContext;   // e.g. the sponsorship policy
+    }
     const res = await eth.request({ method: "wallet_sendCalls", params: [{
       version: "2.0.0", chainId: chainHex, from, atomicRequired: false,
       calls: [{ to, data: calldata(windowId, dataHex, []), value: "0x0" }],
@@ -173,7 +176,7 @@ async function main() {
       const calls = [...list.querySelectorAll("input[type=range]")].map((i) => ({ token: i.dataset.token, p: Number(i.value) / 100 }));
       const codes = open.builder_codes || [];
       status.textContent = "Waiting for the wallet...";
-      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status, open.paymaster_url, !injected);
+      const hash = await send(eth, from, chainHex, open.ledger.address, Number(sel.value), encodeCalls(calls), codes, status, open.paymaster_url, !injected, open.paymaster_context);
       status.innerHTML = `On the record: transaction <a href="https://basescan.org/tx/${hash}"><code>${hash}</code></a>. The first record per wallet and window is the one that is scored; your probabilities appear on the board after the window resolves.`;
     } catch (e) {
       status.textContent = `Not sent: ${e && e.message ? e.message : e}`;

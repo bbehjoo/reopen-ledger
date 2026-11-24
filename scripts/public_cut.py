@@ -76,7 +76,7 @@ def export_head(out: Path) -> list[str]:
     return sorted(kept)
 
 
-SERVED = {"PAYMASTER_URL"}
+SERVED = {"PAYMASTER_URL", "PAYMASTER_POLICY"}
 
 
 def secrets() -> list[str]:
@@ -84,7 +84,8 @@ def secrets() -> list[str]:
         from dotenv import dotenv_values
     except ImportError:
         return []
-    # PAYMASTER_URL is served on purpose (form.json, sponsored gas); it is capped and allowlisted on the CDP side
+    # PAYMASTER_URL and PAYMASTER_POLICY are served on purpose (form.json, sponsored gas); capped and contract-restricted
+    # on the provider's side
     vals = [v for k, v in dotenv_values(ROOT / ".env").items() if v and k not in SERVED]
     vals += [os.environ[k] for k in ("HOUSE_MNEMONIC", "EXPORT_SIGNING_KEY") if os.environ.get(k)]   # CI
     out = []

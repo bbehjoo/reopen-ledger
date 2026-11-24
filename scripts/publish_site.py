@@ -38,14 +38,15 @@ def main() -> int:
     out = ROOT.parent / "Reopen Ledger" / "work" / "reopen-ledger-site"
     if out.exists():
         public_cut.rmtree(out)
-    if not os.environ.get("PAYMASTER_URL"):   # locally from .env; in CI from the PAYMASTER_URL secret
-        try:
-            from dotenv import dotenv_values
-            v = dotenv_values(ROOT / ".env").get("PAYMASTER_URL")
-            if v:
-                os.environ["PAYMASTER_URL"] = v
-        except ImportError:
-            pass
+    for k in ("PAYMASTER_URL", "PAYMASTER_POLICY"):   # locally from .env; in CI from the secrets of these names
+        if not os.environ.get(k):
+            try:
+                from dotenv import dotenv_values
+                v = dotenv_values(ROOT / ".env").get(k)
+                if v:
+                    os.environ[k] = v
+            except ImportError:
+                pass
     pages = site.build_site(exp, out)
     (out / ".nojekyll").write_text("", encoding="utf-8")
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())

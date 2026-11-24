@@ -38,15 +38,15 @@ const eth = { request: async ({ method, params }) => {
 } };
 (async () => {
   const st = { textContent: "" };
-  const h = await m.send(eth, "0x1", "0x2105", "0xledger", 120261120, "00", ["bc_test1"], st, %s, %s);
+  const h = await m.send(eth, "0x1", "0x2105", "0xledger", 120261120, "00", ["bc_test1"], st, %s, %s, %s);
   console.log(JSON.stringify({ h, seen, st: st.textContent }));
 })();
 """
 
 
-def _send(paymaster, passkey):
+def _send(paymaster, passkey, context=None):
     js = json.dumps((ROOT / "site" / "static" / "commit.js").as_posix())
-    out = subprocess.run(["node", "-e", SEND % (js, json.dumps(paymaster), json.dumps(passkey))],
+    out = subprocess.run(["node", "-e", SEND % (js, json.dumps(paymaster), json.dumps(passkey), json.dumps(context))],
                          capture_output=True, text=True, check=True).stdout
     return json.loads(out)
 
@@ -66,3 +66,10 @@ def test_wallet_without_capabilities_pays_its_own_gas_and_keeps_the_code():
     r = _send("https://paymaster.example", False)
     assert [s["method"] for s in r["seen"]] == ["wallet_getCapabilities", "eth_sendTransaction"]
     assert r["seen"][1]["params"][0]["data"].endswith("80218021802180218021802180218021")
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
+def test_sponsorship_policy_goes_with_the_paymaster():
+    r = _send("https://paymaster.example", True, {"sponsorshipPolicyId": "sp_test"})
+    caps = r["seen"][0]["params"][0]["capabilities"]
+    assert caps["paymasterService"] == {"url": "https://paymaster.example", "context": {"sponsorshipPolicyId": "sp_test"}}
