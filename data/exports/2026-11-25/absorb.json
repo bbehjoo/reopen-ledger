@@ -1,0 +1,837 @@
+{
+ "at_et": "2026-11-23 Mon 23:34 EST",
+ "block": 61522467,
+ "coverage_note": "Lending positions read: Morpho Blue and Aave V4 (Equities Hub). Euler v2 lists one stock collateral vault holding nothing at the snapshot.",
+ "depth_errors": {},
+ "lending_block": 61522467,
+ "lending_totals": {
+  "aave_v4": {
+   "borrowers": 344,
+   "collateral_usd": 18418353.143503,
+   "debt_usd": 8220203.401973
+  },
+  "morpho_blue": {
+   "borrowers": 59,
+   "collateral_usd": 42284.990978,
+   "debt_usd": 14454.316676
+  },
+  "total": {
+   "borrowers": 403,
+   "collateral_usd": 18460638.134481,
+   "debt_usd": 8234657.718649
+  }
+ },
+ "markets": [
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 12706.466821,
+   "debt_usd": 3077.166366,
+   "market": "0xae1a3048",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 19,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 3154.390667,
+   "debt_usd": 487.203778,
+   "market": "0xb4b42dd6",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 19,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 900.632082,
+   "debt_usd": 332.770844,
+   "market": "0x44b343b5",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 10,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000008bc8786b856e61707c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 13753.266859,
+   "debt_usd": 5660.767997,
+   "market": "0xce983b9e",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 11,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 11498.249171,
+   "debt_usd": 4846.125108,
+   "market": "0xa3913d89",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 16,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 195.163572,
+   "debt_usd": 25.145281,
+   "market": "0xcca091ad",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 3,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000d9192b6b456483c2e8"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 68.859515,
+   "debt_usd": 25.124658,
+   "market": "0x4f9329a8",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 2,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000ab99cfa739e253872b"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.422194,
+   "debt_usd": 0.000992,
+   "market": "0xc819df16",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 1,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000001e800a7f5189430cd0"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.323915,
+   "debt_usd": 0.000993,
+   "market": "0x0cc78b1f",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 1,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 7.216182,
+   "debt_usd": 0.010659,
+   "market": "0x91360eea",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 2,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xfef5641f",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xa8835b56",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000008bc8786b856e61707c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0x4e8fcfab",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xcf7cced1",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xcce338a2",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb2000000000000000000008bc8786b856e61707c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xaba747cd",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0x5c800e86",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0xb50ecaba",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0x560a19b8",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 0.0,
+   "debt_usd": 0.0,
+   "market": "0x26d61964",
+   "oracle_note": "Chainlink 24/5 feed, no staleness check",
+   "positions": 0,
+   "protocol": "morpho_blue",
+   "status": "read",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 763759.554542,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 1855228.729658,
+   "market": "reserve 0",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 145,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 535292.299124,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 1975654.933553,
+   "market": "reserve 1",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 112,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb200000000000000000000d9192b6b456483c2e8"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 5820344.542366,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 4569440.601416,
+   "market": "reserve 2",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 231,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 3495772.528504,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 3400959.63407,
+   "market": "reserve 3",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 110,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb2000000000000000000008bc8786b856e61707c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 361394.626834,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 1807262.312504,
+   "market": "reserve 4",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 76,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb200000000000000000000ab99cfa739e253872b"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 5177577.893688,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 4004490.565153,
+   "market": "reserve 5",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 321,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 1069674.224228,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 1927843.004149,
+   "market": "reserve 6",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 90,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb2000000000000000000001e800a7f5189430cd0"
+  },
+  {
+   "collateral_symbol": null,
+   "collateral_usd": 1194537.474216,
+   "debt_note": "debt of positions using this reserve",
+   "debt_usd": 922962.070106,
+   "market": "reserve 8",
+   "oracle_note": "Chainlink 24/5 feed via AaveOracle, no staleness check",
+   "positions": 74,
+   "protocol": "aave_v4",
+   "status": "read",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5"
+  }
+ ],
+ "tokens": [
+  {
+   "absorb_5pct_below_usd": {
+    "10": 4.163114,
+    "20": 1.844905,
+    "5": 548.031085
+   },
+   "coverage": {
+    "10": null,
+    "20": null,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 4.163114,
+    "20": 1.844905,
+    "5": 548.031085
+   },
+   "impact_100k_bps": 177.061355,
+   "impact_10k_bps": 62.986146,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   },
+   "move_1pct_usd": 19069.53852,
+   "move_2pct_usd": 58542.887118,
+   "pools": 1,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 0,
+    "5": 0
+   },
+   "ref_price": 51.033299,
+   "tier": "no_flags",
+   "token": "0xb20000000000000000000019f6e7c675b73c2e4d",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 18179.276838,
+    "20": 1444.929864,
+    "5": 49866.878808
+   },
+   "coverage": {
+    "10": 118813.46663,
+    "20": 0.557776,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 18179.123831,
+    "20": -1145.590468,
+    "5": 49866.878808
+   },
+   "impact_100k_bps": 48.481725,
+   "impact_10k_bps": 1.729207,
+   "liquidation_flow_usd": {
+    "10": 0.153007,
+    "20": 2590.520331,
+    "5": 0.0
+   },
+   "move_1pct_usd": 105587.561349,
+   "move_2pct_usd": 157291.051418,
+   "pools": 3,
+   "positions_liquidatable": {
+    "10": 1,
+    "20": 4,
+    "5": 0
+   },
+   "ref_price": 384.693583,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000001e800a7f5189430cd0",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 30628.437419,
+    "20": 8934.584836,
+    "5": 118419.437509
+   },
+   "coverage": {
+    "10": 69.071085,
+    "20": 0.022216,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 30185.003855,
+    "20": -393229.452585,
+    "5": 118419.437509
+   },
+   "impact_100k_bps": 23.680639,
+   "impact_10k_bps": 0.909406,
+   "liquidation_flow_usd": {
+    "10": 443.433563,
+    "20": 402164.037421,
+    "5": 0.0
+   },
+   "move_1pct_usd": 133388.041419,
+   "move_2pct_usd": 216266.274006,
+   "pools": 6,
+   "positions_liquidatable": {
+    "10": 3,
+    "20": 10,
+    "5": 0
+   },
+   "ref_price": 283.48721,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000002d0ba3164cc74f58b7",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 46264.273877,
+    "20": 26730.711581,
+    "5": 87107.338929
+   },
+   "coverage": {
+    "10": null,
+    "20": null,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 46264.273877,
+    "20": 26730.711581,
+    "5": 87107.338929
+   },
+   "impact_100k_bps": 39.72862,
+   "impact_10k_bps": 3.455476,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   },
+   "move_1pct_usd": 101562.17818,
+   "move_2pct_usd": 155144.53064,
+   "pools": 3,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 0,
+    "5": 0
+   },
+   "ref_price": 698.357794,
+   "tier": "no_flags",
+   "token": "0xb200000000000000000000397293cb8cda9a10c5",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 10247.107105,
+    "20": 2542.303236,
+    "5": 19848.058555
+   },
+   "coverage": {
+    "10": null,
+    "20": null,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 10247.107105,
+    "20": 2542.303236,
+    "5": 19848.058555
+   },
+   "impact_100k_bps": 359.520303,
+   "impact_10k_bps": 6.230621,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   },
+   "move_1pct_usd": 41999.4374,
+   "move_2pct_usd": 56209.833791,
+   "pools": 4,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 0,
+    "5": 0
+   },
+   "ref_price": 82.688176,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000004884b426556b92883d",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 2944.016871,
+    "20": 1022.556995,
+    "5": 3277.114279
+   },
+   "coverage": {
+    "10": null,
+    "20": null,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 2944.016871,
+    "20": 1022.556995,
+    "5": 3277.114279
+   },
+   "impact_100k_bps": 160.589425,
+   "impact_10k_bps": 55.046759,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   },
+   "move_1pct_usd": 24356.944594,
+   "move_2pct_usd": 67322.639335,
+   "pools": 2,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 0,
+    "5": 0
+   },
+   "ref_price": 57.886896,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000004aff16039ba04bdfbc",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 127401.796592,
+    "20": 50907.260924,
+    "5": 183419.836918
+   },
+   "coverage": {
+    "10": null,
+    "20": 3.145379,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 127401.796592,
+    "20": 34722.480478,
+    "5": 183419.836918
+   },
+   "impact_100k_bps": 15.292109,
+   "impact_10k_bps": 1.077988,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 16184.780445,
+    "5": 0.0
+   },
+   "move_1pct_usd": 165666.242601,
+   "move_2pct_usd": 249218.787612,
+   "pools": 7,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 3,
+    "5": 0
+   },
+   "ref_price": 163.782379,
+   "tier": "no_flags",
+   "token": "0xb20000000000000000000078ee7ce2fe4908108c",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 23249.132774,
+    "20": 7567.809576,
+    "5": 77470.345876
+   },
+   "coverage": {
+    "10": 7065.470827,
+    "20": 3.633293,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 23245.842246,
+    "20": 5484.903326,
+    "5": 77470.345876
+   },
+   "impact_100k_bps": 28.700965,
+   "impact_10k_bps": 1.323539,
+   "liquidation_flow_usd": {
+    "10": 3.290528,
+    "20": 2082.90625,
+    "5": 0.0
+   },
+   "move_1pct_usd": 125096.49283,
+   "move_2pct_usd": 204156.098762,
+   "pools": 4,
+   "positions_liquidatable": {
+    "10": 1,
+    "20": 4,
+    "5": 0
+   },
+   "ref_price": 133.818515,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000007b9fcbd005511acbd5",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 20189.527119,
+    "20": 761.924978,
+    "5": 58140.237883
+   },
+   "coverage": {
+    "10": null,
+    "20": 0.311115,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 20189.527119,
+    "20": -1687.092368,
+    "5": 58140.237883
+   },
+   "impact_100k_bps": 134.968865,
+   "impact_10k_bps": 1.134443,
+   "liquidation_flow_usd": {
+    "10": 0.0,
+    "20": 2449.017347,
+    "5": 0.0
+   },
+   "move_1pct_usd": 51442.802569,
+   "move_2pct_usd": 70379.437149,
+   "pools": 3,
+   "positions_liquidatable": {
+    "10": 0,
+    "20": 3,
+    "5": 0
+   },
+   "ref_price": 601.842744,
+   "tier": "no_flags",
+   "token": "0xb2000000000000000000008bc8786b856e61707c",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 1357.397723,
+    "20": 46.650751,
+    "5": 5586.317442
+   },
+   "coverage": {
+    "10": 1.05993,
+    "20": 0.001704,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 76.749223,
+    "20": -27335.415124,
+    "5": 5586.317442
+   },
+   "impact_100k_bps": 36.287953,
+   "impact_10k_bps": 1.535126,
+   "liquidation_flow_usd": {
+    "10": 1280.6485,
+    "20": 27382.065876,
+    "5": 0.0
+   },
+   "move_1pct_usd": 105256.917095,
+   "move_2pct_usd": 111676.201115,
+   "pools": 3,
+   "positions_liquidatable": {
+    "10": 1,
+    "20": 2,
+    "5": 0
+   },
+   "ref_price": 492.838443,
+   "tier": "no_flags",
+   "token": "0xb200000000000000000000ab99cfa739e253872b",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 16512.625642,
+    "20": 1023.227213,
+    "5": 76021.82498
+   },
+   "coverage": {
+    "10": 11.893721,
+    "20": 0.033525,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 15124.277534,
+    "20": -29498.200045,
+    "5": 76021.82498
+   },
+   "impact_100k_bps": 14.162549,
+   "impact_10k_bps": 0.708472,
+   "liquidation_flow_usd": {
+    "10": 1388.348108,
+    "20": 30521.427257,
+    "5": 0.0
+   },
+   "move_1pct_usd": 137379.585718,
+   "move_2pct_usd": 185433.306208,
+   "pools": 5,
+   "positions_liquidatable": {
+    "10": 3,
+    "20": 8,
+    "5": 0
+   },
+   "ref_price": 350.490294,
+   "tier": "no_flags",
+   "token": "0xb200000000000000000000c2e324d24d7eecd1fb",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "absorb_5pct_below_usd": {
+    "10": 51601.49199,
+    "20": 5390.277127,
+    "5": 95740.990512
+   },
+   "coverage": {
+    "10": 423887.257608,
+    "20": 29985.539054,
+    "5": null
+   },
+   "flags": [],
+   "headroom_usd": {
+    "10": 51601.370256,
+    "20": 5390.097364,
+    "5": 95740.990512
+   },
+   "impact_100k_bps": 7.705512,
+   "impact_10k_bps": 0.537091,
+   "liquidation_flow_usd": {
+    "10": 0.121734,
+    "20": 0.179763,
+    "5": 0.0
+   },
+   "move_1pct_usd": 178795.514517,
+   "move_2pct_usd": 281095.589518,
+   "pools": 4,
+   "positions_liquidatable": {
+    "10": 1,
+    "20": 2,
+    "5": 0
+   },
+   "ref_price": 256.49,
+   "tier": "no_flags",
+   "token": "0xb200000000000000000000d9192b6b456483c2e8",
+   "underwater_debt_usd": {
+    "10": 0.0,
+    "20": 0.0,
+    "5": 0.0
+   }
+  }
+ ],
+ "ts_ms": 1795494869000
+}
