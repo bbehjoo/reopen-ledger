@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1795711860000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 28161.729679,
+   "20": 771.372411,
+   "5": 76713.253421
+  },
+  "liquidation_flow_usd": {
+   "10": 0.0,
+   "20": 2484.321133,
+   "5": 0.0
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 118.474329,
+  "impact_10k_bps": 2.776708,
+  "move_1pct_usd": 55105.339453,
+  "move_2pct_usd": 76611.913765,
+  "snapshot_block": 62326273
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 62309043,
+  "feed_proxy": "0x6526ae6797a76123638b863aee4dd27ba4e4b27d",
+  "frozen_now": true,
+  "hours_since_update": 16.576611,
+  "updated_ms": 1795652184200,
+  "value": 611.7419
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "VpN917bampulW1EvAwUvgfteQNs4XhRicsHfEig2WMxp7yUM50qCLRE5Fz-pxKdNW2WBL00AHNffGlkvg6PSCA"
+ },
+ "symbol": "METAc",
+ "tier": "no_flags",
+ "token": "0xb2000000000000000000008bc8786b856e61707c"
+}

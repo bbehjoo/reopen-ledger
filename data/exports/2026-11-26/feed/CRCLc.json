@@ -1,0 +1,47 @@
+{
+ "as_of_ms": 1795711860000,
+ "coverage": {
+  "absorb_5pct_below_usd": {
+   "10": 350.553807,
+   "20": 6.87892,
+   "5": 738.921742
+  },
+  "liquidation_flow_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  },
+  "underwater_debt_usd": {
+   "10": 0.0,
+   "20": 0.0,
+   "5": 0.0
+  }
+ },
+ "depth": {
+  "impact_100k_bps": 180.060465,
+  "impact_10k_bps": 76.324035,
+  "move_1pct_usd": 10120.219479,
+  "move_2pct_usd": 62695.478476,
+  "snapshot_block": 62326273
+ },
+ "flags": [],
+ "methods_version": "0.2.0",
+ "official": true,
+ "reference": {
+  "block": 62315231,
+  "feed_proxy": "0x0231cf2635d1e17bb5c2462cc7504ba1fbd61f33",
+  "frozen_now": true,
+  "hours_since_update": 16.232833,
+  "updated_ms": 1795653421800,
+  "value": 48.9
+ },
+ "schema": "callrec-token-feed/v1",
+ "signature": {
+  "alg": "ed25519",
+  "key_id": "44a808d4f03daf32",
+  "sig": "GIlVkkUfH4zQsM6nlirs1_rUEr81f351jestiiHJt8ca-OXAAf5y3DRQYMjqu3pumlJ10g12FPcamqdqU0zrAg"
+ },
+ "symbol": "CRCLc",
+ "tier": "no_flags",
+ "token": "0xb20000000000000000000019f6e7c675b73c2e4d"
+}
