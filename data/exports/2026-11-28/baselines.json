@@ -1,0 +1,22 @@
+{
+ "closed": {
+  "brier": 0.216313,
+  "direction_hit_rate": 0.692857,
+  "direction_pairs": 140,
+  "on_the_record": false,
+  "pairs": 140,
+  "pairs_void_dex": 28,
+  "skill_vs_50": 0.134746,
+  "windows": 14
+ },
+ "daily": {
+  "brier": 0.254734,
+  "direction_hit_rate": 0.514151,
+  "direction_pairs": 636,
+  "on_the_record": false,
+  "pairs": 637,
+  "pairs_void_dex": 157,
+  "skill_vs_50": -0.018936,
+  "windows": 67
+ }
+}
